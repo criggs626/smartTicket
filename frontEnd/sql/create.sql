@@ -1,18 +1,80 @@
-create database ticketing_test;
+use ticketingBeta1;
 
-use ticketing_test;
-
-CREATE TABLE tickets(
-id int NOT NULL AUTO_INCREMENT,
-subject varchar(1000),
-user_id varchar(100),
-asignee_id varchar(100),
-priority int(1),
-description varchar(20000),
-PRIMARY KEY (id)
+CREATE TABLE PERMISSIONS(
+PERMISSION_ID int NOT NULL,
+NAME VARCHAR(10),
+PRIMARY KEY(PERMISSION_ID)
 );
-insert into tickets(subject,user_id,asignee_id,priority,description) values("Wind Tunnel computer not working","Hal Jordan","Ferris C.",0,"I was trying to do some simulations before the test flight on thursday and the wind tunnel computer just wasn't working. It kept flashing green and telling me to contact OA whatever that means. I could used this fixed as soon as possible so I can make my flight. Afterall it's not like I can fly on my own.");
-insert into tickets(subject,user_id,asignee_id,priority,description) values("Power Problems","Maxwell Dillon","Scott Lang",0,"The lights in my office keep flickering. I don't know why but I am assuming it is something electrical. If you could send someone to look at it that would be apprecieated. Would want anyone getting electrocuted afterall...");
-insert into tickets(subject,user_id,asignee_id,priority,description) values("Bird repellent","Dick Greyson","Alfred Pennyworth",0,"Every night I keep seeing wings outside my office window, audibal deterent is broken or something but the it's all I see at night! Wings! If you could fix the audible repellent that would be great.");
-insert into tickets(subject,user_id,asignee_id,priority,description) values("QWERTY not working","Bob T.","Lary C.",1,"QWERTY just isn't working properly. I don't know why but it seems like it just isn't turning on. I really need it in order to communicate what we've learned today in class. Please help.");
-insert into tickets(subject,user_id,asignee_id,priority,description) values("Thrust output","Tiberius K.","Scott T.",0,"My motors in the physics lab aren't outputing the proper thrust. I don't know what you can do to fix them but I really need all their power you know? give them all they have! thanks for any help");
+
+-- DEPARTMENTS and CLIENT primary key is an auto incrememnting variable, this way when new departments or clients are added there is less required information
+
+CREATE TABLE DEPARTMENTS(
+DEPARTMENT_ID int NOT NULL AUTO_INCREMENT,
+NAME VARCHAR(20),
+PRIMARY KEY(DEPARTMENT_ID)
+);
+
+CREATE TABLE CLIENTS(
+CLIENT_ID int NOT NULL AUTO_INCREMENT,
+EMAIL varchar(35),
+PRIMARY KEY(CLIENT_ID)
+);
+
+/* 
+User table is dependant on permissions and departments
+added a variable for containing an encrypted password
+this system doesn't immediatly provide a salt, a salt can be added later for convenience
+*/
+CREATE TABLE USERS(
+USER_ID int NOT NULL AUTO_INCREMENT,
+DEPARTMENT int,
+PERMISSION int NOT NULL,
+FNAME varchar(20),
+LNAME varchar(20),
+BIRTH_DAY DATE,
+WORK_EMAIL varchar(35),
+PERSONAL_EMAIL varchar(35),
+PHONE varchar(15),
+PASSWORD BINARY(64) NOT NULL,
+PRIMARY KEY (USER_ID),
+FOREIGN KEY (PERMISSION) REFERENCES PERMISSIONS(PERMISSION_ID),
+FOREIGN KEY (DEPARTMENT) REFERENCES DEPARTMENTS(DEPARTMENT_ID)
+);
+
+--created table for categories
+CREATE TABLE CATEGORIES(
+CATEGORY_ID int NOT NULL AUTO_INCREMENT,
+NAME VARCHAR(20),
+PRIMARY KEY(CATEGORY_ID)
+);
+
+-- Attempted text fields for description and later for messasge content
+CREATE TABLE TICKETS(
+TICKET_ID int NOT NULL AUTO_INCREMENT,
+DEPARTMENT int,
+CLIENT int NOT NULL,
+CATEGORY int,
+TITLE varchar(30),
+DESCRIPTION TINYTEXT,
+ASIGNEE_ID varchar(100),
+OPEN_STATUS BOOLEAN,
+PRIORITY int,
+PRIMARY KEY (TICKET_ID),
+FOREIGN KEY (DEPARTMENT) REFERENCES DEPARTMENTS(DEPARTMENT_ID),
+FOREIGN KEY (CLIENT) REFERENCES CLIENTS(CLIENT_ID),
+FOREIGN KEY (CATEGORY) REFERENCES CATEGORIES(CATEGORY_ID)
+);
+
+CREATE TABLE MESSAGES (
+MESSAGE_ID int NOT NULL AUTO_INCREMENT,
+TICKET int,
+CLIENT int,
+USER int,
+MESSAGE_CONTENT TEXT,
+TIME_SENT DATE,
+SENDER BOOLEAN,
+PRIMARY KEY (MESSAGE_ID),
+FOREIGN KEY (TICKET) REFERENCES TICKETS(TICKET_ID),
+FOREIGN KEY (CLIENT) REFERENCES CLIENTS(CLIENT_ID),
+FOREIGN KEY (USER) REFERENCES USERS(USER_ID)
+);
