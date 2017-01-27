@@ -187,3 +187,17 @@ div.loginRow
 	margin-left: 25%;
     margin-right: 25%;
 }
+
+#ticketTable td, #ticketTable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#ticketTable td:nth-child(even){background-color: f2f2f2;}
+#ticketTable tr:hover {background-color: #ddd;}
+#ticketTable th{
+	 padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #3c3c3c;
+    color: white;
+}
