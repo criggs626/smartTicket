@@ -145,3 +145,45 @@ h6 {
     font-family:Open Sans;
     font-weight: 400;
 }
+
+
+//stuff below here is by Liam so it could be wrong
+input[type=email], input[type=text], input[type=password] {
+	background-color: white;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+	
+}
+label[for=usermail], label[for=password] {
+    font-size: inherit;
+	color: white;
+	
+}
+
+div.loginForm
+{
+	display: block;
+	text-align: center;
+	width: 25%;
+	margin-left: auto;
+    margin-right: auto;
+}
+form
+{
+	width: 50%;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+div.loginRow
+{
+	width: 50%;
+	text-align: center;
+	margin-left: 25%;
+    margin-right: 25%;
+}
