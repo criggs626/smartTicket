@@ -147,7 +147,7 @@ h6 {
 }
 
 
-//stuff below here is by Liam so it could be wrong
+/*stuff below here is by Liam so it could be wrong*/
 input[type=email], input[type=text], input[type=password] {
 	background-color: white;
     width: 100%;
