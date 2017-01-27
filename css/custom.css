@@ -1,0 +1,147 @@
+@font-face {
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(https://fonts.gstatic.com/s/opensans/v13/cJZKeOuBrn4kERxqtaUH3VtXRa8TVwTICgirnJhmVJw.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+@font-face {
+  font-family: Ubuntu;
+  font-style: normal;
+  font-weight: 400;
+  src: local('Ubuntu'), url(https://fonts.gstatic.com/s/ubuntu/v9/sDGTilo5QRsfWu6Yc11AXg.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+nav.{
+	box-shadow:0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+}
+
+nav.links{
+    height:45px;
+    background-color: #868686;
+}
+
+div.main{
+    background-color: #3cb878;
+    border-style: solid;
+    border-color: #868686;
+    border-width: 5px;
+    border-top: 0px;
+    border-bottom: 0px;
+}
+#ticketForm{
+	font-family:Open Sans;
+	text-shadow: .5px .5px 5px gray;
+}
+#ticketsTable{
+	font-family:Ubuntu;
+    font-size: 110%;
+	text-shadow: .5px .5px 5px gray;
+}
+
+div.viewHead{
+    background-color: #dbdbdb;
+    height:50px;
+    margin-bottom: 0px;
+}
+
+div.viewNav{
+    background-color: #868686;
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+div.description{
+    background-color: #FFFFFF;
+    height:200px;
+    overflow-y: auto;
+    padding:5px;
+    margin-bottom: 50px;
+}
+
+input.name{
+    width: 49%;
+}
+
+.btn{
+    background-color:#000000;
+}
+
+.btn:hover{
+    background-color: #868686;
+}
+
+.ticket:hover {
+    cursor: pointer;
+}
+
+table.highlight>tbody>tr:hover {
+    background-color: #ddd;
+}
+
+#viewTicketTitle{
+    text-align:center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#viewTicketClient{
+    text-align:right;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#textAreaBorder {
+    background: white;
+    padding: 1rem;
+}
+
+#textAreaBorder > textarea {
+    margin-bottom: 0;
+}
+
+#file {
+    display: none;
+}
+
+label[for=file] {
+    font-size: inherit;
+}
+
+#formSubmit {
+    float: right;
+}
+
+table{
+    background-color:white;
+    margin-bottom: 50px;
+    margin-top: 30px;
+}
+
+td.ticketNum{
+    padding-left: 2em;
+}
+
+body{
+    background-color: #dbdbdb;
+}
+
+nav {
+    background-color: #3c3c3c;
+    padding: 10px;
+}
+
+h4 {
+    font-family:Ubuntu;
+    font-weight: 400;
+    text-shadow: .5px .5px 5px gray;
+}
+
+h6 {
+    font-family:Open Sans;
+    font-weight: 400;
+}
