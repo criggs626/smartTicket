@@ -50,10 +50,139 @@
 									</th>
                                 </tr>
                             </thead>
-							
+							</section>
                             
                 </div>
             </div>
+			
+			<table id="ticketTable">
+			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search by name..">
+  <tr>
+    <!--When a header is clicked, run the sortTable function, with a parameter,
+0 for sorting by names, 1 for sorting by country: -->
+<th onclick="sortTable(0)">#</th>
+<th onclick="sortTable(1)">User</th>
+<th onclick="sortTable(2)">Summary</th>
+<th onclick="sortTable(3)">Ticket Manager</th>
+<th onclick="sortTable(4)">Updated</th>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>Maria Anders</td>
+    <td>Computer is on Fire</td>
+	<td>William Bell</td>
+	<td>1/26/17</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Christina Berglund</td>
+    <td>Blinking light</td>
+	<td>Gabriel Hutchinson</td>
+	<td>1/25/17</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Francisco Chang</td>
+    <td>Login Issue</td>
+	<td>Caleb Riggs</td>
+	<td>1/23/17</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Roland Mendel</td>
+    <td>Password Reset</td>
+	<td>Jared Davis</td>
+	<td>1/22/17</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Helen Bennett</td>
+    <td>Unable to access network</td>
+	<td>Thomas Carter</td>
+	<td>1/26/17</td>
+  </tr>
+</table>
         </main>
     </body>
+	
+	<script>
+	/*Sort table alphanumberically by column*/
+	function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("ticketTable");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc"; 
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.getElementsByTagName("TR");
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      //Each time a switch is done, increase this count by 1:
+      switchcount ++; 
+    } else {
+      /*If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again.*/
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+/*Filters ticket table by name of user*/ 
+/*(could possibly be expanded to search by ticket manager or ticket number)*/
+	function myFunction() {
+  // Declare variables 
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("ticketTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    } 
+  }
+}
+</script>
 </html>
