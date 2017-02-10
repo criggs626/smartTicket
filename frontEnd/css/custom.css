@@ -227,6 +227,36 @@ form[for=Login]
     font-size: 16px;
 }
 
+.ticketViewer .button {
+    background-color: #3c3c3c; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+	width: 25%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    float: left;
+}
+
+.ticketViewer .button:hover {
+    background-color: #494949;
+}
+
+.ticketViewer p {
+    background-color: #dbdbdb;
+	height: 200px;
+}
+.tm-header h2{
+	background-color: #dbdbdb;
+	color: inherit;
+	margin-bottom: 0;
+	float: left;
+	width: 100%;
+}
+
 #ticketTable td, #ticketTable th {
     border: 1px solid #ddd;
     padding: 8px;
