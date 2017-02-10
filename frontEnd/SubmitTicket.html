@@ -13,9 +13,10 @@
     </head>
     <body><nav>
             <img src="	img/logo.png" height="35px">
+			<button id = "myBtn" class="button login">Login</button>
         </nav>
         <nav class="links">
-
+			
         </nav>
 
         <main>
@@ -26,7 +27,7 @@
 					   <table class="striped highlight">
 						
                                     <th>
-										For help with an IT issue you are experiencing, please complete the form below.
+										For help with an IT issue you are experiencing, email: tickets@flpoly.org or complete the form below.
 									<div class="TicketForm">
 			
 			<form name="Ticket" action="ticket_submit" method="post" accept-charset="utf-8">
@@ -67,6 +68,40 @@
                 </div>
             </div>
 			
+			<div id="myModal" class="modal">
+
+				   <!-- Modal content -->
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <span class="close">X</span>
+					  </br>
+					  <h5>Login</h5>
+					</div>
+					<div class="modal-body">
+					   
+						
+						<div class="loginForm">
+						<!-- action="TicketManagerHome.html" most likely needs to be something else? not sure how login verification works -->
+						<form name="login" action="TicketManagerHome.html" method="post" accept-charset="utf-8">
+						<ul>
+						<li><label for="usermail">Email</label>
+						<input type="email" name="usermail" placeholder="user@email.com" required></li>
+						<li><label for="password">Password</label>
+						<input type="password" name="password" placeholder="password" required></li>
+						<li>
+						<input type="submit" value="Login"></li>
+						</ul>
+						</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+					  <h3></h3>
+					</div>
+				  </div>
+
+				</div>
+			
         </main>
+		<script src=	js/modal.js></script>
     </body>
 </html>
