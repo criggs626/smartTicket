@@ -55,13 +55,16 @@
                 </div>
             </div>
 			
-			
-				
+		
 			<table id="ticketTable">
 			<!-- Trigger/Open The Modal -->
-				<button id="myBtn">Create Ticket</button>
+			<button id="myBtn">Create Ticket</button>
 				
 			<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search by name..">
+			
+			<div class="tm-header">
+			<h2>Active Tickets</h2>		
+			</div>
   <tr>
     <!--When a header is clicked, run the sortTable function, with a parameter,
 0 for sorting by names, 1 for sorting by country: -->
@@ -107,6 +110,19 @@
 	<td>1/26/17</td>
   </tr>
 </table>
+
+
+<div class="ticketViewer">
+  <button class="button">Reply</button>
+  <button class="button">Assign</button>
+  <button class="button">Accept</button>
+  <button class="button">Close</button>
+  <p>
+	Hello, I keep seeing a green light flashing and I'm not sure why. If you can let me know why this may be happening that would be helpful.
+  </p>
+</div>
+
+
 
 	<!-- The Modal -->
 				<div id="myModal" class="modal">
