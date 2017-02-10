@@ -172,7 +172,7 @@ textarea{
 
 label[for=usermail], label[for=password] {
     font-size: inherit;
-	color: white;
+	color: inherit;
 	
 }
 
@@ -214,7 +214,18 @@ form[for=Login]
     text-align: left;
 }
 
-
+.login {
+    line-height: 3em;
+    color: black;
+	position:absolute;
+    width: 8%;
+	left: 90%;
+    text-align: center;
+	height: 50px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
 
 #ticketTable td, #ticketTable th {
     border: 1px solid #ddd;
