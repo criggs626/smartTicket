@@ -4,7 +4,6 @@ var passport = require('passport');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var port = /*80 || */8080;
 
 require('./config/passport')(passport);
 
@@ -25,7 +24,12 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 require('./routes.js')(app, passport,express);
 
-
-app.listen(port, function () {
-    console.log('Example app listening on port 80!')
-})
+try {
+    app.listen(80, function () {
+        console.log('Example app listening on port 80!')
+    });
+} catch (e) {
+    app.listen(8080, function() {
+        console.log('Example app listening on port 8080!')
+    });
+}
