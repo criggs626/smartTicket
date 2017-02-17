@@ -22,7 +22,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-require('./routes.js')(app, passport,express);
+require('./routes.js')(app, passport, express);
 
 try {
     app.listen(80, function () {
