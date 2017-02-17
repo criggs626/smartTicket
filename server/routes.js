@@ -4,16 +4,8 @@ const LOGIN = "TicketManagerLogin.html";
 const INDEX = "SubmitTicket.html";
 
 
-module.exports = function (app, passport, express) {
+module.exports = function (app, passport, express, mysqlConnection) {
     var path = require('path');
-    var mysql = require('mysql');
-    var connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: ''
-    });
-
-    connection.query('USE smartticket;');
 
     app.use(express.static(ROOT_DIR));
     app.use('/home', isLoggedIn, function (req, res) {
@@ -45,26 +37,26 @@ module.exports = function (app, passport, express) {
             catagories = post.cats.join(",");
 			console.log(parseInt(post.vals[0]));
             if (isNaN(parseInt(post.vals[0]))) {
-                values +=connection.escape(post.vals[0]) + ',';
+                values += mysqlConnection.escape(post.vals[0]) + ',';
             } else {
                 values += post.vals[0] + ",";
             }
             for (i = 1; i < post.vals.length - 1; i++) {
                 if (isNaN(parseInt(post.vals[i]))) {
-                    values += connection.escape(post.vals[i]);
+                    values += mysqlConnection.escape(post.vals[i]);
                 } else {
                     values += post.vals[i];
                 }
             }
             if (isNaN(parseInt(post.vals[i]))) {
-                values +=connection.escape(post.vals[i]);
+                values += mysqlConnection.escape(post.vals[i]);
             } else {
                 values += post.vals[i];
             }
             console.log("INSERT INTO " + post.tab + " (" + catagories + ") VALUES(" + values + ");");
         }
-         if(catagories&&values){
-         connection.query("INSERT INTO "+post.tab+" ("+catagories+") VALUES("+values+");");
+         if (catagories && values) {
+             mysqlConnection.query("INSERT INTO "+post.tab+" ("+catagories+") VALUES("+values+");");
          }
     });
     app.use('/', function (req, res) {
@@ -72,7 +64,7 @@ module.exports = function (app, passport, express) {
     });
 
     function isLoggedIn(req, res, next) {
-        return next();
+        // return next();
         // if user is authenticated in the session, carry on
         if (req.isAuthenticated())
             return next();
