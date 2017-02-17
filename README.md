@@ -8,9 +8,11 @@ Run setup.bat (Windows) in the root directory of the repository to build the MyS
 ## Run
 To start the server, open the command line and run
 ```shell
-node server/server.js
+cd server
+node server.js
 ```
 If that doesn't work, try
 ```shell
-nodejs server/server.js
+cd server
+nodejs server.js
 ```
