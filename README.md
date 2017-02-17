@@ -8,7 +8,7 @@ Run setup.bat (Windows) in the root directory of the repository to build the MyS
 Configure some details of the server in ```config.json```.
 
 ### Example
-```json
+```text
 {
     "mysql-username": "root",     // mysql user
     "mysql-password": "password", // mysql password
