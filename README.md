@@ -5,10 +5,10 @@ A smart ticketing system for organizations to track issues using machine learnin
 Run setup.bat (Windows) in the root directory of the repository to build the MySQL tables.
 
 ## Configuration
-Configure some details of the server in ```config.json```.
+Configure certain details of the server by adding ```config.json``` to the root directory.
 
-### Example
-```text
+### Example config.json
+```js
 {
     "mysql-username": "root",     // mysql user
     "mysql-password": "password", // mysql password
