@@ -1,0 +1,1 @@
+mysql -u root -p < table_Creation.sql && echo Success! && pause

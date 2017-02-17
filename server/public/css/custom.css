@@ -1,0 +1,349 @@
+@font-face {
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(https://fonts.gstatic.com/s/opensans/v13/cJZKeOuBrn4kERxqtaUH3VtXRa8TVwTICgirnJhmVJw.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+@font-face {
+  font-family: Ubuntu;
+  font-style: normal;
+  font-weight: 400;
+  src: local('Ubuntu'), url(https://fonts.gstatic.com/s/ubuntu/v9/sDGTilo5QRsfWu6Yc11AXg.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+nav.{
+	box-shadow:0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+}
+
+nav.links{
+    height:45px;
+    background-color: #868686;
+}
+
+div.main{
+    background-color: #3cb878;
+    border-style: solid;
+    border-color: #868686;
+    border-width: 5px;
+    border-top: 0px;
+    border-bottom: 0px;
+}
+#ticketForm{
+	font-family:Open Sans;
+	text-shadow: .5px .5px 5px gray;
+}
+#ticketsTable{
+	font-family:Ubuntu;
+    font-size: 110%;
+	text-shadow: .5px .5px 5px gray;
+}
+
+div.viewHead{
+    background-color: #dbdbdb;
+    height:50px;
+    margin-bottom: 0px;
+}
+
+div.viewNav{
+    background-color: #868686;
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+div.description{
+    background-color: #FFFFFF;
+    height:200px;
+    overflow-y: auto;
+    padding:5px;
+    margin-bottom: 50px;
+}
+
+input.name{
+    width: 49%;
+}
+
+.btn{
+    background-color:#000000;
+}
+
+.btn:hover{
+    background-color: #868686;
+}
+
+.ticket:hover {
+    cursor: pointer;
+}
+
+table.highlight>tbody>tr:hover {
+    background-color: #ddd;
+}
+
+#viewTicketTitle{
+    text-align:center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#viewTicketClient{
+    text-align:right;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#textAreaBorder {
+    background: white;
+    padding: 1rem;
+}
+
+#textAreaBorder > textarea {
+    margin-bottom: 0;
+}
+
+#file {
+    display: none;
+}
+
+label[for=file] {
+    font-size: inherit;
+}
+
+#formSubmit {
+    float: right;
+}
+
+table{
+    background-color:white;
+    margin-bottom: 50px;
+    margin-top: 30px;
+}
+
+td.ticketNum{
+    padding-left: 2em;
+}
+
+body{
+    background-color: #dbdbdb;
+}
+
+nav {
+    background-color: #3c3c3c;
+    padding: 10px;
+}
+
+h4 {
+    font-family:Ubuntu;
+    font-weight: 400;
+    text-shadow: .5px .5px 5px gray;
+}
+
+h6 {
+    font-family:Open Sans;
+    font-weight: 400;
+}
+
+
+/*stuff below here is by Liam so it could be wrong*/
+input[type=email], input[type=text], input[type=password] {
+	background-color: white;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+	
+}
+textarea{
+	background-color: white;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+	resize: vertical;
+	height: auto;
+}
+
+label[for=usermail], label[for=password] {
+    font-size: inherit;
+	color: inherit;
+	
+}
+
+label{
+    font-size: inherit;
+	color: black;
+	
+}
+
+select{
+background-color: white;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+div.loginForm
+{
+	display: block;
+	text-align: center;
+	width: 40%;
+	margin-left: auto;
+    margin-right: auto;
+}
+div.myModal{
+	
+overflow: visible;
+height: 100%
+}
+form[for=Login]
+{
+	width: 50%;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.login {
+    line-height: 3em;
+    color: black;
+	position:absolute;
+    width: 8%;
+	left: 90%;
+    text-align: center;
+	height: 50px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.ticketViewer .button {
+    background-color: #3c3c3c; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+	width: 25%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    float: left;
+}
+
+.ticketViewer .button:hover {
+    background-color: #494949;
+}
+
+.ticketViewer p {
+    background-color: #dbdbdb;
+	height: 200px;
+}
+.tm-header h2{
+	background-color: #dbdbdb;
+	color: inherit;
+	margin-bottom: 0;
+	float: left;
+	width: 100%;
+}
+
+#ticketTable td, #ticketTable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#ticketTable td:nth-child(even){background-color: f2f2f2;}
+#ticketTable tr:hover {background-color: #ddd;}
+#ticketTable th{
+	 padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #3c3c3c;
+    color: white;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+   
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	min-height: 100%; /* needed to cover whole page */
+	overflow: visible;
+}
+
+/* Modal Content */
+.modal-content {
+  position: relative;
+    background-color: #f5f5f5;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 50%;
+	height: 75vh;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 5px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+	overflow-y: auto;
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 10px 16px;
+    background-color: #5cb85c;
+    color: white;
+	
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #dbdbdb;
+    color: #dbdbdb;
+	
+}
+	
