@@ -1,0 +1,5 @@
+{
+    "mysql-username": "root",
+    "mysql-password": "password",
+    "port": "80"
+}

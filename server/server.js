@@ -5,12 +5,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var mysql = require('mysql');
+var config = require('../config.json');
 
 // initialize the MySQL database connection
 var mysqlConnection = mysql.createConnection({
 	host: 'localhost',
-	user: 'root',
-	password: ''
+	user: config['mysql-username'] || 'root',
+	password: config['mysql-password'] || ''
 });
 mysqlConnection.query('USE smartticket;');
 
@@ -33,12 +34,7 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 require('./routes.js')(app, passport, express, mysqlConnection);
 
-try {
-    app.listen(80, function () {
-        console.log('Example app listening on port 80!')
-    });
-} catch (e) {
-    app.listen(8080, function() {
-        console.log('Example app listening on port 8080!')
-    });
-}
+var port = parseInt(config['port']) || 80;
+app.listen(port, function () {
+    console.log('Example app listening on port %d!', port);
+});
