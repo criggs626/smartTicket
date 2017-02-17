@@ -1,5 +1,5 @@
 // config/passport.js
-				
+
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
 
@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
 				  password : ''
 				});
 
-connection.query('USE smartticket');	
+connection.query('USE smartticket;');	
 
 // expose this function to our app using module.exports
 module.exports = function(passport) {
@@ -33,7 +33,7 @@ module.exports = function(passport) {
             done(err, rows[0]);
         });
     });
-	
+
 
     // =========================================================================
     // LOCAL LOGIN =============================================================
@@ -54,17 +54,17 @@ module.exports = function(passport) {
                 return done(err);
 			 if (!rows.length) {
                 return done(null, false, console.log("no user found")); // req.flash is the way to set flashdata using connect-flash
-            } 
-			
+            }
+
 			// if the user is found but the password is wrong
             if (!( rows[0]["PASSWORD"].toString().substring(0, 32) == md5(password)))
                 return done(null, false, console.log("Wrong Password")); // create the loginMessage and save it to session as flashdata
-			
+
             // all is well, return successful user
-            return done(null, rows[0]);			
-		
+            return done(null, rows[0]);
+
 		});
-		
+
 
 
     }));

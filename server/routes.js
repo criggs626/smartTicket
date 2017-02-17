@@ -19,10 +19,10 @@ module.exports = function (app, passport, express) {
     app.use('/home', isLoggedIn, function (req, res) {
         send(res, HOME);
     });
+
     app.get('/login', function (req, res) {
         send(res, LOGIN);
     });
-
     app.post('/login', passport.authenticate('local-login', {
         successRedirect: '/home', // redirect to the secure profile section
         failureRedirect: '/' // redirect back to the signup page if there is an error
@@ -30,7 +30,6 @@ module.exports = function (app, passport, express) {
 
     app.get('/logout', function (req, res) {
         req.logout();
-//        res.sendFile(path.join(__dirname, ROOT_DIR, HOME));
         res.redirect("/");
     });
     app.post('/insert', function (req, res) {
@@ -65,7 +64,7 @@ module.exports = function (app, passport, express) {
             console.log("INSERT INTO " + post.tab + " (" + catagories + ") VALUES(" + values + ");");
         }
          if(catagories&&values){
-         connection.query("INSERT INTO "+post.tab+" ("+catagories+") VALUES("+values+");");	
+         connection.query("INSERT INTO "+post.tab+" ("+catagories+") VALUES("+values+");");
          }
     });
     app.use('/', function (req, res) {
@@ -74,14 +73,14 @@ module.exports = function (app, passport, express) {
 
     function isLoggedIn(req, res, next) {
         return next();
-        // if user is authenticated in the session, carry on 
+        // if user is authenticated in the session, carry on
         if (req.isAuthenticated())
             return next();
 
         // if they aren't redirect them to the home page
         res.redirect("/");
     }
-    
+
     function send(request, file) {
         request.sendFile(path.join(__dirname, ROOT_DIR, file));
     }
