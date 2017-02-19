@@ -3,6 +3,8 @@ const HOME = "TicketManagerHome.html";
 const LOGIN = "TicketManagerLogin.html";
 const INDEX = "SubmitTicket.html";
 
+const DEFAULT_SIZE = 50;
+
 
 module.exports = function (app, passport, express, mysqlConnection) {
     var path = require('path');
@@ -59,6 +61,30 @@ module.exports = function (app, passport, express, mysqlConnection) {
              mysqlConnection.query("INSERT INTO "+post.tab+" ("+catagories+") VALUES("+values+");");
          }
     });
+
+    app.get('/get_tickets', function(req, res) {
+        var p = parseInt(req.query.page) || 0;
+        var s = parseInt(req.query.size) || DEFAULT_SIZE;
+        var start = p * s;
+        var query = 'SELECT ticket_id as id, title, description, open_status, '
+            + 'priority, tickets.department as department, '
+            + 'clients.email as client_email, categories.name as category, '
+            + 'category as category_id, asignee_id as assignee_ids '
+            + 'FROM tickets '
+            + 'LEFT JOIN clients ON clients.client_id=tickets.client '
+            + 'LEFT JOIN categories ON categories.category_id=tickets.category '
+            + 'LIMIT ' + start + ', ' + s + ';'
+        mysqlConnection.query(query, function(err, results, fields) {
+            if (err) return callback(err, null);
+            res.json(results);
+        });
+    });
+
+    app.post('/submit_ticket', function(req, res) {
+        console.log('TODO');
+    });
+
+    // make sure that this one is last
     app.use('/', function (req, res) {
         send(res, INDEX);
     });
