@@ -8,6 +8,8 @@ const DEFAULT_SIZE = 50;
 
 module.exports = function (app, passport, express, mysqlConnection) {
     var path = require('path');
+    var chooseManager = require('../machinelearning/chooseTicketManager.js')(
+        mysqlConnection);
 
     app.use(express.static(ROOT_DIR));
     app.use('/home', isLoggedIn, function (req, res) {
@@ -26,40 +28,69 @@ module.exports = function (app, passport, express, mysqlConnection) {
         req.logout();
         res.redirect("/");
     });
-    app.post('/insert', function (req, res) {
-        post = {
-            tab: req.body.table,
-            cats: req.body.categories,
-            vals: req.body.values
-        };
-		res.send(post);
-        var catagories;
-        var values="";
-        if (post.cats.length == post.vals.length) {
-            catagories = post.cats.join(",");
-			console.log(parseInt(post.vals[0]));
-            if (isNaN(parseInt(post.vals[0]))) {
-                values += mysqlConnection.escape(post.vals[0]) + ',';
-            } else {
-                values += post.vals[0] + ",";
-            }
-            for (i = 1; i < post.vals.length - 1; i++) {
-                if (isNaN(parseInt(post.vals[i]))) {
-                    values += mysqlConnection.escape(post.vals[i]);
-                } else {
-                    values += post.vals[i];
-                }
-            }
-            if (isNaN(parseInt(post.vals[i]))) {
-                values += mysqlConnection.escape(post.vals[i]);
-            } else {
-                values += post.vals[i];
-            }
-            console.log("INSERT INTO " + post.tab + " (" + catagories + ") VALUES(" + values + ");");
+    app.post('/submit_ticket', function (req, res) {
+        const VALID_EMAIL = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+        var clientEmail = req.body.contact.trim();
+        var title = req.body.summary.trim();
+        var description = req.body.description.trim();
+        var ticketType = req.body['ticket type'].trim();
+        var attachment = req.body.attachment;
+
+        if (!VALID_EMAIL.test(clientEmail)) {
+            res.redirect("/");
+            // TODO: notify user of failure
+            console.error("Invalid email provided.");
+            return;
         }
-         if (catagories && values) {
-             mysqlConnection.query("INSERT INTO "+post.tab+" ("+catagories+") VALUES("+values+");");
-         }
+        if (description == "") {
+            res.redirect("/");
+            // TODO: notify user of failure
+            console.error("No description provided.");
+            return;
+        }
+        // add user to database if they don't exist
+        clientEmail = mysqlConnection.escape(clientEmail);
+        var query = "INSERT IGNORE INTO clients (email) VALUES ("
+            + clientEmail + ");";
+        mysqlConnection.query(query, function(err, results, fields) {
+            if (err) {
+                console.error("Unknown MySQL error occured: " + err);
+                return;
+            }
+            var query = "SELECT client_id FROM clients WHERE email="
+                + clientEmail + ";";
+            mysqlConnection.query(query, function(err, results, fields) {
+                if (err) {
+                    console.error("Unknown MySQL error occured: " + err);
+                    return;
+                }
+                // on success, add ticket to database
+                var clientID = results[0].client_id;
+                // get which ticket manager should deal with this ticket
+                var managerID = chooseManager.choose({
+                    clientEmail: clientEmail,
+                    title: title,
+                    description: description
+                });
+                // add ticket to database
+                var query = "INSERT INTO tickets (client, title, description, "
+                    + "asignee_id) VALUES (" + clientID + ", "
+                    + mysqlConnection.escape(title) + ", "
+                    + mysqlConnection.escape(description) + ", "
+                    + managerID + ");";
+                mysqlConnection.query(query, function(err, results, fields) {
+                    // return to webpage
+                    res.redirect("/");
+                    if (!err) {
+                        // TODO: notify user of success, was accepted
+                        console.log("Ticket succesfully submitted.");
+                    } else {
+                        // TODO: notify user of failure
+                        console.error("Failed to add ticket to database.");
+                    }
+                });
+            });
+        });
     });
 
     app.get('/get_tickets', function(req, res) {
