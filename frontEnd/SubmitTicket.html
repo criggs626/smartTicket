@@ -44,17 +44,11 @@
 
 					<li><label for="ticket type">Ticket Type:</label>
 
-					<select name="ticket type" class="browser-default">
-						<option value="ticket issue 1">Ticket Issue 1</option>
-						<option value="ticket issue 2">Ticket Issue 2</option>
-						<option value="ticket issue 3">Ticket Issue 3</option>
-						<option value="ticket issue 4">Ticket Issue 4</option>
-						<option value="ticket issue 5">Ticket Issue 5</option>
+					<select name="ticket type" class="browser-default" id="categories">
+						
 					</select> </li>
 
-					<li><label for="attachment">Attachment:</label>
-					</br>
-					<input type="file" name="attachment" placeholder=""></li>
+					
 					</br>
 					<input type="submit" value="Submit Ticket"></li>
 				</ul>
@@ -71,6 +65,18 @@
 
 
         </main>
+		<script>
+		function categoryDrop(dropDown, callback) {
+    dropdown = document.getElementById(dropDown);
+    $.get("/get_categories", function (categories) {
+        for (i = 0; i < categories.length; i++) {
+            dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '">' + categories[i].NAME + '</option>';
+        }
+        callback();
+    });
+}
+categoryDrop("categories")
+</script>
 
     </body>
 </html>
