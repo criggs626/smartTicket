@@ -57,7 +57,7 @@ function sortTable(n) {
 /*Filters ticket table by name of user*/
 /*(could possibly be expanded to search by ticket manager or ticket number)*/
 function myFunction() {
-    // Declare variables 
+    // Declare variables
     var input, filter, table, tr, td, i;
     input = document.getElementById("myInput");
     filter = input.value.toUpperCase();
@@ -90,7 +90,7 @@ var replyBTN = document.getElementById("reply");
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal 
+// When the user clicks the button, open the modal
 newBTN.onclick = function () {
     newModal.style.display = "block";
 }
@@ -113,3 +113,30 @@ window.onclick = function (event) {
         replyModal.style.display = "none";
     }
 }
+
+// DataTables code
+$("#ticketTable").DataTable( {
+    paging: true,
+    // ajax: function (data, callback, settings) {
+    //     console.log(data, settings);
+    //     callback(
+    //         JSON.parse("{'foo': 'bar'}")
+    //     );
+    // }
+    columns: [
+        { data: "id" },
+        { data: "client_email" },
+        { data: "title" },
+        { data: "assignee_ids" },
+        { data: "open_status" }
+    ],
+    ajax: {
+        url: "/get_tickets",
+        dataSrc: "",
+        type: "GET",
+        data: {
+            size: 10,
+            page: 0
+        }
+    }
+});
