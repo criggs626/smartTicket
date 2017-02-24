@@ -89,9 +89,6 @@ var newBTN = document.getElementById("newBTN");
 
 var replyBTN = document.getElementById("reply");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
 // When the user clicks the button, open the modal
 newBTN.onclick = function () {
     newModal.style.display = "block";
@@ -114,11 +111,11 @@ replyBTN.onclick = function () {
 }
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function () {
+$(".close").click(function (){
     newModal.style.display = "none";
 
     replyModal.style.display = "none";
-}
+});
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
