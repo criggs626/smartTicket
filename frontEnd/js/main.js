@@ -1,5 +1,6 @@
 var firstReply = true;
 var firstNew = true;
+var firstAssign = true;
 /*Sort table alphanumberically by column*/
 function sortTable(n) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -81,13 +82,16 @@ function myFunction() {
 
 // Get the modal
 var newModal = document.getElementById('newModal');
-
 var replyModal = document.getElementById('replyModal');
+var assignModal = document.getElementById('assignModal');
+var confirmation = document.getElementById('confirmModal');
 
 // Get the button that opens the modal
 var newBTN = document.getElementById("newBTN");
-
 var replyBTN = document.getElementById("reply");
+var assignee = document.getElementById("assignee");
+var accept = document.getElementById("accept");
+var closeTicket = document.getElementById("close");
 
 // When the user clicks the button, open the modal
 newBTN.onclick = function () {
@@ -110,18 +114,36 @@ replyBTN.onclick = function () {
     }
 }
 
-// When the user clicks on <span> (x), close the modal
-$(".close").click(function (){
-    newModal.style.display = "none";
+assignee.onclick = function () {
+    assignModal.style.display = "block";
+    if (firstAssign) {
+        asigneeDrop("assign");
+        firstAssign = false;
+    }
+}
 
+accept.onclick=function(){
+    confirmation.style.display = "block";
+}
+
+closeTicket.onclick=function(){
+    confirmation.style.display = "block";
+}
+// When the user clicks on <span> (x), close the modal
+$(".close").click(function () {
+    newModal.style.display = "none";
     replyModal.style.display = "none";
+    assignModal.style.display = "none";
+    confirmation.style.display = "none";
 });
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
-    if (event.target == newModal || event.target == replyModal) {
+    if (event.target == newModal || event.target == replyModal || event.target == assignModal || event.target == confirmation) {
         newModal.style.display = "none";
         replyModal.style.display = "none";
+        assignModal.style.display = "none";
+        confirmation.style.display = "none";
     }
 }
 
@@ -162,7 +184,7 @@ var table = $("#ticketTable").DataTable({
     searching: false
 })
 
-$("#ticketTable tbody").on("click", "tr", function(event) {
+$("#ticketTable tbody").on("click", "tr", function (event) {
     var data = table.row(this).data();
     $("#ticketViewer > .description").text(data.description);
     $("#ticketViewer > .title").text(data.title);

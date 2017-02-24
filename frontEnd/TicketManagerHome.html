@@ -77,9 +77,9 @@
 
                         <div id="ticketViewer" class="ticketViewer">
                             <button class="button" id="reply">Reply</button>
-                            <button class="button">Assign</button>
-                            <button class="button">Accept</button>
-                            <button class="button">Close</button>
+                            <button class="button" id="assignee">Assign</button>
+                            <button class="button" id="accept">Accept</button>
+                            <button class="button" id="close">Close</button>
                             <div class=client_email>
 
                             </div>
@@ -178,6 +178,57 @@
                     </div>
                 </div>
 
+            </div>
+			
+			
+			<!-- The Assign Modal -->
+            <div id="assignModal" class="modal">
+
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="close">X</span>
+                        </br>
+                        <h5>Please complete the form.</h5>
+                    </div>
+                    <div class="modal-body">
+
+
+                        <div class="TicketForm">
+
+                            <form name="Ticket" action="ticket_submit" method="post" accept-charset="utf-8">
+                                <ul>
+                                    <li><label for="contact">Assignee:</label>
+                                        <select name="ticket type" class="browser-default" id="assign">
+
+                                        </select> </li>
+                                    </br>
+                                    <input type="submit" value="Assign users"></li>
+                                </ul>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+			
+			<!-- The Confirmation Modal -->
+            <div id="confirmModal" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="close">X</span>
+                        </br>
+                        <h5>Are you sure you would like to continue? </h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="TicketForm">
+						<br>
+							<button class="btn">Cancel</button>
+							<button class="btn">Confirm</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </body>
