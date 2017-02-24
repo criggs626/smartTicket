@@ -66,13 +66,12 @@
 
         </main>
 		<script>
-		function categoryDrop(dropDown, callback) {
+		function categoryDrop(dropDown) {
     dropdown = document.getElementById(dropDown);
     $.get("/get_categories", function (categories) {
         for (i = 0; i < categories.length; i++) {
             dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '">' + categories[i].NAME + '</option>';
         }
-        callback();
     });
 }
 categoryDrop("categories")

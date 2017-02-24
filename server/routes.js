@@ -33,7 +33,6 @@ module.exports = function (app, passport, express, mysqlConnection) {
 		var title = req.body.summary.trim();
 		var description = req.body.description.trim();
 		var ticketType = req.body['ticket type'].trim();
-		var attachment = req.body.attachment;
 
 		if (!VALID_EMAIL.test(clientEmail)) {
 			res.redirect("/");
@@ -73,7 +72,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
 				});
 				// add ticket to database
 				var query = "INSERT INTO tickets (client, title, description, "
-						+ "asignee_id) VALUES (" + clientID + ", "
+						+ "assignee_id) VALUES (" + clientID + ", "
 						+ mysqlConnection.escape(title) + ", "
 						+ mysqlConnection.escape(description) + ", "
 						+ managerID + ");";
@@ -98,7 +97,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
 		var query = 'SELECT ticket_id as id, title, description, open_status, '
 				+ 'priority, tickets.department as department, '
 				+ 'clients.email as client_email, categories.name as category, '
-				+ 'category as category_id, asignee_id as assignee_ids '
+				+ 'category as category_id, assignee_id as assignee_ids '
 				+ 'FROM tickets '
 				+ 'LEFT JOIN clients ON clients.client_id=tickets.client '
 				+ 'LEFT JOIN categories ON categories.category_id=tickets.category '
