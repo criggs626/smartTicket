@@ -111,6 +111,23 @@ module.exports = function (app, passport, express, mysqlConnection) {
             res.json(results);
         });
     });
+	
+	app.get('/get_categories',isLoggedIn, function(req, res) {
+        var query = 'SELECT CATEGORY_ID, NAME FROM categories;'
+        mysqlConnection.query(query, function(err, results, fields) {
+            if (err) return callback(err, null);
+            res.json(results);
+        });
+    });
+	
+	app.get('/get_assignee',isLoggedIn, function(req, res) {
+        var query = 'SELECT USER_ID, FNAME,LNAME FROM users ORDER BY FNAME;'
+        mysqlConnection.query(query, function(err, results, fields) {
+            if (err) return callback(err, null);
+            res.json(results);
+        });
+    });
+	
 
     // make sure that this one is last
     app.use('/', function (req, res) {

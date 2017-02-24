@@ -1,3 +1,5 @@
+var firstReply=true;
+var firstNew=true;
 /*Sort table alphanumberically by column*/
 function sortTable(n) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -93,10 +95,22 @@ var span = document.getElementsByClassName("close")[0];
 // When the user clicks the button, open the modal 
 newBTN.onclick = function () {
     newModal.style.display = "block";
+	if(firstNew){
+		categoryDrop("newCats",function() {
+			asigneeDrop("newAssign");
+		});
+		firstNew=false;
+	}
 }
 
 replyBTN.onclick = function () {
     replyModal.style.display = "block";
+	if(firstReply){
+		categoryDrop("replyCats",function() {
+			asigneeDrop("replyAssign");
+		});
+		firstReply=false;
+	}
 }
 
 // When the user clicks on <span> (x), close the modal
@@ -112,4 +126,23 @@ window.onclick = function (event) {
         newModal.style.display = "none";
         replyModal.style.display = "none";
     }
+}
+
+function categoryDrop(dropDown,callback){
+	dropdown=document.getElementById(dropDown);
+	$.get("/get_categories",function(categories){
+		for (i=0;i<categories.length;i++){
+			dropdown.innerHTML+='<option value="'+categories[i].CATEGORY_ID+'">'+categories[i].NAME+'</option>';
+		}
+		callback();
+	});
+}
+
+function asigneeDrop(dropDown){
+	dropdown=document.getElementById(dropDown);
+	$.get("/get_assignee",function(categories){
+		for (i=0;i<categories.length;i++){
+			dropdown.innerHTML+='<option value="'+categories[i].USER_ID+'">'+categories[i].FNAME+" "+categories[i].LNAME+'</option>';
+		}
+	});
 }
