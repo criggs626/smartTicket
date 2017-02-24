@@ -4,7 +4,7 @@ const LOGIN = "TicketManagerLogin.html";
 const INDEX = "SubmitTicket.html";
 
 const DEFAULT_SIZE = 50;
-
+const DEBUG=true;
 
 module.exports = function (app, passport, express, mysqlConnection) {
     var path = require('path');
@@ -12,6 +12,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
         mysqlConnection);
 
     app.use(express.static(ROOT_DIR));
+	
     app.use('/home', isLoggedIn, function (req, res) {
         send(res, HOME);
     });
@@ -111,10 +112,6 @@ module.exports = function (app, passport, express, mysqlConnection) {
         });
     });
 
-    app.post('/submit_ticket', function(req, res) {
-        console.log('TODO');
-    });
-
     // make sure that this one is last
     app.use('/', function (req, res) {
         send(res, INDEX);
@@ -123,7 +120,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
     function isLoggedIn(req, res, next) {
         // return next();
         // if user is authenticated in the session, carry on
-        if (req.isAuthenticated())
+        if (req.isAuthenticated() || DEBUG)
             return next();
 
         // if they aren't redirect them to the home page
