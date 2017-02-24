@@ -33,12 +33,11 @@ div.main{
 }
 #ticketForm{
 	font-family:Open Sans;
-	text-shadow: .5px .5px 5px gray;
+
 }
 #ticketsTable{
 	font-family:Ubuntu;
     font-size: 110%;
-	text-shadow: .5px .5px 5px gray;
 }
 
 div.viewHead{
