@@ -156,7 +156,7 @@ input[type=email], input[type=text], input[type=password] {
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
-	
+
 }
 textarea{
 	background-color: white;
@@ -173,13 +173,13 @@ textarea{
 label[for=usermail], label[for=password] {
     font-size: inherit;
 	color: inherit;
-	
+
 }
 
 label{
     font-size: inherit;
 	color: black;
-	
+
 }
 
 select{
@@ -201,7 +201,7 @@ div.loginForm
     margin-right: auto;
 }
 div.myModal{
-	
+
 overflow: visible;
 height: 100%
 }
@@ -245,10 +245,21 @@ form[for=Login]
     background-color: #494949;
 }
 
-.ticketViewer p {
-    background-color: #dbdbdb;
+.ticketViewer .description {
 	height: 200px;
 }
+
+.ticketViewer div {
+    width: 100%;
+    background-color: #dbdbdb;
+    padding: .5em;
+    box-sizing: border-box;
+}
+
+.displaynone {
+    display: none;
+}
+
 .tm-header h2{
 	background-color: #dbdbdb;
 	color: inherit;
@@ -281,7 +292,7 @@ form[for=Login]
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-   
+
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 	min-height: 100%; /* needed to cover whole page */
@@ -307,7 +318,7 @@ form[for=Login]
 
 /* Add Animation */
 @-webkit-keyframes animatetop {
-    from {top:-300px; opacity:0} 
+    from {top:-300px; opacity:0}
     to {top:0; opacity:1}
 }
 
@@ -335,7 +346,7 @@ form[for=Login]
     padding: 10px 16px;
     background-color: #3CB878;
     color: white;
-	
+
 }
 
 .modal-body {padding: 2px 16px;}
@@ -344,6 +355,29 @@ form[for=Login]
     padding: 2px 16px;
     background-color: #dbdbdb;
     color: #dbdbdb;
-	
+
 }
-	
+
+
+/* adjustments to DataTable */
+.dataTables_filter {
+    width: 100% !important;
+    text-align: left !important;
+}
+
+.dataTables_filter label {
+    color: transparent;
+}
+
+.dataTables_filter input[type=search] {
+    color: #333;
+    background: white;
+    margin-left: inherit !important;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.clickedRow > td {
+    background: #AAA !important;
+}
