@@ -89,8 +89,11 @@ INSERT INTO DEPARTMENTS(NAME) VALUES ("Netowrking");
 INSERT INTO DEPARTMENTS(NAME) VALUES ("Licensing");
 INSERT INTO DEPARTMENTS(NAME) VALUES ("HR");
 
-INSERT INTO USERS(PERMISSION,FNAME,LNAME,BIRTH_DAY,WORK_EMAIL,PERSONAL_EMAIL,PHONE,PASSWORD) VALUES(0,"Caleb","Riggs","1997-11-04","criggs2892@flpoly.org","madscientist626@verion.net","7277102842",MD5("password"));
-INSERT INTO USERS(PERMISSION,FNAME,LNAME,BIRTH_DAY,WORK_EMAIL,PERSONAL_EMAIL,PHONE,PASSWORD) VALUES(1,"Jared","Davis","1990-01-01","jareddavis0237@flpoly.org","jdavis@gmail.com","8139999999",MD5("password"));
+INSERT INTO USERS(PERMISSION,FNAME,LNAME,BIRTH_DAY,WORK_EMAIL,PERSONAL_EMAIL,PHONE,PASSWORD) VALUES(0,"Caleb","Riggs","1997-11-04","criggs2892@flpoly.org","madscientist626@verizon.net","7277102842",MD5("password"));
+INSERT INTO USERS(PERMISSION,FNAME,LNAME,BIRTH_DAY,WORK_EMAIL,PERSONAL_EMAIL,PHONE,PASSWORD) VALUES(1,"Jared","Davis","1991-04-23","jareddavis0237@flpoly.org","jdavis@gmail.com","8139999999",MD5("password"));
+INSERT INTO USERS(PERMISSION,FNAME,LNAME,BIRTH_DAY,WORK_EMAIL,PERSONAL_EMAIL,PHONE,PASSWORD) VALUES(0,"Gabriel","Hutchison","1997-08-11","ghutchison2600@flpoly.org","","8138082533",MD5("password"));
+INSERT INTO USERS(PERMISSION,FNAME,LNAME,BIRTH_DAY,WORK_EMAIL,PERSONAL_EMAIL,PHONE,PASSWORD) VALUES(1,"William","Bell","1996-06-21","williambell0161@flpoly.org","","12345678900",MD5("password"));
+INSERT INTO USERS(PERMISSION,FNAME,LNAME,BIRTH_DAY,WORK_EMAIL,PERSONAL_EMAIL,PHONE,PASSWORD) VALUES(1,"Henrique","Bolivar","1996-02-21","henriquebolivar1000@flpoly.org","","12345678900",MD5("calebRox"));
 
 INSERT INTO CLIENTS (EMAIL) VALUES("test@gmail.com");
 INSERT INTO CLIENTS (EMAIL) VALUES("secondTest@verizon.net");
@@ -101,6 +104,7 @@ INSERT INTO CATEGORIES(NAME) VALUES("Unknown");
 INSERT INTO CATEGORIES(NAME) VALUES("End User");
 INSERT INTO CATEGORIES(NAME) VALUES("Software Request");
 
-INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(1,1,"Network Issues","I am having issues connecting to the internet on my laptop, I wonder if it is something to do with the security settings? Please if you could take a look at it and let. I have a class later and internet is necessary","[1,2]",TRUE,3);
-INSERT INTO TICKETS (CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(1,"Issue","I can't get it to work... I just can't...","[1]",TRUE,5);
-INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(2,1,"Office","I need to have access to microsoft office on my computer. If you could make that work that would be great.","[2]",TRUE,2);
+INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(2,1,"Network Issues","I am having issues connecting to the internet on my laptop, I wonder if it is something to do with the security settings? Please if you could take a look at it and let. I have a class later and internet is necessary","[1,2]",TRUE,3);
+INSERT INTO TICKETS (CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(2,"Issue","I can't get it to work... I just can't...","[1]",TRUE,5);
+INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(3,1,"Office","I need to have access to microsoft office on my computer. If you could make that work that would be great.","[2]",TRUE,2);
+INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(1,1,"Long ticket test","Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum","[3]",TRUE,2);
