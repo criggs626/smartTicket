@@ -282,6 +282,56 @@ form[for=Login]
     color: white;
 }
 
+#deptTable {
+	margin-top: -30px;
+	float: left;
+	width: 25%;
+}
+
+#deptTable th{
+	background-color: #3c3c3c;
+    color: white;
+}
+
+#managerTable {
+	
+	float: right;
+	width: 70%;
+}
+
+#managerTable th{
+	background-color: #3c3c3c;
+    color: white;
+}
+#managersIMG{
+	margin-left: 10%;
+	float: left;
+	width: 100px;
+	height: 100px;
+	
+}
+
+
+#settingsTable {
+	clear: left;
+	margin-left: 20%;
+	width: 60%;
+}
+
+#settingsTable th{
+	background-color: #3c3c3c;
+    color: white;
+}
+
+#settingsIMG{
+	margin-top: -20px;
+	margin-left: 34%;
+	float: left;
+	width: 100px;
+	height: 100px;
+	
+}
+
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
