@@ -56,36 +56,41 @@
 
                         <!-- Trigger/Open The Modal -->
                         <button id="newBTN">Create Ticket</button>
+                        <br><br>
 
-                        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search by name..">
-
-                        <div class="tm-header">
-                            <h2>Active Tickets</h2>
-                        </div>
+                        <!-- The primary table that the user interacts with -->
                         <table id="ticketTable" class="display">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>User</th>
                                     <th>Summary</th>
-                                    <th>Ticket Manager</th>
-                                    <th>Updated</th>
+                                    <th>Category</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- this will be dynamically filled -->
                             </tbody>
                         </table>
+                        <br>
 
 
-                        <div class="ticketViewer">
+                        <div id="ticketViewer" class="ticketViewer">
                             <button class="button" id="reply">Reply</button>
                             <button class="button">Assign</button>
                             <button class="button">Accept</button>
                             <button class="button">Close</button>
-                            <p>
-                                Hello, I keep seeing a green light flashing and I'm not sure why. If you can let me know why this may be happening that would be helpful.
-                            </p>
+                            <div class=client_email>
+
+                            </div>
+                            <div class=title>
+
+                            </div>
+                            <div class=description>
+                                Select a ticket to have its details displayed here.
+                            </div>
+                            <div class="displaynone ticket_id">
+                            </div>
                         </div>
                     </section>
 

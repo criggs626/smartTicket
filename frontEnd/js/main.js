@@ -148,19 +148,30 @@ function asigneeDrop(dropDown) {
 }
 
 // DataTables code
-$("#ticketTable").DataTable({
+var table = $("#ticketTable").DataTable({
     paging: true,
     columns: [
         {data: "id"},
         {data: "client_email"},
         {data: "title"},
-        {data: "assignee_ids"},
-        {data: "open_status"}
+        {data: "category"}
     ],
     ajax: {
         url: "/get_tickets",
         dataSrc: "",
         type: "GET"
     },
-    lengthChange: false
+    lengthChange: false,
+    searching: false
+})
+
+$("#ticketTable tbody").on("click", "tr", function(event) {
+    var data = table.row(this).data();
+    $("#ticketViewer > .description").text(data.description);
+    $("#ticketViewer > .title").text(data.title);
+    $("#ticketViewer > .client_email").text(data.client_email);
+    $("#ticketViewer > .ticket_id").text(data.id);
+    // indicate that the row has been selected (for css)
+    $(".clickedRow").removeClass("clickedRow");
+    $(this).addClass("clickedRow");
 });
