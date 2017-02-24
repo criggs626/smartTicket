@@ -1,155 +1,152 @@
 <!DOCTYPE html>
 <html lang=en>
-    <head>
-        <meta charset=utf-8>
-        <title>SmartTicket - Home</title>
 
-        <link rel=stylesheet href=	css/materialize.min.css>
-        <link rel=stylesheet href=	css/custom.css>
+<head>
+    <meta charset=utf-8>
+    <title>SmartTicket - Home</title>
 
-        <script src=	js/jquery.min.js></script>
-        <script src=	js/materialize.min.js></script>
+    <link rel=stylesheet href=css/materialize.min.css>
+    <link rel=stylesheet href=css/custom.css>
 
-    </head>
-    <body><nav>
-            <img src="	img/logo.png" height="35px">
-        </nav>
-        <nav class="links">
+    <script src=js/jquery.min.js></script>
+    <script src=js/materialize.min.js></script>
 
-        </nav>
+</head>
 
-        <main>
-            <div class="row">
-                <div class="col s10 offset-s1 main">
-                    <section id=ticketsTable>
-                        <table class="striped highlight">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <img src="	img/ic_group_black_48dp.png">
-                                        <a href= "http://sp17-smartticket.hpc.lab/ticket/php/view_tickets.php"
-                                           target=_self>
+<body>
+    <nav>
+        <img src="img/logo.png" height="35px">
+    </nav>
+    <nav class="links">
+
+    </nav>
+
+    <main>
+        <div class="row">
+            <div class="col s10 offset-s1 main">
+                <section id=ticketsTable>
+                    <table class="striped highlight">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <img src="	img/ic_group_black_48dp.png">
+                                    <a href="http://sp17-smartticket.hpc.lab/ticket/php/view_tickets.php" target=_self>
                                             Tickets
                                         </a>
-                                    </th>
-                                    <th>
-                                        <img src="	img/ic_work_black_48dp_2x.png" width= "48px" height= "48px">
-                                        Ticket&nbsp;Managers
-                                    </th>
-                                    <th>
-                                        <img src="	img/ic_poll_black_48dp.png" width= "48px" height= "48px">
-                                        Reports
-                                    </th>
-                                    <th>
-                                        <img src="	img/ic_pages_black_48dp.png" width= "48px" height= "48px">
-                                        FAQ
-                                    </th>
-                                    <th>
-                                        <img src="	img/ic_settings_black_48dp_2x.png" width= "48px" height= "48px">
-                                        Settings
-                                    </th>
-                                </tr>
-                            </thead>
-                    </section>
-
-                </div>
-            </div>
+                                </th>
+                                <th>
+                                    <img src="	img/ic_work_black_48dp_2x.png" width="48px" height="48px"> Ticket&nbsp;Managers
+                                </th>
+                                <th>
+                                    <img src="	img/ic_poll_black_48dp.png" width="48px" height="48px"> Reports
+                                </th>
+                                <th>
+                                    <img src="	img/ic_pages_black_48dp.png" width="48px" height="48px"> FAQ
+                                </th>
+                                <th>
+                                    <img src="	img/ic_settings_black_48dp_2x.png" width="48px" height="48px"> Settings
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
 
 
-            <table id="ticketTable">
-                <!-- Trigger/Open The Modal -->
-                <button id="newBTN">Create Ticket</button>
+                    <!-- Trigger/Open The Modal -->
+                    <button id="newBTN">Create Ticket</button>
 
-                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search by name..">
+                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search by name..">
 
-                <div class="tm-header">
-                    <h2>Active Tickets</h2>		
-                </div>
-                <tr>
-                    <!--When a header is clicked, run the sortTable function, with a parameter,
+                    <div class="tm-header">
+                        <h2>Active Tickets</h2>
+                    </div>
+                    <table id="ticketTable">
+                        <tr>
+                            <!--When a header is clicked, run the sortTable function, with a parameter,
                 0 for sorting by names, 1 for sorting by country: -->
-                    <th onclick="sortTable(0)">#</th>
-                    <th onclick="sortTable(1)">User</th>
-                    <th onclick="sortTable(2)">Summary</th>
-                    <th onclick="sortTable(3)">Ticket Manager</th>
-                    <th onclick="sortTable(4)">Updated</th>
-                </tr>
-                <tr>
-                    <td>0</td>
-                    <td>Maria Anders</td>
-                    <td>Computer is on Fire</td>
-                    <td>William Bell</td>
-                    <td>1/26/17</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Christina Berglund</td>
-                    <td>Blinking light</td>
-                    <td>Gabriel Hutchinson</td>
-                    <td>1/25/17</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Francisco Chang</td>
-                    <td>Login Issue</td>
-                    <td>Caleb Riggs</td>
-                    <td>1/23/17</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Roland Mendel</td>
-                    <td>Password Reset</td>
-                    <td>Jared Davis</td>
-                    <td>1/22/17</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Helen Bennett</td>
-                    <td>Unable to access network</td>
-                    <td>Thomas Carter</td>
-                    <td>1/26/17</td>
-                </tr>
-            </table>
+                            <th onclick="sortTable(0)">#</th>
+                            <th onclick="sortTable(1)">User</th>
+                            <th onclick="sortTable(2)">Summary</th>
+                            <th onclick="sortTable(3)">Ticket Manager</th>
+                            <th onclick="sortTable(4)">Updated</th>
+                        </tr>
+                        <tr>
+                            <td>0</td>
+                            <td>Maria Anders</td>
+                            <td>Computer is on Fire</td>
+                            <td>William Bell</td>
+                            <td>1/26/17</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Christina Berglund</td>
+                            <td>Blinking light</td>
+                            <td>Gabriel Hutchinson</td>
+                            <td>1/25/17</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Francisco Chang</td>
+                            <td>Login Issue</td>
+                            <td>Caleb Riggs</td>
+                            <td>1/23/17</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Roland Mendel</td>
+                            <td>Password Reset</td>
+                            <td>Jared Davis</td>
+                            <td>1/22/17</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Helen Bennett</td>
+                            <td>Unable to access network</td>
+                            <td>Thomas Carter</td>
+                            <td>1/26/17</td>
+                        </tr>
+                    </table>
 
 
-            <div class="ticketViewer">
-                <button class="button" id="reply">Reply</button>
-                <button class="button">Assign</button>
-                <button class="button">Accept</button>
-                <button class="button">Close</button>
-                <p>
-                    Hello, I keep seeing a green light flashing and I'm not sure why. If you can let me know why this may be happening that would be helpful.
-                </p>
-            </div>
-
-
-
-            <!-- The Modal -->
-            <div id="newModal" class="modal">
-
-                <!-- Modal content -->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <span class="close">X</span>
-                        </br>
-                        <h5>Please complete the form.</h5>
+                    <div class="ticketViewer">
+                        <button class="button" id="reply">Reply</button>
+                        <button class="button">Assign</button>
+                        <button class="button">Accept</button>
+                        <button class="button">Close</button>
+                        <p>
+                            Hello, I keep seeing a green light flashing and I'm not sure why. If you can let me know why this may be happening that would be helpful.
+                        </p>
                     </div>
-                    <div class="modal-body">
+                </section>
+
+            </div>
+        </div>
 
 
-                        <div class="TicketForm">
+        <!-- The Modal -->
+        <div id="newModal" class="modal">
 
-                            <form name="Ticket" action="ticket_submit" method="post" accept-charset="utf-8">
-                                <ul>
-                                    <li><label for="contact">Contact:</label>
-                                        <input type="text" name="contact" placeholder="" required></li>
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">X</span>
+                    </br>
+                    <h5>Please complete the form.</h5>
+                </div>
+                <div class="modal-body">
 
-                                    <li><label for="summary">Summary:</label>
-                                        <input type="text" name="summary" placeholder="" required></li>
+                    <div class="TicketForm">
 
-                                    <li><label for="description">Description:</label>
-                                        <!--<input type="text" name="description" placeholder="" required></li>-->
-                                        <textarea name="description" rows="5" cols=100%></textarea>
+                        <form name="Ticket" action="ticket_submit" method="post" accept-charset="utf-8">
+                            <ul>
+                                <li><label for="contact">Contact:</label>
+                                    <input type="text" name="contact" placeholder="" required></li>
+
+                                <li><label for="summary">Summary:</label>
+                                    <input type="text" name="summary" placeholder="" required></li>
+
+                                <li><label for="description">Description:</label>
+                                    <!--<input type="text" name="description" placeholder="" required></li>-->
+                                    <textarea name="description" rows="5" cols=100%></textarea>
 
                                     <li><label for="ticket type">Ticket Type:</label>
 
@@ -166,42 +163,35 @@
                                         <input type="file" name="attachment" placeholder=""></li>
                                     </br>
                                     <input type="submit" value="Submit Ticket"></li>
-                                </ul>
-                            </form>
-                        </div>
+                            </ul>
+                        </form>
                     </div>
                 </div>
-
             </div>
+        </div>
 
+        <!-- The Reply Modal -->
+        <div id="replyModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">X</span>
+                    </br>
+                    <h5>Please complete the form.</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="TicketForm">
+                        <form name="Ticket" action="ticket_submit" method="post" accept-charset="utf-8">
+                            <ul>
+                                <li><label for="contact">Contact:</label>
+                                    <input type="text" name="contact" placeholder="" required></li>
 
+                                <li><label for="summary">Summary:</label>
+                                    <input type="text" name="summary" placeholder="" required></li>
 
-            <!-- The Reply Modal -->
-            <div id="replyModal" class="modal">
-
-                <!-- Modal content -->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <span class="close">X</span>
-                        </br>
-                        <h5>Please complete the form.</h5>
-                    </div>
-                    <div class="modal-body">
-
-
-                        <div class="TicketForm">
-
-                            <form name="Ticket" action="ticket_submit" method="post" accept-charset="utf-8">
-                                <ul>
-                                    <li><label for="contact">Contact:</label>
-                                        <input type="text" name="contact" placeholder="" required></li>
-
-                                    <li><label for="summary">Summary:</label>
-                                        <input type="text" name="summary" placeholder="" required></li>
-
-                                    <li><label for="description">Description:</label>
-                                        <!--<input type="text" name="description" placeholder="" required></li>-->
-                                        <textarea name="description" rows="5" cols=100%></textarea>
+                                <li><label for="description">Description:</label>
+                                    <!--<input type="text" name="description" placeholder="" required></li>-->
+                                    <textarea name="description" rows="5" cols=100%></textarea>
 
                                     <li><label for="ticket type">Ticket Type:</label>
 
@@ -218,15 +208,15 @@
                                         <input type="file" name="attachment" placeholder=""></li>
                                     </br>
                                     <input type="submit" value="Submit Ticket"></li>
-                                </ul>
-                            </form>
-                        </div>
+                            </ul>
+                        </form>
                     </div>
                 </div>
-
             </div>
-        </main>
-    </body>
+        </div>
+    </main>
+</body>
 
-    <script src="js/main.js"></script>
+<script src="js/main.js"></script>
+
 </html>
