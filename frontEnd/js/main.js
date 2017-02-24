@@ -117,12 +117,6 @@ window.onclick = function (event) {
 // DataTables code
 $("#ticketTable").DataTable( {
     paging: true,
-    // ajax: function (data, callback, settings) {
-    //     console.log(data, settings);
-    //     callback(
-    //         JSON.parse("{'foo': 'bar'}")
-    //     );
-    // }
     columns: [
         { data: "id" },
         { data: "client_email" },
@@ -133,10 +127,7 @@ $("#ticketTable").DataTable( {
     ajax: {
         url: "/get_tickets",
         dataSrc: "",
-        type: "GET",
-        data: {
-            size: 10,
-            page: 0
-        }
-    }
+        type: "GET"
+    },
+    lengthChange: false
 });

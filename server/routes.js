@@ -12,7 +12,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
         mysqlConnection);
 
     app.use(express.static(ROOT_DIR));
-	
+
     app.use('/home', isLoggedIn, function (req, res) {
         send(res, HOME);
     });
@@ -95,9 +95,8 @@ module.exports = function (app, passport, express, mysqlConnection) {
     });
 
     app.get('/get_tickets', function(req, res) {
-        var p = parseInt(req.query.page) || 0;
-        var s = parseInt(req.query.size) || DEFAULT_SIZE;
-        var start = p * s;
+        var start = parseInt(req.query.start) || 0;
+        var size = parseInt(req.query.length) || DEFAULT_SIZE;
         var query = 'SELECT ticket_id as id, title, description, open_status, '
             + 'priority, tickets.department as department, '
             + 'clients.email as client_email, categories.name as category, '
@@ -105,7 +104,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
             + 'FROM tickets '
             + 'LEFT JOIN clients ON clients.client_id=tickets.client '
             + 'LEFT JOIN categories ON categories.category_id=tickets.category '
-            + 'LIMIT ' + start + ', ' + s + ';'
+            + 'LIMIT ' + start + ', ' + size + ';'
         mysqlConnection.query(query, function(err, results, fields) {
             if (err) return callback(err, null);
             res.json(results);
