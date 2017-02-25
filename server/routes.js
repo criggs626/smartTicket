@@ -159,7 +159,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
 		var returnAddr = req.body.returnAddr || "/";
 		returnAddr = returnAddr.trim();
 		var ticket_id = parseInt(req.body.ticket_id) || -1;
-		var assignee_id = parseInt(req.body.assignee || req.body.assignee_id) || -1;
+		var assignee_id = parseInt(req.body.assignee || req.body.assignee_id || req.body.assign) || -1;
 		if (ticket_id == -1) {
 			res.redirect(returnAddr);
 			// TODO: notify user of faiulre
@@ -259,7 +259,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
 			return next();
 
 		// if they aren't redirect them to the home page
-		res.redirect("/");
+		res.redirect("/login");
 	}
 
 	function send(request, file) {

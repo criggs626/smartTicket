@@ -132,6 +132,8 @@ assignee.onclick = function () {
         asigneeDrop("assign");
         firstAssign = false;
     }
+    var id = $(".clickedRow > :first-child").text();
+    $("form[name=assign] > input[name=ticket_id]").attr("value", id);
 }
 
 accept.onclick=function(){

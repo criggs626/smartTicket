@@ -201,17 +201,19 @@
                     <div class="modal-header">
                         <span class="close">X</span>
                         </br>
-                        <h5>Please complete the form.</h5>
+                        <h5>Assign this ticket to...</h5>
                     </div>
                     <div class="modal-body">
 
 
                         <div class="TicketForm">
 
-                            <form name="assign" action="ticket_submit" method="post" accept-charset="utf-8">
+                            <form name="assign" action="assign_ticket" method="post" accept-charset="utf-8">
+                                <input type=hidden name=returnAddr value=/home>
+                                <input type=hidden name=ticket_id>
                                 <ul>
-                                    <li><label for="contact">Assignee:</label>
-                                        <select name="ticket type" class="browser-default" id="assign">
+                                    <li><label for="assign">Assignee:</label>
+                                        <select name="assign" class="browser-default" id="assign">
 
                                         </select> </li>
                                     </br>
