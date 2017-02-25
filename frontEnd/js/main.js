@@ -220,6 +220,8 @@ $("#ticketTable tbody").on("click", "tr", function (event) {
     $(this).addClass("clickedRow");
     // // load messages, too
     // loadMessages(parseInt(data.id) || 0);
+    // enable buttons
+    $("#ticketViewer > .button").prop("disabled", false);
 });
 
 function loadMessages(ticket_id) {

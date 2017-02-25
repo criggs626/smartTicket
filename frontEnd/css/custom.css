@@ -243,8 +243,12 @@ form[for=Login]
     float: left;
 }
 
-.ticketViewer .button:hover {
+.ticketViewer .button:hover:not(:disabled) {
     background-color: #494949;
+}
+
+.ticketViewer .button:disabled {
+    color: #777;
 }
 
 .ticketViewer div {
