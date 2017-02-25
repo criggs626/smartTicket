@@ -3,7 +3,7 @@ const HOME = "TicketManagerHome.html";
 const LOGIN = "TicketManagerLogin.html";
 const INDEX = "SubmitTicket.html";
 const DEFAULT_SIZE = 50;
-const DEBUG = true;
+const DEBUG = false;
 module.exports = function (app, passport, express, mysqlConnection) {
 	var path = require('path');
 	var chooseManager = require('../machinelearning/chooseTicketManager.js')(
@@ -28,20 +28,24 @@ module.exports = function (app, passport, express, mysqlConnection) {
 		res.redirect("/");
 	});
 	app.post('/submit_ticket', function (req, res) {
+		var returnAddr = req.body.returnAddr || "/";
+		returnAddr = returnAddr.trim();
+
 		const VALID_EMAIL = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 		var clientEmail = req.body.contact.trim();
 		var title = req.body.summary.trim();
 		var description = req.body.description.trim();
-		var ticketType = req.body['ticket type'].trim();
+		var assignee_id = parseInt(req.body.assignee) || -1;
+		var ticketType = parseInt(req.body['ticket type']) || 1;
 
 		if (!VALID_EMAIL.test(clientEmail)) {
-			res.redirect("/");
+			res.redirect(returnAddr);
 			// TODO: notify user of failure
 			console.error("Invalid email provided.");
 			return;
 		}
 		if (description == "") {
-			res.redirect("/");
+			res.redirect(returnAddr);
 			// TODO: notify user of failure
 			console.error("No description provided.");
 			return;
@@ -62,34 +66,128 @@ module.exports = function (app, passport, express, mysqlConnection) {
 					console.error("Unknown MySQL error occured: " + err);
 					return;
 				}
+				// function to add ticket to database
+				var afterGetAssignee = function() {
+					var query = "INSERT INTO tickets "
+							+ "(client, title, description, category, "
+							+ "assignee_id) VALUES (" + clientID + ", "
+							+ mysqlConnection.escape(title) + ", "
+							+ mysqlConnection.escape(description) + ", "
+							+ ticketType + ", "
+							+ assignee_id + ");";
+					mysqlConnection.query(query, function (err, results, fields) {
+						// return to webpage
+						res.redirect(returnAddr);
+						if (!err) {
+							// TODO: notify user of success, was accepted
+							console.log("Ticket succesfully submitted.");
+						} else {
+							// TODO: notify user of failure
+							console.error("Failed to add ticket to database.");
+						}
+					});
+				};
 				// on success, add ticket to database
 				var clientID = results[0].client_id;
 				// get which ticket manager should deal with this ticket
-				var managerID = chooseManager.choose({
-					clientEmail: clientEmail,
-					title: title,
-					description: description
-				});
-				// add ticket to database
-				var query = "INSERT INTO tickets (client, title, description, "
-						+ "assignee_id) VALUES (" + clientID + ", "
-						+ mysqlConnection.escape(title) + ", "
-						+ mysqlConnection.escape(description) + ", "
-						+ managerID + ");";
-				mysqlConnection.query(query, function (err, results, fields) {
-					// return to webpage
-					res.redirect("/");
-					if (!err) {
-						// TODO: notify user of success, was accepted
-						console.log("Ticket succesfully submitted.");
-					} else {
-						// TODO: notify user of failure
-						console.error("Failed to add ticket to database.");
-					}
-				});
+				if (assignee_id == -1) {
+					chooseManager.choose({
+						clientEmail: clientEmail,
+						title: title,
+						description: description
+					}, function(err, id) {
+						if (err) {
+							console.error("Error retreiving user id: ", err);
+							return;
+						}
+						assignee_id = id;
+						afterGetAssignee();
+					});
+				} else {
+					afterGetAssignee();
+				}
 			});
 		});
 	});
+	app.post('/reply_to_ticket', isLoggedIn, function (req, res) {
+		var returnAddr = req.body.returnAddr || "/";
+		returnAddr = returnAddr.trim();
+
+		var ticket_id = parseInt(req.body.ticket_id) || -1;
+		var assignee_id = parseInt(req.body.assignee) || -1;
+		var message = req.body.description.trim();
+		var ticketType = parseInt(req.body['ticket type']) || 1;
+
+		if (ticket_id == -1) {
+			res.redirect(returnAddr);
+			// TODO: notify user of failure
+			console.error("Invalid ticket id.");
+			return;
+		}
+		if (assignee_id == -1) {
+			res.redirect(returnAddr);
+			// TODO: notify user of failure
+			console.error("Invalid assignee id.");
+			return;
+		}
+		if (message == "") {
+			res.redirect(returnAddr);
+			// TODO: notify user of failure
+			console.error("No message provided.");
+			return;
+		}
+		// add message to ticket
+		var query = "INSERT INTO messages "
+			+ "(ticket, message_content, sender, time_sent) VALUES ("
+			+ ticket_id + ", "
+			+ mysqlConnection.escape(message) + ", "
+			+ req.user.USER_ID + ", " // current user in passport session
+			+ "NOW());";
+		mysqlConnection.query(query, function(err, results, fields) {
+			// return to webpage
+			if (!err) {
+				// assign the ticket to the new ticket manager
+				// res.redirect(returnAddr);
+				assignTicket(req, res);
+			} else {
+				// TODO: notify user of failure
+				console.error("Failed to add message to database.");
+			}
+		});
+	});
+	app.post('/assign_ticket', isLoggedIn, assignTicket);
+
+	function assignTicket(req, res) {
+		var returnAddr = req.body.returnAddr || "/";
+		returnAddr = returnAddr.trim();
+		var ticket_id = parseInt(req.body.ticket_id) || -1;
+		var assignee_id = parseInt(req.body.assignee || req.body.assignee_id) || -1;
+		if (ticket_id == -1) {
+			res.redirect(returnAddr);
+			// TODO: notify user of faiulre
+			console.error("Invalid ticket id: '%d'", req.body.ticket_id);
+			return;
+		}
+		if (assignee_id == -1) {
+			res.redirect(returnAddr);
+			// TODO: notify user of failure
+			console.error("Invalid assignee id.");
+			return;
+		}
+		var query = "UPDATE tickets SET assignee_id=" + assignee_id
+			+ " WHERE ticket_id=" + ticket_id + ";";
+		mysqlConnection.query(query, function(err, results, fields) {
+			// return to webpage
+			res.redirect(returnAddr);
+			if (!err) {
+				// TODO: notify user of success, was accepted
+				console.log("Ticket succesfully assigned.");
+			} else {
+				// TODO: notify user of failure
+				console.error("Failed to change assignemnt in database.");
+			}
+		});
+	}
 
 	app.get('/get_tickets', function (req, res) {
 		var start = parseInt(req.query.start) || 0;

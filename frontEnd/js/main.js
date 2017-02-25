@@ -112,6 +112,12 @@ replyBTN.onclick = function () {
         });
         firstReply = false;
     }
+    // show client email in modal's title
+    var clientEmail = $("#ticketViewer > .client_email").text();
+    $("#replyEmail").text(clientEmail);
+    $(".TicketForm input[name=contact]").attr("value", clientEmail);
+    var id = $(".clickedRow > :first-child").text();
+    $(".TicketForm input[name=ticket_id]").attr("value", id);
 }
 
 assignee.onclick = function () {
@@ -186,7 +192,9 @@ var table = $("#ticketTable").DataTable({
 
 $("#ticketTable tbody").on("click", "tr", function (event) {
     var data = table.row(this).data();
-    $("#ticketViewer > .description").text(data.description);
+    var text = data.description;
+    text = text.replace(/\n|(\r\n)/g, "<br>");
+    $("#ticketViewer > .description").html(text);
     $("#ticketViewer > .title").text(data.title);
     $("#ticketViewer > .client_email").text(data.client_email);
     $("#ticketViewer > .ticket_id").text(data.id);

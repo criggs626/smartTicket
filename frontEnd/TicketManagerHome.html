@@ -148,17 +148,20 @@
                     <div class="modal-header">
                         <span class="close">X</span>
                         </br>
-                        <h5>Please complete the form.</h5>
+                        <h5>Send reply to <span id=replyEmail>unknown</span></h5>
                     </div>
                     <div class="modal-body">
 
 
                         <div class="TicketForm">
 
-                            <form name="Ticket" action="ticket_submit" method="post" accept-charset="utf-8">
+                            <form name="Ticket" action="reply_to_ticket" method="post" accept-charset="utf-8">
+                                <input type=hidden name=returnAddr value=/home>
+                                <input type=hidden name=contact>
+                                <input type=hidden name=ticket_id>
                                 <ul>
                                     <li><label for="contact">Assignee:</label>
-                                        <select name="ticket type" class="browser-default" id="replyAssign">
+                                        <select name="assignee" class="browser-default" id="replyAssign">
 
                                         </select> </li>
                                     <li><label for="description">Response:</label>
@@ -179,8 +182,8 @@
                 </div>
 
             </div>
-			
-			
+
+
 			<!-- The Assign Modal -->
             <div id="assignModal" class="modal">
 
@@ -211,7 +214,7 @@
                 </div>
 
             </div>
-			
+
 			<!-- The Confirmation Modal -->
             <div id="confirmModal" class="modal">
                 <!-- Modal content -->
