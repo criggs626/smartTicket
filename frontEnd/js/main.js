@@ -145,6 +145,8 @@ accept.onclick=function(){
 
 closeTicket.onclick=function(){
     closeModal.style.display = "block";
+    var id = $(".clickedRow > :first-child").text();
+    $("form[name=close] > input[name=ticket_id]").attr("value", id);
 }
 // When the user clicks on <span> (x), close the modal
 $(".close, .cancel").click(function () {
@@ -186,6 +188,7 @@ function asigneeDrop(dropDown) {
 }
 
 // DataTables code
+var tableParams = { onlyOpen: true };
 var table = $("#ticketTable").DataTable({
     paging: true,
     columns: [
@@ -197,7 +200,8 @@ var table = $("#ticketTable").DataTable({
     ajax: {
         url: "/get_tickets",
         dataSrc: "",
-        type: "GET"
+        type: "GET",
+        data: tableParams//function(d) { return tableParams }
     },
     lengthChange: false,
     searching: false

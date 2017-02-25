@@ -246,6 +246,28 @@
                     </div>
                 </div>
             </div>
+
+            <!-- The Close Modal -->
+            <div id="closeModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="close">X</span>
+                        </br>
+                        <h5>Are you sure you want to close this ticket?</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="TicketForm">
+						<br>
+                            <form method=post action=/close_ticket accept-charset=utf-8 name=close>
+                                <input type=hidden name=ticket_id>
+                                <input type=hidden name=returnAddr value=/home>
+                                <input type=button class="btn cancel" value="Cancel">
+                                <input type=submit class=btn value="Close">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </body>
 

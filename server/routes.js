@@ -70,11 +70,13 @@ module.exports = function (app, passport, express, mysqlConnection) {
 				var afterGetAssignee = function() {
 					var query = "INSERT INTO tickets "
 							+ "(client, title, description, category, "
-							+ "assignee_id) VALUES (" + clientID + ", "
+							+ "assignee_id, open_status) VALUES ("
+							+ clientID + ", "
 							+ mysqlConnection.escape(title) + ", "
 							+ mysqlConnection.escape(description) + ", "
 							+ ticketType + ", "
-							+ assignee_id + ");";
+							+ assignee_id
+							+ ", 1);";
 					mysqlConnection.query(query, function (err, results, fields) {
 						// return to webpage
 						res.redirect(returnAddr);
@@ -179,10 +181,35 @@ module.exports = function (app, passport, express, mysqlConnection) {
 				console.log("Ticket succesfully assigned.");
 			} else {
 				// TODO: notify user of failure
-				console.error("Failed to change assignemnt in database.");
+				console.error("Failed to change assignment in database.");
 			}
 		});
 	}
+
+	app.post('/close_ticket', isLoggedIn, function(req, res) {
+		var returnAddr = req.body.returnAddr || "/";
+		returnAddr = returnAddr.trim();
+		var ticket_id = parseInt(req.body.ticket_id) || -1;
+		if (ticket_id == -1) {
+			res.redirect(returnAddr);
+			// TODO: notify user of faiulre
+			console.error("Invalid ticket id: '%d'", req.body.ticket_id);
+			return;
+		}
+		var query = "UPDATE tickets SET open_status=0 WHERE ticket_id="
+			+ ticket_id + " LIMIT 1;";
+		mysqlConnection.query(query, function(err, results, fields) {
+			// return to webpage
+			res.redirect(returnAddr);
+			if (!err) {
+				// TODO: notify user of success, was accepted
+				console.log("Ticket succesfully closed.");
+			} else {
+				// TODO: notify user of failure
+				console.error("Failed to close ticket in database.");
+			}
+		});
+	});
 
 	app.get('/get_messages', isLoggedIn, function (req, res) {
 		var ticket_id = parseInt(req.query.ticket_id) || -1;
@@ -205,6 +232,8 @@ module.exports = function (app, passport, express, mysqlConnection) {
 	});
 
 	app.get('/get_tickets', isLoggedIn, function (req, res) {
+		var onlyOpen = (req.query.onlyOpen == "true");
+		var onlyClosed = (req.query.onlyClosed == "true");
 		var start = parseInt(req.query.start) || 0;
 		var size = parseInt(req.query.length) || DEFAULT_SIZE;
 		var query = 'SELECT ticket_id as id, title, description, open_status, '
@@ -214,6 +243,8 @@ module.exports = function (app, passport, express, mysqlConnection) {
 				+ 'FROM tickets '
 				+ 'LEFT JOIN clients ON clients.client_id=tickets.client '
 				+ 'LEFT JOIN categories ON categories.category_id=tickets.category '
+				+ 'WHERE 1=1 ' + ((onlyOpen) ? 'AND open_status=1 ' : '')
+				+ ((onlyClosed) ? 'AND open_status=0 ' : '')
 				+ 'LIMIT ' + start + ', ' + size + ';'
 		mysqlConnection.query(query, function (err, results, fields) {
 			if (err) {
