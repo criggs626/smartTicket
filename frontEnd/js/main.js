@@ -84,7 +84,8 @@ function myFunction() {
 var newModal = document.getElementById('newModal');
 var replyModal = document.getElementById('replyModal');
 var assignModal = document.getElementById('assignModal');
-var confirmation = document.getElementById('confirmModal');
+var acceptModal = document.getElementById('acceptModal');
+var closeModal = document.getElementById('closeModal');
 
 // Get the button that opens the modal
 var newBTN = document.getElementById("newBTN");
@@ -137,27 +138,31 @@ assignee.onclick = function () {
 }
 
 accept.onclick=function(){
-    confirmation.style.display = "block";
+    acceptModal.style.display = "block";
+    var id = $(".clickedRow > :first-child").text();
+    $("form[name=accept] > input[name=ticket_id]").attr("value", id);
 }
 
 closeTicket.onclick=function(){
-    confirmation.style.display = "block";
+    closeModal.style.display = "block";
 }
 // When the user clicks on <span> (x), close the modal
-$(".close").click(function () {
+$(".close, .cancel").click(function () {
     newModal.style.display = "none";
     replyModal.style.display = "none";
     assignModal.style.display = "none";
-    confirmation.style.display = "none";
+    acceptModal.style.display = "none";
+    closeModal.style.display = "none";
 });
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
-    if (event.target == newModal || event.target == replyModal || event.target == assignModal || event.target == confirmation) {
+    if (event.target == newModal || event.target == replyModal || event.target == assignModal || event.target == acceptModal || event.target == closeModal) {
         newModal.style.display = "none";
         replyModal.style.display = "none";
         assignModal.style.display = "none";
-        confirmation.style.display = "none";
+        acceptModal.style.display = "none";
+        closeModal.style.display = "none";
     }
 }
 

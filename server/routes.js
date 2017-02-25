@@ -167,10 +167,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
 			return;
 		}
 		if (assignee_id == -1) {
-			res.redirect(returnAddr);
-			// TODO: notify user of failure
-			console.error("Invalid assignee id.");
-			return;
+			assignee_id = req.user.USER_ID;
 		}
 		var query = "UPDATE tickets SET assignee_id=" + assignee_id
 			+ " WHERE ticket_id=" + ticket_id + ";";
