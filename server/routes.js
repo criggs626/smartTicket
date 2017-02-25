@@ -103,8 +103,9 @@ module.exports = function (app, passport, express, mysqlConnection) {
 				+ 'LEFT JOIN categories ON categories.category_id=tickets.category '
 				+ 'LIMIT ' + start + ', ' + size + ';'
 		mysqlConnection.query(query, function (err, results, fields) {
-			if (err)
-				return callback(err, null);
+			if (err) {
+				console.error("Unknown MySQL error occured: " + err);
+			}
 			res.json(results);
 		});
 	});
@@ -112,8 +113,9 @@ module.exports = function (app, passport, express, mysqlConnection) {
 	app.get('/get_categories', isLoggedIn, function (req, res) {
 		var query = 'SELECT CATEGORY_ID, NAME FROM categories;'
 		mysqlConnection.query(query, function (err, results, fields) {
-			if (err)
-				return callback(err, null);
+			if (err) {
+				console.error("Unknown MySQL error occured: " + err);
+			}
 			res.json(results);
 		});
 	});
@@ -121,8 +123,9 @@ module.exports = function (app, passport, express, mysqlConnection) {
 	app.get('/get_assignee', isLoggedIn, function (req, res) {
 		var query = 'SELECT USER_ID, FNAME,LNAME FROM users ORDER BY FNAME;'
 		mysqlConnection.query(query, function (err, results, fields) {
-			if (err)
-				return callback(err, null);
+			if (err) {
+				console.error("Unknown MySQL error occured: " + err);
+			}
 			res.json(results);
 		});
 	});
