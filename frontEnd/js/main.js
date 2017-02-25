@@ -120,6 +120,12 @@ replyBTN.onclick = function () {
     $(".TicketForm input[name=ticket_id]").attr("value", id);
 }
 
+// // reload messages list after
+// $("form[name=reply]").submit(function(event) {
+//     var id = $("form[name=reply] > input[name=ticket_id]").attr("value");
+//     loadMessages(parseInt(id));
+// });
+
 assignee.onclick = function () {
     assignModal.style.display = "block";
     if (firstAssign) {
@@ -201,4 +207,41 @@ $("#ticketTable tbody").on("click", "tr", function (event) {
     // indicate that the row has been selected (for css)
     $(".clickedRow").removeClass("clickedRow");
     $(this).addClass("clickedRow");
+    // // load messages, too
+    // loadMessages(parseInt(data.id) || 0);
 });
+
+function loadMessages(ticket_id) {
+    $("#messages").children().not("#messageTemplate").remove();
+    $("#messageLoading").removeClass("displaynone");
+    $.ajax({
+        url: "/get_messages",
+        data: {
+            "ticket_id": ticket_id
+        },
+        cache: false,
+        method: "GET",
+        dataType: "json",
+        success: function(data, textStatus, jqXHR) {
+            if (textStatus != "success") {
+                console.error("Error retreiving messages: ", textStatus);
+                return;
+            }
+            for (var messageID in data) {
+                addMessage(data[messageID]);
+            }
+            $("#messageLoading").addClass("displaynone");
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("Error retrieving messages: ", errorThrown);
+        }
+    });
+}
+function addMessage(message) {
+    var messageElem = $("#messageTemplate")[0].cloneNode(true);
+    messageElem.id = "message" + message.MESSAGE_ID;
+    var sender = (message.SENDER == 0) ? message.USER_EMAIL : message.CLIENT_EMAIL;
+    $(messageElem).find(".sender").text(sender);
+    $(messageElem).find(".body").text(message.MESSAGE_CONTENT);
+    $("#messages").append(messageElem);
+}

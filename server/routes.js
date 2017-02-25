@@ -138,25 +138,23 @@ module.exports = function (app, passport, express, mysqlConnection) {
 		}
 		// add message to ticket
 		var query = "INSERT INTO messages "
-			+ "(ticket, message_content, sender, time_sent) VALUES ("
+			+ "(ticket, message_content, user, sender, time_sent) VALUES ("
 			+ ticket_id + ", "
 			+ mysqlConnection.escape(message) + ", "
 			+ req.user.USER_ID + ", " // current user in passport session
-			+ "NOW());";
+			+ "0, NOW());";
 		mysqlConnection.query(query, function(err, results, fields) {
 			// return to webpage
 			if (!err) {
 				// assign the ticket to the new ticket manager
-				// res.redirect(returnAddr);
 				assignTicket(req, res);
 			} else {
 				// TODO: notify user of failure
-				console.error("Failed to add message to database.");
+				console.error("Failed to add message to database: ", err);
 			}
 		});
 	});
 	app.post('/assign_ticket', isLoggedIn, assignTicket);
-
 	function assignTicket(req, res) {
 		var returnAddr = req.body.returnAddr || "/";
 		returnAddr = returnAddr.trim();
@@ -189,7 +187,27 @@ module.exports = function (app, passport, express, mysqlConnection) {
 		});
 	}
 
-	app.get('/get_tickets', function (req, res) {
+	app.get('/get_messages', isLoggedIn, function (req, res) {
+		var ticket_id = parseInt(req.query.ticket_id) || -1;
+		if (ticket_id == -1) {
+			res.redirect("/");
+			// TODO: notify user of failure
+			console.error("Invalid ticket id.");
+			return;
+		}
+		var query = "SELECT *, clients.email as CLIENT_EMAIL, "
+			+ "users.work_email AS USER_EMAIL FROM messages "
+			+ "LEFT JOIN users ON messages.user=users.user_id "
+			+ "LEFT JOIN clients ON messages.client=clients.client_id;";
+		mysqlConnection.query(query, function (err, results, fields) {
+			if (err) {
+				console.error("Unknown MySQL error occured: " + err);
+			}
+			res.json(results);
+		})
+	});
+
+	app.get('/get_tickets', isLoggedIn, function (req, res) {
 		var start = parseInt(req.query.start) || 0;
 		var size = parseInt(req.query.length) || DEFAULT_SIZE;
 		var query = 'SELECT ticket_id as id, title, description, open_status, '
