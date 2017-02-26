@@ -254,7 +254,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
 		});
 	});
 
-	app.get('/get_categories', isLoggedIn, function (req, res) {
+	app.get('/get_categories', function (req, res) {
 		var query = 'SELECT CATEGORY_ID, NAME FROM categories;'
 		mysqlConnection.query(query, function (err, results, fields) {
 			if (err) {
