@@ -1,9 +1,11 @@
 const ROOT_DIR = "../frontEnd/";
 const HOME = "TicketManagerHome.html";
 const LOGIN = "TicketManagerLogin.html";
+const MANAGERS = "TicketManagers.html";
 const INDEX = "SubmitTicket.html";
+const SETTINGS = "TicketManagerSettings.html";
 const DEFAULT_SIZE = 50;
-const DEBUG = false;
+const DEBUG = true;
 module.exports = function (app, passport, express, mysqlConnection) {
 	var path = require('path');
 	var chooseManager = require('../machinelearning/chooseTicketManager.js')(
@@ -18,6 +20,14 @@ module.exports = function (app, passport, express, mysqlConnection) {
 	app.get('/login', function (req, res) {
 		send(res, LOGIN);
 	});
+	
+	app.get('/managers',isLoggedIn, function (req, res) {
+		send(res, MANAGERS);
+	});
+	app.get('/settings',isLoggedIn, function (req, res) {
+		send(res, SETTINGS);
+	});
+	
 	app.post('/login', passport.authenticate('local-login', {
 		successRedirect: '/home', // redirect to the secure profile section
 		failureRedirect: '/' // redirect back to the signup page if there is an error
@@ -266,6 +276,26 @@ module.exports = function (app, passport, express, mysqlConnection) {
 
 	app.get('/get_assignee', isLoggedIn, function (req, res) {
 		var query = 'SELECT USER_ID, FNAME,LNAME FROM users ORDER BY FNAME;'
+		mysqlConnection.query(query, function (err, results, fields) {
+			if (err) {
+				console.error("Unknown MySQL error occured: " + err);
+			}
+			res.json(results);
+		});
+	});
+	
+	app.get('/get_departments', isLoggedIn, function (req, res) {
+		var query = 'SELECT * FROM departments ORDER BY NAME;'
+		mysqlConnection.query(query, function (err, results, fields) {
+			if (err) {
+				console.error("Unknown MySQL error occured: " + err);
+			}
+			res.json(results);
+		});
+	});
+	
+	app.get('/get_depEmployee', isLoggedIn, function (req, res) {
+		var query = 'SELECT USER_ID, FNAME,LNAME FROM users WHERE Contains(DEPARTMENT,"1") ORDER BY FNAME;'
 		mysqlConnection.query(query, function (err, results, fields) {
 			if (err) {
 				console.error("Unknown MySQL error occured: " + err);

@@ -1,6 +1,3 @@
-var firstReply = true;
-var firstNew = true;
-var firstAssign = true;
 /*Sort table alphanumberically by column*/
 function sortTable(n) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -97,22 +94,21 @@ var closeTicket = document.getElementById("close");
 // When the user clicks the button, open the modal
 newBTN.onclick = function () {
     newModal.style.display = "block";
-    if (firstNew) {
-        categoryDrop("newCats", function () {
-            asigneeDrop("newAssign");
-        });
-        firstNew = false;
-    }
+
+    categoryDrop("newCats", function () {
+        asigneeDrop("newAssign");
+    });
+
 }
 
 replyBTN.onclick = function () {
     replyModal.style.display = "block";
-    if (firstReply) {
-        categoryDrop("replyCats", function () {
-            asigneeDrop("replyAssign");
-        });
-        firstReply = false;
-    }
+
+    categoryDrop("replyCats", function () {
+        asigneeDrop("replyAssign");
+    });
+
+
     // show client email in modal's title
     var clientEmail = $("#ticketViewer > .client_email").text();
     $("#replyEmail").text(clientEmail);
@@ -129,21 +125,19 @@ replyBTN.onclick = function () {
 
 assignee.onclick = function () {
     assignModal.style.display = "block";
-    if (firstAssign) {
-        asigneeDrop("assign");
-        firstAssign = false;
-    }
+    asigneeDrop("assign");
+
     var id = $(".clickedRow > :first-child").text();
     $("form[name=assign] > input[name=ticket_id]").attr("value", id);
 }
 
-accept.onclick=function(){
+accept.onclick = function () {
     acceptModal.style.display = "block";
     var id = $(".clickedRow > :first-child").text();
     $("form[name=accept] > input[name=ticket_id]").attr("value", id);
 }
 
-closeTicket.onclick=function(){
+closeTicket.onclick = function () {
     closeModal.style.display = "block";
     var id = $(".clickedRow > :first-child").text();
     $("form[name=close] > input[name=ticket_id]").attr("value", id);
@@ -170,6 +164,7 @@ window.onclick = function (event) {
 
 function categoryDrop(dropDown, callback) {
     dropdown = document.getElementById(dropDown);
+    dropdown.innerHTML = "";
     $.get("/get_categories", function (categories) {
         for (i = 0; i < categories.length; i++) {
             dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '">' + categories[i].NAME + '</option>';
@@ -180,6 +175,7 @@ function categoryDrop(dropDown, callback) {
 
 function asigneeDrop(dropDown) {
     dropdown = document.getElementById(dropDown);
+    dropdown.innerHTML = "";
     $.get("/get_assignee", function (categories) {
         for (i = 0; i < categories.length; i++) {
             dropdown.innerHTML += '<option value="' + categories[i].USER_ID + '">' + categories[i].FNAME + " " + categories[i].LNAME + '</option>';
@@ -188,7 +184,7 @@ function asigneeDrop(dropDown) {
 }
 
 // DataTables code
-var tableParams = { onlyOpen: true };
+var tableParams = {onlyOpen: true};
 var table = $("#ticketTable").DataTable({
     paging: true,
     columns: [
@@ -235,7 +231,7 @@ function loadMessages(ticket_id) {
         cache: false,
         method: "GET",
         dataType: "json",
-        success: function(data, textStatus, jqXHR) {
+        success: function (data, textStatus, jqXHR) {
             if (textStatus != "success") {
                 console.error("Error retreiving messages: ", textStatus);
                 return;
@@ -245,7 +241,7 @@ function loadMessages(ticket_id) {
             }
             $("#messageLoading").addClass("displaynone");
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
             console.error("Error retrieving messages: ", errorThrown);
         }
     });
