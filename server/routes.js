@@ -294,8 +294,9 @@ module.exports = function (app, passport, express, mysqlConnection) {
 		});
 	});
 	
-	app.get('/get_depEmployee', isLoggedIn, function (req, res) {
-		var query = 'SELECT USER_ID, FNAME,LNAME FROM users WHERE Contains(DEPARTMENT,"1") ORDER BY FNAME;'
+	app.post('/get_depEmployee', isLoggedIn, function (req, res) {
+		var depID = req.body.ID;
+		var query = 'SELECT USER_ID, FNAME,LNAME FROM users WHERE DEPARTMENT LIKE "%'+depID+'%" ORDER BY FNAME;'
 		mysqlConnection.query(query, function (err, results, fields) {
 			if (err) {
 				console.error("Unknown MySQL error occured: " + err);

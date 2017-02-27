@@ -299,7 +299,6 @@ form[for=Login]
 }
 
 #managerTable {
-
 	float: right;
 	width: 70%;
 }
@@ -308,6 +307,11 @@ form[for=Login]
 	background-color: #3c3c3c;
     color: white;
 }
+/*#managerTable tr{
+	display:block;
+	overflow-y:scroll;
+	height:200px;
+}*/
 #managersIMG{
 	margin-left: 10%;
 	float: left;
