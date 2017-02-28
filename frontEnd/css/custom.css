@@ -298,20 +298,24 @@ form[for=Login]
     color: white;
 }
 
+#managerDiv{
+	height:40vh;
+	overflow-y:scroll;
+	width:70%;
+	overflow-x:hidden;
+}
+
 #managerTable {
-	float: right;
-	width: 70%;
+	margin-bottom:0px;
+	margin-top:0px;
+	margin-left:10px;
 }
 
 #managerTable th{
 	background-color: #3c3c3c;
     color: white;
 }
-/*#managerTable tr{
-	display:block;
-	overflow-y:scroll;
-	height:200px;
-}*/
+
 #managersIMG{
 	margin-left: 10%;
 	float: left;
