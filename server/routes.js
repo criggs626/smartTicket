@@ -5,7 +5,7 @@ const MANAGERS = "TicketManagers.html";
 const INDEX = "SubmitTicket.html";
 const SETTINGS = "TicketManagerSettings.html";
 const DEFAULT_SIZE = 50;
-const DEBUG = true;
+const DEBUG = false;
 module.exports = function (app, passport, express, mysqlConnection) {
 	var path = require('path');
 	var chooseManager = require('../machinelearning/chooseTicketManager.js')(
@@ -302,6 +302,34 @@ module.exports = function (app, passport, express, mysqlConnection) {
 				console.error("Unknown MySQL error occured: " + err);
 			}
 			res.json(results);
+		});
+	});
+	
+	app.post('/new_department',isLoggedIn,function(req,res){
+		var query = 'SELECT PERMISSION FROM users WHERE USER_ID="'+req.user.USER_ID+'";';
+		mysqlConnection.query(query, function (err, results, fields) {
+			if (err) {
+				console.error("Unknown MySQL error occured: " + err);
+			}
+			else{
+				var permissions=results[0].PERMISSION;
+				var name=req.body.depName.trim();
+				if(permissions==0){
+					var query = 'INSERT INTO DEPARTMENTS (NAME) VALUES("'+name+'")';
+					mysqlConnection.query(query, function (err, results, fields){
+						if(err){
+							console.error("Unknown MySQL error occured: " + err);
+						}
+						else{
+							console.log("New Department '"+name+"' added");
+						}
+					});
+				}
+				else{
+					console.error("Inadiquate permissions");
+				}
+				
+			}
 		});
 	});
 
