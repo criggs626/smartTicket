@@ -371,6 +371,57 @@ module.exports = function (app, passport, express, mysqlConnection) {
         });
 
     });
+	
+   app.post('/addTo_department', isLoggedIn, function (req, res) {
+    var returnAddr = req.body.returnAddr || "/";
+    returnAddr = returnAddr.trim();
+    var dep_id = (req.body.depID) || "-1";
+    var assignee_id = parseInt(req.body.assignee || req.body.assignee_id || req.body.assign) || -1;
+    if (dep_id == "-1") {
+        res.redirect(returnAddr);
+        // TODO: notify user of faiulre
+        console.error("Invalid department id: '%d'", req.body.depID);
+        return;
+    }
+    var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
+    mysqlConnection.query(query, function (err, results, fields) {
+        if (err) {
+            console.error("Unknown MySQL error occured: " + err);
+        } else {
+            var permissions = results[0].PERMISSION;
+            if (permissions == 0) {
+                var query = 'SELECT DEPARTMENT FROM users WHERE USER_ID="' + assignee_id + '";';
+                mysqlConnection.query(query, function (err, results, fields) {
+                    // return to webpage
+                    if (!err) {
+                        var deps = results[0].DEPARTMENT;
+                        if (deps.indexOf(dep_id) == -1) {
+                            var query = "UPDATE USERS SET DEPARTMENT='" + deps + "," + dep_id + "' WHERE USER_ID='" + assignee_id + "';";
+                            mysqlConnection.query(query, function (err, results, fields) {
+                                if (err) {
+                                    res.redirect(returnAddr);
+                                    console.error("Unknown MySQL error occured: " + err);
+                                } else {
+                                    res.redirect(returnAddr);
+                                    console.log("User added");
+                                }
+                            });
+                        } else {
+                            res.redirect(returnAddr);
+                            console.log("The user is already a member of this department");
+                        }
+                    } else {
+                        res.redirect(returnAddr);
+                        // TODO: notify user of failure
+                        console.error("Innadiquate permissions");
+                    }
+                });
+            } else {
+                console.error("Inadiquate permissions");
+            }
+        }
+    });
+});
 
 
     // make sure that this one is last

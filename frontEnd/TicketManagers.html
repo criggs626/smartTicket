@@ -133,6 +133,38 @@
                     </div>
                 </div>
             </div>
+			
+			            <!-- The Assign Modal -->
+            <div id="assignModal" class="modal">
+
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="close">X</span>
+                        </br>
+                        <h5>Add this user...</h5>
+                    </div>
+                    <div class="modal-body">
+
+
+                        <div class="TicketForm">
+
+                            <form name="assign" action="addTo_department" method="post" accept-charset="utf-8">
+                                <input type=hidden name=returnAddr value=/home>
+                                       <input type=hidden id="addUser" name=depID>
+                                <ul>
+                                    <li><label for="assign">Assignee:</label>
+                                        <select name="assign" class="browser-default" id="assign">
+
+                                        </select> </li>
+                                    </br>
+                                    <input type="submit" value="Add users"></li>
+                                </ul>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
 		<script src="js/managers.js"></script>
     </body>
