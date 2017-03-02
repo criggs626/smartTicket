@@ -135,10 +135,11 @@
 
                         <div class="TicketForm">
 
-                            <form name="Ticket" action="ticket_submit" method="post" accept-charset="utf-8">
+                            <form name="Ticket" action="submit_ticket" method="post" accept-charset="utf-8">
+                                <input type=hidden name=returnAddr value=/home>
                                 <ul>
-                                    <li><label for="contact">Assignee:</label>
-                                        <select name="ticket type" class="browser-default" id="newAssign">
+                                    <li><label for="assignee">Assignee:</label>
+                                        <select name="assignee" class="browser-default" id="newAssign">
 
                                         </select></li>
                                     <li><label for="contact">Contact:</label>
