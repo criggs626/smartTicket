@@ -331,9 +331,17 @@ form[for=Login]
 	width: 60%;
 }
 
-#settingsTable th{
+#settingsTable th {
 	background-color: #3c3c3c;
     color: white;
+}
+
+#settingsTable td {
+    cursor: pointer;
+}
+
+#settingsTable td:hover {
+    text-decoration: underline;
 }
 
 #settingsIMG{
