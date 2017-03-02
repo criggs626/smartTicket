@@ -1,197 +1,387 @@
 <!DOCTYPE html>
 <html lang=en>
-        <head>
+    <head>
         <meta charset=utf-8>
         <title>SmartTicket - Settings</title>
-
-        <link rel=stylesheet href=	css/materialize.min.css>
-        <link rel=stylesheet href=	css/custom.css>
-
-        <script src=	js/jquery.min.js></script>
-        <script src=	js/materialize.min.js></script>
-       
+        <link rel=stylesheet href=css/materialize.min.css>
+        <link rel=stylesheet href=css/custom.css>
+        <script src=js/jquery.min.js></script>
+        <script src=js/materialize.min.js></script>
+        <script src=js/settings.js></script>
     </head>
-    <body><nav>
-            <img src="	img/logo.png" height="35px">
+    <body>
+        <nav>
+            <img src="img/logo.png" height="35px">
         </nav>
         <nav class="links">
-
         </nav>
-
         <main>
             <div class="row">
                 <div class="col s10 offset-s1 main">
                     <section id=ticketsTable>
                         <table class="striped highlight">
-                            <thead>
-                                <tr>
-                                    <th>
-									<img src="	img/ic_group_black_48dp.png">
-									<a href= "TicketManagerHome.html"
-										target=_self>
-										Tickets
-									</a>
-									</th>
-                                    <th>
-									<img src="	img/ic_work_black_48dp_2x.png" width= "48px" height= "48px">
-									<a href= "TicketManagers.html"
-										target=_self>
-										Ticket&nbsp;Managers
-									</a>
-									</th>
-                                    <th>
-									<img src="	img/ic_poll_black_48dp.png" width= "48px" height= "48px">
-									<a href= "TicketManagerReports.html"
-										target=_self>
-										Reports
-									</a>
-									</th>
-                                    <th>
-									<img src="	img/ic_pages_black_48dp.png" width= "48px" height= "48px">
-									<a href= "TicketManagerFAQ.html"
-										target=_self>
-										FAQ
-									</a>
-									</th>
-                                    <th>
-									<img src="	img/ic_settings_black_48dp_2x.png" width= "48px" height= "48px">
-									<a href= "TicketManagerSettings.html"
-										target=_self>
-										Settings
-									</a>
-									</th>
-                                </tr>
-                            </thead>
-							</section>
-                            
+                        <thead>
+                            <tr>
+                                <th>
+                                    <img src="img/ic_group_black_48dp.png">
+                                    <a href="TicketManagerHome.html" target=_self>
+                                    Tickets
+                                    </a>
+                                </th>
+                                <th>
+                                    <img src="img/ic_work_black_48dp_2x.png" width="48px" height="48px">
+                                    <a href="TicketManagers.html" target=_self>
+                                    Ticket&nbsp;Managers
+                                    </a>
+                                </th>
+                                <th>
+                                    <img src="img/ic_poll_black_48dp.png" width="48px" height="48px">
+                                    <a href="TicketManagerReports.html" target=_self>
+                                    Reports
+                                    </a>
+                                </th>
+                                <th>
+                                    <img src="img/ic_pages_black_48dp.png" width="48px" height="48px">
+                                    <a href="TicketManagerFAQ.html" target=_self>
+                                    FAQ
+                                    </a>
+                                </th>
+                                <th>
+                                    <img src="img/ic_settings_black_48dp_2x.png" width="48px" height="48px">
+                                    <a href="TicketManagerSettings.html" target=_self>
+                                    Settings
+                                    </a>
+                                </th>
+                            </tr>
+                        </thead>
+                    </section>
                 </div>
-				</div>
-				
-				
-				
-				
-				
-				
-				
-				<table id = "settingsTable">
-				
-				<img src="	img/ic_settings_black_48dp_2x.png" id = "settingsIMG"> 
-				<h2>&nbspSettings</h2>
-				
-				  <tr>
-					<th>Settings</th>
-					<th></th>
-				  </tr>
-				  <tr>
-					<td>About Me</td>
-					<td>Network Settings</td>
-				  </tr>
-				  <tr>
-					<td>Updates</td>
-					<td>Support</td>
-				  </tr>
-				  <tr>
-					<td>Server Settings</td>
-					<td>Theme</td>
-				  </tr>
-				  <tr>
-					<td>Database Export</td>
-					<td>Accessibility</td>
-				  </tr>
-				</table>	
-			
-		
-			
+            </div>
+            <table id="settingsTable">
+                <img src="img/ic_settings_black_48dp_2x.png" id="settingsIMG">
+                <h2>&nbsp;Settings</h2>
+                <tr>
+                    <th colspan=2>Settings</th>
+                </tr>
+                <tr>
+                    <td>About Me</td>
+                    <td>Network Settings</td>
+                </tr>
+                <tr>
+                    <td>Updates</td>
+                    <td>Support</td>
+                </tr>
+                <tr>
+                    <td>Server Settings</td>
+                    <td>Theme</td>
+                </tr>
+                <tr>
+                    <td>Database Export</td>
+                    <td>Accessibility</td>
+                </tr>
+            </table>
+            </div>
+        </main>
+
+        <!-- Modals -->
+        <!-- The About me Modal -->
+        <div id="aboutmeModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">X</span>
+                    </br>
+                    <h5>About me</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="TicketForm">
+                        <br>
+                        <form method=post action=/settings_aboutme accept-charset=utf-8 name=settings_aboutme>
+                            <input type=hidden name=ticket_id>
+                            <input type=hidden name=returnAddr value=/settings>
+
+                            <label for=aboutme_firstname>First Name</label>
+                            <input id=aboutme_firstname name=firstname value="Caleb">
+
+                            <label for=aboutme_lastname>Last Name</label>
+                            <input id=aboutme_lastname name=lastname value="Riggs">
+
+                            <label for=aboutme_email>Email</label>
+                            <input id=aboutme_email name=email value="criggs2892@flpoly.org">
+
+                            <input type=button class="btn cancel" value="Cancel">
+                            <input type=submit class=btn value="Update">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Updates Modal -->
+        <div id="updatesModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">X</span>
+                    </br>
+                    <h5>Updates</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="TicketForm">
+                        <br>
+                        <form method=post action=/settings_updates accept-charset=utf-8 name=settings_updates>
+                            <input type=hidden name=ticket_id>
+                            <input type=hidden name=returnAddr value=/settings>
+
+                            <div>Version 0.56 (Latest)</div>
+                            <br>
+
+                            <input type=submit disabled class=btn value="Upgrade">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Server Settings Modal -->
+        <div id="serversettingsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">X</span>
+                    </br>
+                    <h5>Server Settings</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="TicketForm">
+                        <br>
+                        <form method=post action=/settings_serversettings accept-charset=utf-8 name=settings_serversettings>
+                            <input type=hidden name=ticket_id>
+                            <input type=hidden name=returnAddr value=/settings>
+
+							YOU SHOULD NOT SEE THIS
+
+                            <input type=button class="btn cancel" value="Cancel">
+                            <input type=submit class=btn value="Update">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Database Export Modal -->
+        <div id="databaseexportModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">X</span>
+                    </br>
+                    <h5>Database Export</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="TicketForm">
+                        <br>
+                        <form method=post action=/settings_databaseexport accept-charset=utf-8 name=settings_databaseexport>
+                            <input type=hidden name=ticket_id>
+                            <input type=hidden name=returnAddr value=/settings>
+
+                            <input type=submit class=btn value="Export">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Network Settings Modal -->
+        <div id="networksettingsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">X</span>
+                    </br>
+                    <h5>Network Settings</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="TicketForm">
+                        <br>
+                        <form method=post action=/settings_networksettings accept-charset=utf-8 name=settings_networksettings>
+                            <input type=hidden name=ticket_id>
+                            <input type=hidden name=returnAddr value=/settings>
+
+							PINK PINK PINK PINK PINK PINK
+
+                            <input type=button class="btn cancel" value="Cancel">
+                            <input type=submit class=btn value="Update">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Support Modal -->
+        <div id="supportModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">X</span>
+                    </br>
+                    <h5>Support</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="TicketForm">
+                        <br>
+                        <form method=post action=/settings_support accept-charset=utf-8 name=settings_support>
+                            <input type=hidden name=ticket_id>
+                            <input type=hidden name=returnAddr value=/settings>
+
+							<div>Contact <a href=mailto:ticket.support@flpoly.org>ticket.support@flpoly.org</a> with any technical issues.</div>
+                            <br>
+
+                            <input type=submit class=btn value="Okay">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Theme Modal -->
+        <div id="themeModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">X</span>
+                    </br>
+                    <h5>Theme</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="TicketForm">
+                        <br>
+                        <form method=post action=/settings_theme accept-charset=utf-8 name=settings_theme>
+                            <input type=hidden name=ticket_id>
+                            <input type=hidden name=returnAddr value=/settings>
+
+                            <input type=color id=theme_primary value=#3cb878>
+                            <label for=theme_primary>&nbsp;Primary</label>
+                            <br><br>
+							<input type=color id=theme_secondary value=#3c3c3c>
+                            <label for=theme_secondary>&nbsp;Secondary</label>
+                            <br><br>
+							<input type=color id=theme_tertiary value=#ffffff>
+                            <label for=theme_tertiary>&nbsp;Tertiary</label>
+                            <br><br>
+                            <input type=button class="btn cancel" value="Cancel">
+                            <input type=submit class=btn value="Update">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Accessibility Modal -->
+        <div id="accessibilityModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">X</span>
+                    </br>
+                    <h5>Accessibility</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="TicketForm">
+                        <br>
+                        <form method=post action=/settings_accessibility accept-charset=utf-8 name=settings_accessibility>
+                            <input type=hidden name=ticket_id>
+                            <input type=hidden name=returnAddr value=/settings>
+
+                            <div id=accessibility_highcontrastmode class=switch>
+                                <label>
+                                    <input type=checkbox>
+                                    <span class=lever></span>
+                                    High-Contrast Mode
+                                </label>
+                            </div>
+                            <br>
+
+                            <input type=button class="btn cancel" value="Cancel">
+                            <input type=submit class=btn value="Update">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
+        <script>
+            /*Sort table alphanumberically by column*/
+            function sortTable(n) {
+                var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+                table = document.getElementById("ticketTable");
+                switching = true;
+                //Set the sorting direction to ascending:
+                dir = "asc";
+                /*Make a loop that will continue until
+                no switching has been done:*/
+                while (switching) {
+                    //start by saying: no switching is done:
+                    switching = false;
+                    rows = table.getElementsByTagName("TR");
+                    /*Loop through all table rows (except the
+                    first, which contains table headers):*/
+                    for (i = 1; i < (rows.length - 1); i++) {
+                        //start by saying there should be no switching:
+                        shouldSwitch = false;
+                        /*Get the two elements you want to compare,
+                        one from current row and one from the next:*/
+                        x = rows[i].getElementsByTagName("TD")[n];
+                        y = rows[i + 1].getElementsByTagName("TD")[n];
+                        /*check if the two rows should switch place,
+                        based on the direction, asc or desc:*/
+                        if (dir == "asc") {
+                            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                                //if so, mark as a switch and break the loop:
+                                shouldSwitch = true;
+                                break;
+                            }
+                        } else if (dir == "desc") {
+                            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                                //if so, mark as a switch and break the loop:
+                                shouldSwitch = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (shouldSwitch) {
+                        /*If a switch has been marked, make the switch
+                        and mark that a switch has been done:*/
+                        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                        switching = true;
+                        //Each time a switch is done, increase this count by 1:
+                        switchcount++;
+                    } else {
+                        /*If no switching has been done AND the direction is "asc",
+                        set the direction to "desc" and run the while loop again.*/
+                        if (switchcount == 0 && dir == "asc") {
+                            dir = "desc";
+                            switching = true;
+                        }
+                    }
+                }
+            }
 
+            /*Filters ticket table by name of user*/
+            /*(could possibly be expanded to search by ticket manager or ticket number)*/
+            function myFunction() {
+                // Declare variables
+                var input, filter, table, tr, td, i;
+                input = document.getElementById("myInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("ticketTable");
+                tr = table.getElementsByTagName("tr");
 
-
-
-			</div>
-    </main>
+                // Loop through all table rows, and hide those who don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[1];
+                    if (td) {
+                        if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+        </script>
     </body>
-	
-	<script>
-	/*Sort table alphanumberically by column*/
-	function sortTable(n) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementById("ticketTable");
-  switching = true;
-  //Set the sorting direction to ascending:
-  dir = "asc"; 
-  /*Make a loop that will continue until
-  no switching has been done:*/
-  while (switching) {
-    //start by saying: no switching is done:
-    switching = false;
-    rows = table.getElementsByTagName("TR");
-    /*Loop through all table rows (except the
-    first, which contains table headers):*/
-    for (i = 1; i < (rows.length - 1); i++) {
-      //start by saying there should be no switching:
-      shouldSwitch = false;
-      /*Get the two elements you want to compare,
-      one from current row and one from the next:*/
-      x = rows[i].getElementsByTagName("TD")[n];
-      y = rows[i + 1].getElementsByTagName("TD")[n];
-      /*check if the two rows should switch place,
-      based on the direction, asc or desc:*/
-      if (dir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-          //if so, mark as a switch and break the loop:
-          shouldSwitch= true;
-          break;
-        }
-      } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-          //if so, mark as a switch and break the loop:
-          shouldSwitch= true;
-          break;
-        }
-      }
-    }
-    if (shouldSwitch) {
-      /*If a switch has been marked, make the switch
-      and mark that a switch has been done:*/
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      //Each time a switch is done, increase this count by 1:
-      switchcount ++; 
-    } else {
-      /*If no switching has been done AND the direction is "asc",
-      set the direction to "desc" and run the while loop again.*/
-      if (switchcount == 0 && dir == "asc") {
-        dir = "desc";
-        switching = true;
-      }
-    }
-  }
-}
-
-/*Filters ticket table by name of user*/ 
-/*(could possibly be expanded to search by ticket manager or ticket number)*/
-	function myFunction() {
-  // Declare variables 
-  var input, filter, table, tr, td, i;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("ticketTable");
-  tr = table.getElementsByTagName("tr");
-
-  // Loop through all table rows, and hide those who don't match the search query
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[1];
-    if (td) {
-      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    } 
-  }
-}
-</script>
-
-
 </html>
