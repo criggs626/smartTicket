@@ -7,25 +7,30 @@ const SETTINGS = "TicketManagerSettings.html";
 const MANAGERVIEW = "managerView.html";
 const DEFAULT_SIZE = 50;
 const DEBUG = false;
-module.exports = function (app, passport, express, mysqlConnection) {
+module.exports = function(app, passport, express, mysqlConnection) {
     var path = require('path');
     var chooseManager = require('../machinelearning/chooseTicketManager.js')(
-            mysqlConnection);
+        mysqlConnection);
 
     app.use(express.static(ROOT_DIR));
 
-    app.use('/home', isLoggedIn, function (req, res) {
+    app.use('/home', isLoggedIn, function(req, res) {
         send(res, HOME);
     });
 
-    app.get('/login', function (req, res) {
+    // app.get('/', function (req, res) {
+    //     // test stuff for ML
+    //     chooseManager.conductTest();
+    // });
+
+    app.get('/login', function(req, res) {
         send(res, LOGIN);
     });
 
-    app.get('/managers', isLoggedIn, function (req, res) {
+    app.get('/managers', isLoggedIn, function(req, res) {
         send(res, MANAGERS);
     });
-    app.get('/settings', isLoggedIn, function (req, res) {
+    app.get('/settings', isLoggedIn, function(req, res) {
         send(res, SETTINGS);
     });
 
@@ -33,16 +38,16 @@ module.exports = function (app, passport, express, mysqlConnection) {
         successRedirect: '/home', // redirect to the secure profile section
         failureRedirect: '/' // redirect back to the signup page if there is an error
     }));
-	
+
 	app.use('/manager', isLoggedIn, function (req, res) {
         send(res, MANAGERVIEW);
     });
 
-    app.get('/logout', function (req, res) {
+    app.get('/logout', function(req, res) {
         req.logout();
         res.redirect("/");
     });
-    app.post('/submit_ticket', function (req, res) {
+    app.post('/submit_ticket', function(req, res) {
         var returnAddr = req.body.returnAddr || "/";
         returnAddr = returnAddr.trim();
 
@@ -67,32 +72,36 @@ module.exports = function (app, passport, express, mysqlConnection) {
         }
         // add user to database if they don't exist
         clientEmail = mysqlConnection.escape(clientEmail);
-        var query = "INSERT IGNORE INTO clients (email) VALUES ("
-                + clientEmail + ");";
-        mysqlConnection.query(query, function (err, results, fields) {
+        var query = "INSERT IGNORE INTO clients (email) VALUES (" +
+            clientEmail + ");";
+        mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
                 return;
             }
-            var query = "SELECT client_id FROM clients WHERE email="
-                    + clientEmail + ";";
-            mysqlConnection.query(query, function (err, results, fields) {
+            var query = "SELECT client_id FROM clients WHERE email=" +
+                clientEmail + ";";
+            mysqlConnection.query(query, function(err, results, fields) {
                 if (err) {
                     console.error("Unknown MySQL error occured: " + err);
                     return;
                 }
                 // function to add ticket to database
-                var afterGetAssignee = function () {
-                    var query = "INSERT INTO tickets "
-                            + "(client, title, description, category, "
-                            + "assignee_id, open_status) VALUES ("
-                            + clientID + ", "
-                            + mysqlConnection.escape(title) + ", "
-                            + mysqlConnection.escape(description) + ", "
-                            + ticketType + ", "
-                            + assignee_id
-                            + ", 1);";
-                    mysqlConnection.query(query, function (err, results, fields) {
+                var afterGetAssignee = function() {
+                    if (assignee_id == -1) {
+                        assignee_id = "NULL";
+                    }
+                    console.log("ML chose ", assignee_id);
+                    var query = "INSERT INTO tickets " +
+                        "(client, title, description, category, " +
+                        "assignee_id, open_status) VALUES (" +
+                        clientID + ", " +
+                        mysqlConnection.escape(title) + ", " +
+                        mysqlConnection.escape(description) + ", " +
+                        ticketType + ", " +
+                        assignee_id +
+                        ", 1);";
+                    mysqlConnection.query(query, function(err, results, fields) {
                         // return to webpage
                         res.redirect(returnAddr);
                         if (!err) {
@@ -111,13 +120,18 @@ module.exports = function (app, passport, express, mysqlConnection) {
                     chooseManager.choose({
                         clientEmail: clientEmail,
                         title: title,
-                        description: description
-                    }, function (err, id) {
+                        text: description
+                    }, function(err, result) {
                         if (err) {
                             console.error("Error retreiving user id: ", err);
                             return;
                         }
-                        assignee_id = id;
+                        // determine whether the managerID is worthy
+                        if (shouldAutoAssignManager(result.managerID)) {
+                            assignee_id = result.managerID;
+                        } else {
+                            assignee_id = -1;
+                        }
                         afterGetAssignee();
                     });
                 } else {
@@ -126,7 +140,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
             });
         });
     });
-    app.post('/reply_to_ticket', isLoggedIn, function (req, res) {
+    app.post('/reply_to_ticket', isLoggedIn, function(req, res) {
         var returnAddr = req.body.returnAddr || "/";
         returnAddr = returnAddr.trim();
 
@@ -154,13 +168,14 @@ module.exports = function (app, passport, express, mysqlConnection) {
             return;
         }
         // add message to ticket
-        var query = "INSERT INTO messages "
-                + "(ticket, message_content, user, sender, time_sent) VALUES ("
-                + ticket_id + ", "
-                + mysqlConnection.escape(message) + ", "
-                + req.user.USER_ID + ", " // current user in passport session
-                + "0, NOW());";
-        mysqlConnection.query(query, function (err, results, fields) {
+        var query = "INSERT INTO messages " +
+            "(ticket, message_content, user, sender, time_sent) VALUES (" +
+            ticket_id + ", " +
+            mysqlConnection.escape(message) + ", " +
+            req.user.USER_ID + ", " // current user in passport session
+            +
+            "0, NOW());";
+        mysqlConnection.query(query, function(err, results, fields) {
             // return to webpage
             if (!err) {
                 // assign the ticket to the new ticket manager
@@ -172,6 +187,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
         });
     });
     app.post('/assign_ticket', isLoggedIn, assignTicket);
+
     function assignTicket(req, res) {
         var returnAddr = req.body.returnAddr || "/";
         returnAddr = returnAddr.trim();
@@ -186,9 +202,9 @@ module.exports = function (app, passport, express, mysqlConnection) {
         if (assignee_id == -1) {
             assignee_id = req.user.USER_ID;
         }
-        var query = "UPDATE tickets SET assignee_id=" + assignee_id
-                + " WHERE ticket_id=" + ticket_id + ";";
-        mysqlConnection.query(query, function (err, results, fields) {
+        var query = "UPDATE tickets SET assignee_id=" + assignee_id +
+            " WHERE ticket_id=" + ticket_id + ";";
+        mysqlConnection.query(query, function(err, results, fields) {
             // return to webpage
             res.redirect(returnAddr);
             if (!err) {
@@ -201,7 +217,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
         });
     }
 
-    app.post('/close_ticket', isLoggedIn, function (req, res) {
+    app.post('/close_ticket', isLoggedIn, function(req, res) {
         var returnAddr = req.body.returnAddr || "/";
         returnAddr = returnAddr.trim();
         var ticket_id = parseInt(req.body.ticket_id) || -1;
@@ -211,9 +227,9 @@ module.exports = function (app, passport, express, mysqlConnection) {
             console.error("Invalid ticket id: '%d'", req.body.ticket_id);
             return;
         }
-        var query = "UPDATE tickets SET open_status=0 WHERE ticket_id="
-                + ticket_id + " LIMIT 1;";
-        mysqlConnection.query(query, function (err, results, fields) {
+        var query = "UPDATE tickets SET open_status=0 WHERE ticket_id=" +
+            ticket_id + " LIMIT 1;";
+        mysqlConnection.query(query, function(err, results, fields) {
             // return to webpage
             res.redirect(returnAddr);
             if (!err) {
@@ -226,7 +242,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
         });
     });
 
-    app.get('/get_messages', isLoggedIn, function (req, res) {
+    app.get('/get_messages', isLoggedIn, function(req, res) {
         var ticket_id = parseInt(req.query.ticket_id) || -1;
         if (ticket_id == -1) {
             res.redirect("/");
@@ -234,11 +250,11 @@ module.exports = function (app, passport, express, mysqlConnection) {
             console.error("Invalid ticket id.");
             return;
         }
-        var query = "SELECT *, clients.email as CLIENT_EMAIL, "
-                + "users.work_email AS USER_EMAIL FROM messages "
-                + "LEFT JOIN users ON messages.user=users.user_id "
-                + "LEFT JOIN clients ON messages.client=clients.client_id;";
-        mysqlConnection.query(query, function (err, results, fields) {
+        var query = "SELECT *, clients.email as CLIENT_EMAIL, " +
+            "users.work_email AS USER_EMAIL FROM messages " +
+            "LEFT JOIN users ON messages.user=users.user_id " +
+            "LEFT JOIN clients ON messages.client=clients.client_id;";
+        mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
             }
@@ -246,7 +262,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
         })
     });
 
-    app.get('/get_tickets', isLoggedIn, function (req, res) {
+    app.get('/get_tickets', isLoggedIn, function(req, res) {
         var onlyOpen = (req.query.onlyOpen == "true");
         var onlyClosed = (req.query.onlyClosed == "true");
         var start = parseInt(req.query.start) || 0;
@@ -269,9 +285,9 @@ module.exports = function (app, passport, express, mysqlConnection) {
         });
     });
 
-    app.get('/get_categories', function (req, res) {
+    app.get('/get_categories', function(req, res) {
         var query = 'SELECT CATEGORY_ID, NAME FROM categories;'
-        mysqlConnection.query(query, function (err, results, fields) {
+        mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
             }
@@ -279,9 +295,9 @@ module.exports = function (app, passport, express, mysqlConnection) {
         });
     });
 
-    app.get('/get_assignee', isLoggedIn, function (req, res) {
+    app.get('/get_assignee', isLoggedIn, function(req, res) {
         var query = 'SELECT USER_ID, FNAME,LNAME FROM users ORDER BY FNAME;'
-        mysqlConnection.query(query, function (err, results, fields) {
+        mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
             }
@@ -289,9 +305,9 @@ module.exports = function (app, passport, express, mysqlConnection) {
         });
     });
 
-    app.get('/get_departments', isLoggedIn, function (req, res) {
+    app.get('/get_departments', isLoggedIn, function(req, res) {
         var query = 'SELECT * FROM departments ORDER BY NAME;'
-        mysqlConnection.query(query, function (err, results, fields) {
+        mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
             }
@@ -299,10 +315,10 @@ module.exports = function (app, passport, express, mysqlConnection) {
         });
     });
 
-    app.post('/get_depEmployee', isLoggedIn, function (req, res) {
+    app.post('/get_depEmployee', isLoggedIn, function(req, res) {
         var depID = req.body.ID;
         var query = 'SELECT USER_ID, FNAME,LNAME FROM users WHERE DEPARTMENT LIKE "%' + depID + '%" ORDER BY FNAME;'
-        mysqlConnection.query(query, function (err, results, fields) {
+        mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
             }
@@ -310,10 +326,10 @@ module.exports = function (app, passport, express, mysqlConnection) {
         });
     });
 
-    app.post('/new_department', isLoggedIn, function (req, res) {
+    app.post('/new_department', isLoggedIn, function(req, res) {
         var returnAddr = "/managers";
         var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
-        mysqlConnection.query(query, function (err, results, fields) {
+        mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
             } else {
@@ -321,7 +337,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
                 var name = req.body.depName.trim();
                 if (permissions == 0) {
                     var query = 'INSERT INTO DEPARTMENTS (NAME) VALUES("' + name + '")';
-                    mysqlConnection.query(query, function (err, results, fields) {
+                    mysqlConnection.query(query, function(err, results, fields) {
                         if (err) {
                             console.error("Unknown MySQL error occured: " + err);
                             res.redirect(returnAddr);
@@ -338,7 +354,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
         });
     });
 
-    app.post('/delete_department', isLoggedIn, function (req, res) {
+    app.post('/delete_department', isLoggedIn, function(req, res) {
         var returnAddr = req.body.returnAddr || "/";
         returnAddr = returnAddr.trim();
         var dep_id = parseInt(req.body.depID) || -1;
@@ -349,88 +365,86 @@ module.exports = function (app, passport, express, mysqlConnection) {
             return;
         }
         var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
-        mysqlConnection.query(query, function (err, results, fields) {
+        mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
             } else {
-				var permissions = results[0].PERMISSION;
-				if (permissions == 0) {
-                var query = "delete from departments WHERE DEPARTMENT_ID="
-                        + dep_id + ";";
-                mysqlConnection.query(query, function (err, results, fields) {
-                    // return to webpage
-                    res.redirect(returnAddr);
-                    if (!err) {
-                        // TODO: notify user of success, was accepted
-                        console.log("Department deleted");
-                    } else {
-                        // TODO: notify user of failure
-                        console.error("Failed to delete department in database.");
-                    }
-                });
-				}
-				else{
-					console.error("Inadiquate permissions");
-				}
+                var permissions = results[0].PERMISSION;
+                if (permissions == 0) {
+                    var query = "delete from departments WHERE DEPARTMENT_ID=" +
+                        dep_id + ";";
+                    mysqlConnection.query(query, function(err, results, fields) {
+                        // return to webpage
+                        res.redirect(returnAddr);
+                        if (!err) {
+                            // TODO: notify user of success, was accepted
+                            console.log("Department deleted");
+                        } else {
+                            // TODO: notify user of failure
+                            console.error("Failed to delete department in database.");
+                        }
+                    });
+                } else {
+                    console.error("Inadiquate permissions");
+                }
             }
         });
 
     });
-	
-   app.post('/addTo_department', isLoggedIn, function (req, res) {
-    var returnAddr = "/managers";
-    returnAddr = returnAddr.trim();
-    var dep_id = (req.body.depID) || "-1";
-    var assignee_id = parseInt(req.body.assignee || req.body.assignee_id || req.body.assign) || -1;
-    if (dep_id == "-1") {
-        res.redirect(returnAddr);
-        // TODO: notify user of faiulre
-        console.error("Invalid department id: '%d'", req.body.depID);
-        return;
-    }
-    var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
-    mysqlConnection.query(query, function (err, results, fields) {
-        if (err) {
-            console.error("Unknown MySQL error occured: " + err);
-        } else {
-            var permissions = results[0].PERMISSION;
-            if (permissions == 0) {
-                var query = 'SELECT DEPARTMENT FROM users WHERE USER_ID="' + assignee_id + '";';
-                mysqlConnection.query(query, function (err, results, fields) {
-                    // return to webpage
-                    if (!err) {
-                        var deps = results[0].DEPARTMENT;
-                        if (deps.indexOf(dep_id) == -1) {
-                            var query = "UPDATE USERS SET DEPARTMENT='" + deps + "," + dep_id + "' WHERE USER_ID='" + assignee_id + "';";
-                            mysqlConnection.query(query, function (err, results, fields) {
-                                if (err) {
-                                    res.redirect(returnAddr);
-                                    console.error("Unknown MySQL error occured: " + err);
-                                } else {
-                                    res.redirect(returnAddr);
-                                    console.log("User added");
-                                }
-                            });
+    app.post('/addTo_department', isLoggedIn, function(req, res) {
+        var returnAddr = req.body.returnAddr || "/";
+        returnAddr = returnAddr.trim();
+        var dep_id = (req.body.depID) || "-1";
+        var assignee_id = parseInt(req.body.assignee || req.body.assignee_id || req.body.assign) || -1;
+        if (dep_id == "-1") {
+            res.redirect(returnAddr);
+            // TODO: notify user of faiulre
+            console.error("Invalid department id: '%d'", req.body.depID);
+            return;
+        }
+        var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
+        mysqlConnection.query(query, function(err, results, fields) {
+            if (err) {
+                console.error("Unknown MySQL error occured: " + err);
+            } else {
+                var permissions = results[0].PERMISSION;
+                if (permissions == 0) {
+                    var query = 'SELECT DEPARTMENT FROM users WHERE USER_ID="' + assignee_id + '";';
+                    mysqlConnection.query(query, function(err, results, fields) {
+                        // return to webpage
+                        if (!err) {
+                            var deps = results[0].DEPARTMENT;
+                            if (deps.indexOf(dep_id) == -1) {
+                                var query = "UPDATE USERS SET DEPARTMENT='" + deps + "," + dep_id + "' WHERE USER_ID='" + assignee_id + "';";
+                                mysqlConnection.query(query, function(err, results, fields) {
+                                    if (err) {
+                                        res.redirect(returnAddr);
+                                        console.error("Unknown MySQL error occured: " + err);
+                                    } else {
+                                        res.redirect(returnAddr);
+                                        console.log("User added");
+                                    }
+                                });
+                            } else {
+                                res.redirect(returnAddr);
+                                console.log("The user is already a member of this department");
+                            }
                         } else {
                             res.redirect(returnAddr);
-                            console.log("The user is already a member of this department");
+                            // TODO: notify user of failure
+                            console.error("Innadiquate permissions");
                         }
-                    } else {
-                        res.redirect(returnAddr);
-                        // TODO: notify user of failure
-                        console.error("Innadiquate permissions");
-                    }
-                });
-            } else {
-                console.error("Inadiquate permissions");
+                    });
+                } else {
+                    console.error("Inadiquate permissions");
+                }
             }
-        }
+        });
     });
-});
 
 
     // make sure that this one is last
-    app.use('/', function (req, res) {
+    app.use('/', function(req, res) {
         send(res, INDEX);
     });
 
@@ -446,5 +460,10 @@ module.exports = function (app, passport, express, mysqlConnection) {
 
     function send(request, file) {
         request.sendFile(path.join(__dirname, ROOT_DIR, file));
+    }
+
+    function shouldAutoAssignManager(score) {
+        const THRESHOLD = 0.001;
+        return score > THRESHOLD;
     }
 }
