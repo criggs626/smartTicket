@@ -7,6 +7,7 @@ const SETTINGS = "TicketManagerSettings.html";
 const MANAGERVIEW = "managerView.html";
 const DEFAULT_SIZE = 50;
 const DEBUG = false;
+const DEFAULT_ASSIGNEE = "[0]";
 module.exports = function(app, passport, express, mysqlConnection) {
     var path = require('path');
     var chooseManager = require('../machinelearning/chooseTicketManager.js')(
@@ -89,7 +90,7 @@ module.exports = function(app, passport, express, mysqlConnection) {
                 // function to add ticket to database
                 var afterGetAssignee = function() {
                     if (assignee_id == -1) {
-                        assignee_id = "NULL";
+                        assignee_id = DEFAULT_ASSIGNEE;
                     }
                     console.log("ML chose ", assignee_id);
                     var query = "INSERT INTO tickets " +
