@@ -111,7 +111,14 @@ function asigneeDrop(dropDown) {
 }
 
 // DataTables code
-var tableParams = {onlyOpen: true,onlyPersonal:false};
+if (pageName=="managerView"){
+	var tableParams = {onlyOpen: true,onlyPersonal:true};
+	accept.style.display="none";
+	replyBTN.style.width="50%";
+}
+else{
+	var tableParams = {onlyOpen: true,onlyPersonal:false};
+}
 var table = $("#ticketTable").DataTable({
     paging: true,
     columns: [
