@@ -216,14 +216,14 @@ form[for=Login]
     text-align: left;
 }
 
-.login {
+.logout {
     line-height: 3em;
-    color: black;
-	position:absolute;
+    color: white;
+    position:absolute;
     width: 8%;
-	left: 90%;
+    left: 90%;
     text-align: center;
-	height: 50px;
+    height: 50px;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
