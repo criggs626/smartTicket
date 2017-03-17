@@ -258,7 +258,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
                 + 'FROM tickets '
                 + 'LEFT JOIN clients ON clients.client_id=tickets.client '
                 + 'LEFT JOIN categories ON categories.category_id=tickets.category '
-                + 'WHERE 1=1 ' + ((onlyOpen) ? 'AND open_status=1 ' : '')
+                + 'WHERE 1=1 ' + ((onlyOpen) ? 'AND open_status=1 ' : 'AND open_status=0 ')
                 + ((onlyClosed) ? 'AND open_status=0 ' : '')
                 + 'LIMIT ' + start + ', ' + size + ';'
         mysqlConnection.query(query, function (err, results, fields) {

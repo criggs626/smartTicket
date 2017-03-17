@@ -1,3 +1,4 @@
+drop database smartticket;
 CREATE DATABASE smartTicket;
 USE smartTicket;
 
@@ -106,4 +107,4 @@ INSERT INTO CATEGORIES(NAME) VALUES("Software Request");
 INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(2,1,"Network Issues","I am having issues connecting to the internet on my laptop, I wonder if it is something to do with the security settings? Please if you could take a look at it and let. I have a class later and internet is necessary","[1,2]",TRUE,3);
 INSERT INTO TICKETS (CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(2,"Issue","I can't get it to work... I just can't...","[1]",TRUE,5);
 INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(3,1,"Office","I need to have access to microsoft office on my computer. If you could make that work that would be great.","[2]",TRUE,2);
-INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(1,1,"Long ticket test","Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum","[3]",TRUE,2);
+INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(1,1,"Long ticket test","Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum","[0]",TRUE,2);
