@@ -105,7 +105,7 @@ function asigneeDrop(dropDown) {
 }
 
 // DataTables code
-var tableParams = {onlyOpen: true};
+var tableParams = {onlyOpen: true,onlyPersonal:false};
 var table = $("#ticketTable").DataTable({
     paging: true,
     columns: [

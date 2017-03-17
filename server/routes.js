@@ -248,19 +248,20 @@ module.exports = function (app, passport, express, mysqlConnection) {
 
     app.get('/get_tickets', isLoggedIn, function (req, res) {
         var onlyOpen = (req.query.onlyOpen == "true");
-        var onlyClosed = (req.query.onlyClosed == "true");
+        var onlyPersonal = (req.query.onlyPersonal == "true");
         var start = parseInt(req.query.start) || 0;
         var size = parseInt(req.query.length) || DEFAULT_SIZE;
-        var query = 'SELECT ticket_id as id, title, description, open_status, '
-                + 'priority, tickets.department as department, '
-                + 'clients.email as client_email, categories.name as category, '
-                + 'category as category_id, assignee_id as assignee_ids '
-                + 'FROM tickets '
-                + 'LEFT JOIN clients ON clients.client_id=tickets.client '
-                + 'LEFT JOIN categories ON categories.category_id=tickets.category '
-                + 'WHERE 1=1 ' + ((onlyOpen) ? 'AND open_status=1 ' : 'AND open_status=0 ')
-                + ((onlyClosed) ? 'AND open_status=0 ' : '')
-                + 'LIMIT ' + start + ', ' + size + ';'
+        var query = 'SELECT ticket_id as id, title, description, open_status, \n'
+                + 'priority, tickets.department as department, \n'
+                + 'clients.email as client_email, categories.name as category, \n'
+                + 'category as category_id, assignee_id as assignee_ids \n'
+                + 'FROM tickets \n'
+                + 'LEFT JOIN clients ON clients.client_id=tickets.client \n'
+                + 'LEFT JOIN categories ON categories.category_id=tickets.category \n'
+                + 'WHERE 1=1 ' + ((onlyOpen) ? 'AND open_status=1 \n' : 'AND open_status=0 \n')
+                + ((onlyPersonal) ? 'AND assignee_id LIKE "%'+req.user.USER_ID+'%"\n' : ' AND assignee_id LIKE "%0%" \n')
+                + 'LIMIT ' + start + ', ' + size + ';\n'
+		console.log("open Status: "+req.query.onlyOpen+"\npersonal status: "+req.query.onlyPersonal+"\nquery:\n"+query);  //Display all relevant query info
         mysqlConnection.query(query, function (err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
