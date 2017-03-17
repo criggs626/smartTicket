@@ -180,25 +180,15 @@
                         <div class="TicketForm">
 
                             <form name="replay" action="reply_to_ticket" method="post" accept-charset="utf-8">
-                                <input type=hidden name=returnAddr value=/home>
+                                <input type=hidden name=returnAddr value=/managerView>
                                        <input type=hidden name=contact>
                                 <input type=hidden name=ticket_id>
                                 <ul>
-                                    <li><label for="contact">Assignee:</label>
-                                        <select name="assignee" class="browser-default" id="replyAssign">
-
-                                        </select> </li>
                                     <li><label for="description">Response:</label>
                                         <!--<input type="text" name="description" placeholder="" required></li>-->
                                         <textarea name="description" rows="5" cols=100%></textarea>
-
-                                    <li><label for="ticket type">Ticket Type:</label>
-
-                                        <select name="ticket type" class="browser-default" id="replyCats">
-
-                                        </select> </li>
                                     </br>
-                                    <input type="submit" value="Reply to Tickets"></li>
+                                    <input type="submit" value="Reply to Ticket"></li>
                                 </ul>
                             </form>
                         </div>

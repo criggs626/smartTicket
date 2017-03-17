@@ -129,7 +129,6 @@ module.exports = function (app, passport, express, mysqlConnection) {
     app.post('/reply_to_ticket', isLoggedIn, function (req, res) {
         var returnAddr = req.body.returnAddr || "/";
         returnAddr = returnAddr.trim();
-
         var ticket_id = parseInt(req.body.ticket_id) || -1;
         var assignee_id = parseInt(req.body.assignee) || -1;
         var message = req.body.description.trim();
@@ -139,12 +138,6 @@ module.exports = function (app, passport, express, mysqlConnection) {
             res.redirect(returnAddr);
             // TODO: notify user of failure
             console.error("Invalid ticket id.");
-            return;
-        }
-        if (assignee_id == -1) {
-            res.redirect(returnAddr);
-            // TODO: notify user of failure
-            console.error("Invalid assignee id.");
             return;
         }
         if (message == "") {
@@ -164,7 +157,9 @@ module.exports = function (app, passport, express, mysqlConnection) {
             // return to webpage
             if (!err) {
                 // assign the ticket to the new ticket manager
-                assignTicket(req, res);
+				if (assignee_id!=-1){
+					assignTicket(req, res);
+				}
             } else {
                 // TODO: notify user of failure
                 console.error("Failed to add message to database: ", err);
@@ -261,7 +256,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
                 + 'WHERE 1=1 ' + ((onlyOpen) ? 'AND open_status=1 \n' : 'AND open_status=0 \n')
                 + ((onlyPersonal) ? 'AND assignee_id LIKE "%'+req.user.USER_ID+'%"\n' : ' AND assignee_id LIKE "%0%" \n')
                 + 'LIMIT ' + start + ', ' + size + ';\n'
-		console.log("open Status: "+req.query.onlyOpen+"\npersonal status: "+req.query.onlyPersonal+"\nquery:\n"+query);  //Display all relevant query info
+		//console.log("open Status: "+req.query.onlyOpen+"\npersonal status: "+req.query.onlyPersonal+"\nquery:\n"+query);  //Display all relevant query info
         mysqlConnection.query(query, function (err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);

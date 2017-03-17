@@ -84,30 +84,34 @@ window.onclick = function (event) {
 }
 
 function categoryDrop(dropDown, callback) {
-    dropdown = document.getElementById(dropDown);
-    dropdown.innerHTML = "";
-    $.get("/get_categories", function (categories) {
-        for (i = 0; i < categories.length; i++) {
-            if(i == 0)
-				dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '" selected>' + categories[i].NAME + '</option>';
-			else
-                dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '">' + categories[i].NAME + '</option>';
-        }
-        callback();
-    });
+	if (pageName!="managerView"){
+		dropdown = document.getElementById(dropDown);
+		dropdown.innerHTML = "";
+		$.get("/get_categories", function (categories) {
+			for (i = 0; i < categories.length; i++) {
+				if(i == 0)
+					dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '" selected>' + categories[i].NAME + '</option>';
+				else
+					dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '">' + categories[i].NAME + '</option>';
+			}
+			callback();
+		});
+	}
 }
 
 function asigneeDrop(dropDown) {
-    dropdown = document.getElementById(dropDown);
-    dropdown.innerHTML = "";
-    $.get("/get_assignee", function (categories) {
-        for (i = 0; i < categories.length; i++) {
-            if(i == 0)
-				dropdown.innerHTML += '<option value="' + categories[i].USER_ID + '" selected>' + categories[i].FNAME + " " + categories[i].LNAME + '</option>';
-			else
-                dropdown.innerHTML += '<option value="' + categories[i].USER_ID + '">' + categories[i].FNAME + " " + categories[i].LNAME + '</option>';
-        }
-    });
+	if (pageName!="managerView"){
+		dropdown = document.getElementById(dropDown);
+		dropdown.innerHTML = "";
+		$.get("/get_assignee", function (categories) {
+			for (i = 0; i < categories.length; i++) {
+				if(i == 0)
+					dropdown.innerHTML += '<option value="' + categories[i].USER_ID + '" selected>' + categories[i].FNAME + " " + categories[i].LNAME + '</option>';
+				else
+					dropdown.innerHTML += '<option value="' + categories[i].USER_ID + '">' + categories[i].FNAME + " " + categories[i].LNAME + '</option>';
+			}
+		});
+	}
 }
 
 // DataTables code
