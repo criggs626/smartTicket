@@ -4,6 +4,7 @@ const LOGIN = "TicketManagerLogin.html";
 const MANAGERS = "TicketManagers.html";
 const INDEX = "SubmitTicket.html";
 const SETTINGS = "TicketManagerSettings.html";
+const MANAGERVIEW = "managerView.html";
 const DEFAULT_SIZE = 50;
 const DEBUG = false;
 module.exports = function (app, passport, express, mysqlConnection) {
@@ -32,6 +33,10 @@ module.exports = function (app, passport, express, mysqlConnection) {
         successRedirect: '/home', // redirect to the secure profile section
         failureRedirect: '/' // redirect back to the signup page if there is an error
     }));
+	
+	app.use('/manager', isLoggedIn, function (req, res) {
+        send(res, MANAGERVIEW);
+    });
 
     app.get('/logout', function (req, res) {
         req.logout();
@@ -373,7 +378,7 @@ module.exports = function (app, passport, express, mysqlConnection) {
     });
 	
    app.post('/addTo_department', isLoggedIn, function (req, res) {
-    var returnAddr = req.body.returnAddr || "/";
+    var returnAddr = "/managers";
     returnAddr = returnAddr.trim();
     var dep_id = (req.body.depID) || "-1";
     var assignee_id = parseInt(req.body.assignee || req.body.assignee_id || req.body.assign) || -1;
