@@ -21,6 +21,7 @@ nav.{
 nav.links{
     height:45px;
     background-color: #868686;
+	text-align:center;
 }
 
 div.main{
@@ -116,6 +117,9 @@ label[for=file] {
 
 #formSubmit {
     float: right;
+}
+#current{
+	margin-top:0px;
 }
 
 table{

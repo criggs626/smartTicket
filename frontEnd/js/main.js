@@ -100,18 +100,16 @@ function categoryDrop(dropDown, callback) {
 }
 
 function asigneeDrop(dropDown) {
-	if (pageName!="managerView"){
-		dropdown = document.getElementById(dropDown);
-		dropdown.innerHTML = "";
-		$.get("/get_assignee", function (categories) {
-			for (i = 0; i < categories.length; i++) {
-				if(i == 0)
-					dropdown.innerHTML += '<option value="' + categories[i].USER_ID + '" selected>' + categories[i].FNAME + " " + categories[i].LNAME + '</option>';
-				else
-					dropdown.innerHTML += '<option value="' + categories[i].USER_ID + '">' + categories[i].FNAME + " " + categories[i].LNAME + '</option>';
-			}
-		});
-	}
+	dropdown = document.getElementById(dropDown);
+	dropdown.innerHTML = "";
+	$.get("/get_assignee", function (categories) {
+		for (i = 0; i < categories.length; i++) {
+			if(i == 0)
+				dropdown.innerHTML += '<option value="' + categories[i].USER_ID + '" selected>' + categories[i].FNAME + " " + categories[i].LNAME + '</option>';
+			else
+				dropdown.innerHTML += '<option value="' + categories[i].USER_ID + '">' + categories[i].FNAME + " " + categories[i].LNAME + '</option>';
+		}
+	});
 }
 
 // DataTables code
@@ -119,6 +117,9 @@ if (pageName=="managerView"){
 	var tableParams = {onlyOpen: true,onlyPersonal:true};
 	accept.style.display="none";
 	replyBTN.style.width="50%";
+	$.get("/currentUser",function(data){
+		$("#current").html(data.Fname+" "+data.Lname);
+	});
 }
 else{
 	var tableParams = {onlyOpen: true,onlyPersonal:false};

@@ -424,6 +424,11 @@ module.exports = function (app, passport, express, mysqlConnection) {
     });
 });
 
+	app.get("/currentUser",function(req,res){
+		result={"Fname":req.user.FNAME,"Lname":req.user.LNAME,"id":req.user.USER_ID};
+		res.json(result);
+	});
+
 
     // make sure that this one is last
     app.use('/', function (req, res) {

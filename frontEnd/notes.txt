@@ -1,0 +1,2 @@
+Logout Centering
+Login page redirect
