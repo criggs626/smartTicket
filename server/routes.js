@@ -92,7 +92,7 @@ module.exports = function(app, passport, express, mysqlConnection) {
                     if (assignee_id == -1) {
                         assignee_id = DEFAULT_ASSIGNEE;
                     }
-                    console.log("ML chose ", assignee_id);
+                    // console.log("ML chose ", assignee_id);
                     var query = "INSERT INTO tickets " +
                         "(client, title, description, category, " +
                         "assignee_id, open_status) VALUES (" +
@@ -117,7 +117,7 @@ module.exports = function(app, passport, express, mysqlConnection) {
                 // on success, add ticket to database
                 var clientID = results[0].client_id;
                 // get which ticket manager should deal with this ticket
-                if (assignee_id == -1) {
+                if (assignee_id < 1) {
                     chooseManager.choose({
                         clientEmail: clientEmail,
                         title: title,
@@ -136,7 +136,19 @@ module.exports = function(app, passport, express, mysqlConnection) {
                         afterGetAssignee();
                     });
                 } else {
-                    afterGetAssignee();
+                    // this was assigned manually. Learn from this.
+                    chooseManager.train(
+                        {
+                            clientEmail: clientEmail,
+                            title: title,
+                            text: description
+                        },
+                        assignee_id,
+                        function(err) {
+                            if (err != null) console.log("Error training", err);
+                            afterGetAssignee();
+                        }
+                    );
                 }
             });
         });
@@ -201,6 +213,8 @@ module.exports = function(app, passport, express, mysqlConnection) {
             return;
         }
         if (assignee_id == -1) {
+            // when assigning with nobody specified, this means that the manager
+            // accepted the ticket. Set it to the currently signed-in ID.
             assignee_id = req.user.USER_ID;
         }
         var query = "UPDATE tickets SET assignee_id=" + assignee_id +
@@ -215,6 +229,30 @@ module.exports = function(app, passport, express, mysqlConnection) {
                 // TODO: notify user of failure
                 console.error("Failed to change assignment in database.");
             }
+        });
+        // train the classifier on the ticket data
+        query = "SELECT clients.email as email, title, description FROM tickets"
+            + " LEFT JOIN clients ON tickets.client=clients.client_id"
+            + " WHERE ticket_id=" + ticket_id + ";";
+        mysqlConnection.query(query, function(err, results, fields) {
+            if (err) {
+                console.error("Failed to obtain ticket data to train.", err);
+            }
+            // Manually assigned. Learn from this.
+            var clientEmail = results[0].email;
+            var title = results[0].title; // gimme that title title
+            var description = results[0].description;
+            chooseManager.train(
+                {
+                    clientEmail: clientEmail,
+                    title: title,
+                    text: description
+                },
+                assignee_id,
+                function(err) {
+                    if (err != null) console.log("Error training", err);
+                }
+            );
         });
     }
 

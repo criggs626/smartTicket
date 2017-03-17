@@ -11,7 +11,6 @@ module.exports = function (mysqlConnection) {
             //     title: "title",
             //     text: "description"
             // }
-            console.log("Who does this data fit best?", data.title, data.text);
             // get text data
             // title is twice as important as the text
             var tokens = this.processTokens(data.title, data.text)
@@ -48,11 +47,11 @@ module.exports = function (mysqlConnection) {
         processTokens: function(title, message) {
             // title is twice as important as the message
             var text = title + " " + title + " " + message;
-            text = text.replace(/[^A-Za-z ]/g, " ");
-            text = text.replace(/[ ]{2,}/g, " ");
-            text = text.replace(/s\b/g, "");
-            text = text.toLowerCase();
-            return text.split(" ");
+            text = text.replace(/[^A-Za-z ]/g, " "); // only alphabetic or space
+            text = text.replace(/[ ]{2,}/g, " ");    // minimize whitespace
+            text = text.replace(/s\b/g, "");         // remove any trailing 's'
+            text = text.toLowerCase();               // lowercase
+            return text.split(" ");                  // return as array of words
         },
         /*
          * Given data and dataCount, determine each manager's "score". Greater score means
@@ -76,8 +75,10 @@ module.exports = function (mysqlConnection) {
          * Given text data from the ticket and the manager that was assigned
          * manually, adjust the data to represent this preference (legit~ish ML)
          */
-        train: function(text, managerID) {
-            // TODO
+        train: function(data, managerID, done) {
+            console.log("Training classifier");
+            console.log(data, managerID);
+            done(null);
         },
         /*
          * Given a manager's ID, determine whether he/she is working now
@@ -86,37 +87,35 @@ module.exports = function (mysqlConnection) {
              // TODO
              return false;
          },
-        /*
-         * Run some tests to verify the operation of each of the functions.
-         * This will be removed for production
-         */
-        conductTest: function() {
-            var input1 = {
-                clientEmail: "example@example.com",
-                title: "Can't connect to polysecure",
-                text: "I'm having network issues. Would you be able to fix my wifi connection?",
-            };
-            this.choose(input1, function(err, result) {
-                if (err != null) {
-                    console.error("Error during test.", err);
-                    return;
-                }
-                console.log(input1, "leads to", result.managerID, result.score);
-            });
-            var input2 = {
-                clientEmail: "example@example.com",
-                title: "Met with the BSOD",
-                text: "Computer crashed, I need it for work ASAP. HELP",
-            };
-            this.choose(input2, function(err, result) {
-                if (err != null) {
-                    console.error("Error during test.", err);
-                    return;
-                }
-                console.log(input2, "leads to", result.managerID, result.score);
-            });
-        },
+        // /*
+        //  * Run some tests to verify the operation of each of the functions.
+        //  * This will be removed for production
+        //  */
+        // conductTest: function() {
+        //     var input1 = {
+        //         clientEmail: "example@example.com",
+        //         title: "Can't connect to polysecure",
+        //         text: "I'm having network issues. Would you be able to fix my wifi connection?",
+        //     };
+        //     this.choose(input1, function(err, result) {
+        //         if (err != null) {
+        //             console.error("Error during test.", err);
+        //             return;
+        //         }
+        //         console.log(input1, "leads to", result.managerID, result.score);
+        //     });
+        //     var input2 = {
+        //         clientEmail: "example@example.com",
+        //         title: "Met with the BSOD",
+        //         text: "Computer crashed, I need it for work ASAP. HELP",
+        //     };
+        //     this.choose(input2, function(err, result) {
+        //         if (err != null) {
+        //             console.error("Error during test.", err);
+        //             return;
+        //         }
+        //         console.log(input2, "leads to", result.managerID, result.score);
+        //     });
+        // },
     };
-
-
 }
