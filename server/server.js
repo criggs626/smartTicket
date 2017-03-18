@@ -6,6 +6,8 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var mysql = require('mysql');
 var config = require('../config.json');
+var replace = require("replace");
+
 
 // initialize the MySQL database connection
 var mysqlConnection = mysql.createConnection({
@@ -32,7 +34,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-require('./routes.js')(app, passport, express, mysqlConnection);
+require('./routes.js')(app, passport, express, mysqlConnection,replace);
 
 var port = parseInt(config['port']) || 80;
 app.listen(port, function () {

@@ -7,7 +7,7 @@ const SETTINGS = "TicketManagerSettings.html";
 const MANAGERVIEW = "managerView.html";
 const DEFAULT_SIZE = 50;
 const DEBUG = false;
-module.exports = function (app, passport, express, mysqlConnection) {
+module.exports = function (app, passport, express, mysqlConnection,replace) {
     var path = require('path');
     var chooseManager = require('../machinelearning/chooseTicketManager.js')(
             mysqlConnection);
@@ -429,11 +429,54 @@ module.exports = function (app, passport, express, mysqlConnection) {
     });
 });
 
-	app.get("/currentUser",function(req,res){
+	app.get("/currentUser",isLoggedIn,function(req,res){
 		result={"Fname":req.user.FNAME,"Lname":req.user.LNAME,"id":req.user.USER_ID};
 		res.json(result);
 	});
+	
+	app.post("/changeColor",function(req,res){
+		var returnAddr = req.body.returnAddr;
+		var firstReplacement=req.body.first;
+		var secondReplacment=req.body.second;
+		var thirdReplacement=req.body.third;
+		fs = require('fs')
+fs.readFile('../frontend/colors', 'utf8', function (err,data) {
+  if (err) {
+    return console.log(err);
+  }
+  colors=JSON.parse(data) 
+  replace({
+		regex: colors.first,
+		replacement: firstReplacement,
+		paths: ['../frontend/colors.css'],
+		recursive: true,
+		silent: true,
+	});
+	colors.first=firstReplacement;
+	replace({
+		regex: colors.second,
+		replacement: secondReplacment,
+		paths: ['../frontend/colors.css'],
+		recursive: true,
+		silent: true,
+	});
+	colors.second=secondReplacment;
+	replace({
+		regex: colors.third,
+		replacement: thirdReplacement,
+		paths: ['../frontend/colors.css'],
+		recursive: true,
+		silent: true,
+	});
+	colors.third=thirdReplacement;
+	fs.writeFile("../frontend/colors", JSON.stringify(colors), 'utf8', function (err) {
+     if (err) return console.log("Why!!!!"+err);
+  });
+});
 
+
+		res.redirect(returnAddr)
+	});
 
     // make sure that this one is last
     app.use('/', function (req, res) {
