@@ -97,28 +97,31 @@
                             <button class="button" id="close" disabled>Close</button>
                             <div class="displaynone ticket_id">
                             </div>
+							<div class="header">
                             <div class=client_email>
 
                             </div>
                             <div class=title>
 
                             </div>
+							<div class=category>
+
+                            </div>
+							</div>
                             <div class=description>
                                 Select a ticket to have its details displayed here.
                             </div>
-                            <div id=messageLoading class="progress displaynone">
-                                <div class=indeterminate></div>
-                            </div>
+							<div class="message_container">
+							<span style="text-align:center;"><h3>Messages</h3></span>
                             <div id=messages>
-                                <div id=messageTemplate class=message>
-                                    <span class=sender>example@example.com</span>
-                                    <span class=body>Body here</span>
-                                </div>
+								Messages will load here...
                             </div>
+							</div>
                         </div>
                     </section>
 
                 </div>
+
             </div>
 
 
@@ -181,7 +184,7 @@
                         <div class="TicketForm">
 
                             <form name="replay" action="reply_to_ticket" method="post" accept-charset="utf-8">
-                                <input type=hidden name=returnAddr value=/managerView>
+                                <input type=hidden name=returnAddr value=/manager>
                                        <input type=hidden name=contact>
                                 <input type=hidden name=ticket_id>
                                 <ul>

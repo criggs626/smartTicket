@@ -33,6 +33,24 @@ div.main{
     border-bottom: 0px;
     padding-bottom: 25px !important;
 }
+div.header{
+	display:flex;
+}
+div.client_email{
+	text-align:center;
+	width:25%;
+	background-color:white;
+}
+div.title{
+	text-align:center;
+	width:50%;
+	background-color:white;
+}
+div.category{
+	text-align:center;
+	width:25%;
+	background-color:white;
+}
 main > div.row {
     margin-bottom: 0;
 }
@@ -259,8 +277,7 @@ form[for=Login]
     width: 100%;
     box-sizing: border-box;
 }
-.ticketViewer > .description, .ticketViewer .message,
-.ticketViewer > .client_email, .ticketViewer > .title {
+.ticketViewer > .description, .ticketViewer .message{
     background-color: #dbdbdb;
     padding: .5em;
 }
@@ -459,6 +476,32 @@ form[for=Login]
 
 
 /* Messages */
-#messageTemplate {
-    display: none;
+div.message_container{
+	height:50vh;
+	background-color:white;
+	margin-top:20px;
+	
+}
+#messages{
+}
+div.sent{
+	text-align:left;
+	background-color:#dbdbdb;
+	padding: 5px 200px 5px 40px;
+	border-style: solid;
+    border-width:0 0 1px 0;
+/*
+	text-align:right;
+	padding: 5px 40px 5px 200px;
+	background-color:#dbdbdb;
+	background-size:50px 100px;
+	border-style: solid;
+    border-width:0 0 1px 0;
+*/
+}
+div.received{
+	text-align:left;
+	padding: 5px 200px 5px 40px;
+	border-style: solid;
+    border-width:0 0 1px 0;
 }

@@ -147,12 +147,16 @@ $("#ticketTable tbody").on("click", "tr", function (event) {
     var text = data.description;
     text = text.replace(/\n|(\r\n)/g, "<br>");
     $("#ticketViewer > .description").html(text);
-    $("#ticketViewer > .title").text(data.title);
-    $("#ticketViewer > .client_email").text(data.client_email);
+    $("#ticketViewer > .header > .title").text(data.title);
+    $("#ticketViewer > .header > .category").text(data.category);
+    $("#ticketViewer > .header > .client_email").text(data.client_email);
     $("#ticketViewer > .ticket_id").text(data.id);
     // indicate that the row has been selected (for css)
     $(".clickedRow").removeClass("clickedRow");
     $(this).addClass("clickedRow");
+	if (pageName=="managerView"){
+		loadMessages(parseInt(data.id) || 0)
+	}
     // // load messages, too
     // loadMessages(parseInt(data.id) || 0);
     // enable buttons
@@ -160,8 +164,6 @@ $("#ticketTable tbody").on("click", "tr", function (event) {
 });
 
 function loadMessages(ticket_id) {
-    $("#messages").children().not("#messageTemplate").remove();
-    $("#messageLoading").removeClass("displaynone");
     $.ajax({
         url: "/get_messages",
         data: {
@@ -175,6 +177,7 @@ function loadMessages(ticket_id) {
                 console.error("Error retreiving messages: ", textStatus);
                 return;
             }
+			$("#messages").html("");
             for (var messageID in data) {
                 addMessage(data[messageID]);
             }
@@ -186,10 +189,10 @@ function loadMessages(ticket_id) {
     });
 }
 function addMessage(message) {
-    var messageElem = $("#messageTemplate")[0].cloneNode(true);
-    messageElem.id = "message" + message.MESSAGE_ID;
-    var sender = (message.SENDER == 0) ? message.USER_EMAIL : message.CLIENT_EMAIL;
-    $(messageElem).find(".sender").text(sender);
-    $(messageElem).find(".body").text(message.MESSAGE_CONTENT);
-    $("#messages").append(messageElem);
+	if (message.SENDER==0){
+		$("#messages").append("<div class='sent'>"+message.USER_EMAIL+": "+message.MESSAGE_CONTENT+"</div>");
+	}
+	else{
+		$("#messages").append("<div class='received'>"+message.CLIENT_EMAIL+": "+message.MESSAGE_CONTENT+"</div>");
+	}
 }

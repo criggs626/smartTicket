@@ -160,9 +160,13 @@ module.exports = function (app, passport, express, mysqlConnection) {
 				if (assignee_id!=-1){
 					assignTicket(req, res);
 				}
+				res.redirect(returnAddr);
+				return;
             } else {
                 // TODO: notify user of failure
                 console.error("Failed to add message to database: ", err);
+				res.redirect(returnAddr);
+				return;
             }
         });
     });
@@ -229,10 +233,11 @@ module.exports = function (app, passport, express, mysqlConnection) {
             console.error("Invalid ticket id.");
             return;
         }
-        var query = "SELECT *, clients.email as CLIENT_EMAIL, "
-                + "users.work_email AS USER_EMAIL FROM messages "
-                + "LEFT JOIN users ON messages.user=users.user_id "
-                + "LEFT JOIN clients ON messages.client=clients.client_id;";
+        var query = "SELECT *, clients.email as CLIENT_EMAIL, \n"
+                + "users.work_email AS USER_EMAIL FROM messages \n"
+                + "LEFT JOIN users ON messages.user=users.user_id \n"
+                + "LEFT JOIN clients ON messages.client=clients.client_id\n"
+				+ "WHERE TICKET="+ticket_id+";";
         mysqlConnection.query(query, function (err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
