@@ -51,7 +51,7 @@
 
 					
 					</br>
-					<input type="submit" value="Submit Ticket"></li>
+					<input type="submit" value="Submit Ticket" id="submit"></li>
 				</ul>
 			</form>
 			</div>
@@ -76,6 +76,9 @@
     });
 }
 categoryDrop("categories")
+$("#submit").click(function(){
+	alert("Ticket Created");
+});
 </script>
 
     </body>
