@@ -1,6 +1,7 @@
 var PATH_DATA_COUNT = "../machineLearning/dataCount.json";
 var stopWords = require("./stopWords.json");
 var fs = require("fs");
+const IDF_WEIGHT = 4;
 
 module.exports = function (mysqlConnection) {
     return {
@@ -19,17 +20,19 @@ module.exports = function (mysqlConnection) {
             var tokens = this.processTokens(data.title, data.text)
             // use dataCount to assess scores
             var dataCount = require(PATH_DATA_COUNT);
-            // var scores = this.calcScores(tokens, dataCount);
-            // // list manager ranking
-            // var sorted = Object.keys(scores).sort(function(a, b) {
-            //     return scores[b] - scores[a];
-            // });
-            var scores = this.uniquePerManager(tokens, dataCount);
-            console.log(scores);
+            var scores = this.calcScores(tokens, dataCount);
+            // list manager ranking
             var sorted = Object.keys(scores).sort(function(a, b) {
-                return scores[b].length - scores[a].length;
+                return scores[b] - scores[a];
             });
-            console.log(sorted);
+            // console.log(scores);
+            // // Pure-IDF test
+            // var scores = this.uniquePerManager(tokens, dataCount);
+            // console.log(scores);
+            // var sorted = Object.keys(scores).sort(function(a, b) {
+            //     return scores[b].length - scores[a].length;
+            // });
+            // console.log(sorted);
 
             var bestManagerID = sorted[0];
             // loop through managers in order until currently on-duty manager
@@ -50,39 +53,39 @@ module.exports = function (mysqlConnection) {
                 "score": scores[managerID],
             });
         },
-        /*
-         * Given the ticket's tokens and the count data, find what words appear
-         * excusively in each manager's corpus
-         */
-        uniquePerManager: function(tokens, dataCount) {
-            var unique = {};
-            for (var tokenID in tokens) {
-                var managerForToken = -1;
-                var token = tokens[tokenID];
-                for (var managerID in dataCount) {
-                    var wordCounts = dataCount[managerID]["words"];
-                    if (wordCounts[token]) {
-                        if (managerForToken == -1) {
-                            managerForToken = managerID;
-                        } else {
-                            managerForToken = -1;
-                            break;
-                        }
-                    }
-                }
-                if (managerForToken != -1) { // only one manager has this word
-                    if (unique[managerForToken]) {
-                        if (unique[managerForToken].indexOf(token) == -1) {
-                            unique[managerForToken].push(token);
-                        }
-                    } else {
-                        unique[managerForToken] = [token];
-                    }
-                }
-            }
-            return unique;
-            // IDEA: try custom inverse document frequency instead
-        },
+        // /*
+        //  * Given the ticket's tokens and the count data, find what words appear
+        //  * excusively in each manager's corpus
+        //  */
+        // uniquePerManager: function(tokens, dataCount) {
+        //     var unique = {};
+        //     for (var tokenID in tokens) {
+        //         var managerForToken = -1;
+        //         var token = tokens[tokenID];
+        //         for (var managerID in dataCount) {
+        //             var wordCounts = dataCount[managerID]["words"];
+        //             if (wordCounts[token]) {
+        //                 if (managerForToken == -1) {
+        //                     managerForToken = managerID;
+        //                 } else {
+        //                     managerForToken = -1;
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //         if (managerForToken != -1) { // only one manager has this word
+        //             if (unique[managerForToken]) {
+        //                 if (unique[managerForToken].indexOf(token) == -1) {
+        //                     unique[managerForToken].push(token);
+        //                 }
+        //             } else {
+        //                 unique[managerForToken] = [token];
+        //             }
+        //         }
+        //     }
+        //     return unique;
+        //     // IDEA: try custom inverse document frequency instead
+        // },
         /*
          * Given the title and description of the ticket, return an array of
          * ML-useable tokens.
@@ -106,6 +109,20 @@ module.exports = function (mysqlConnection) {
             return tokens;                           // return as array of words
         },
         /*
+         * Given a token and dataCount object, return token's IDF (Inverse
+         * document frequency)
+         */
+        tokenIDF: function(token, dataCount) {
+            var count = 0;
+            for (var managerID in dataCount) {
+                var wordCount = dataCount[managerID]["words"];
+                if (wordCount[token]) {
+                    count++;
+                }
+            }
+            return count;
+        },
+        /*
          * Given data and dataCount, determine each manager's "score". Greater score means
          * more likely to be able to handle ticket
          */
@@ -116,7 +133,9 @@ module.exports = function (mysqlConnection) {
                 var wordCounts = dataCount[nameID]["words"];
                 for (var wordID in tokens) {
                     var word = tokens[wordID];
-                    scores[nameID] += wordCounts[word] || 0;
+                    scores[nameID] += (wordCounts[word]
+                        * (IDF_WEIGHT / this.tokenIDF(word, dataCount)) )
+                        || 0;
                 }
                 // test without this
                 scores[nameID] /= dataCount[nameID]["count"];
