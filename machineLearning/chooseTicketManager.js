@@ -1,5 +1,6 @@
 var PATH_DATA_COUNT = "../machineLearning/dataCount.json";
 var stopWords = require("./stopWords.json");
+var fs = require("fs");
 
 module.exports = function (mysqlConnection) {
     return {
@@ -88,7 +89,6 @@ module.exports = function (mysqlConnection) {
          * manually, adjust the data to represent this preference (legit~ish ML)
          */
         train: function(data, managerID, done) {
-            var fs = require("fs");
             console.log("Training classifier");
             var dataCount = require(PATH_DATA_COUNT);
             var words = this.processTokens(data.title, data.text);
@@ -105,6 +105,8 @@ module.exports = function (mysqlConnection) {
                 if (!wordCounts[word]) wordCounts[word] = 0;
                 wordCounts[word] += add;
             }
+            
+            dataCount[managerID]["count"] = newLength;
             dataCount[managerID]["words"] = wordCounts;
             fs.writeFile(PATH_DATA_COUNT, JSON.stringify(dataCount, null, 4), function(err) {
                 if (err) {
@@ -122,35 +124,5 @@ module.exports = function (mysqlConnection) {
              // TODO
              return false;
          },
-        // /*
-        //  * Run some tests to verify the operation of each of the functions.
-        //  * This will be removed for production
-        //  */
-        // conductTest: function() {
-        //     var input1 = {
-        //         clientEmail: "example@example.com",
-        //         title: "Can't connect to polysecure",
-        //         text: "I'm having network issues. Would you be able to fix my wifi connection?",
-        //     };
-        //     this.choose(input1, function(err, result) {
-        //         if (err != null) {
-        //             console.error("Error during test.", err);
-        //             return;
-        //         }
-        //         console.log(input1, "leads to", result.managerID, result.score);
-        //     });
-        //     var input2 = {
-        //         clientEmail: "example@example.com",
-        //         title: "Met with the BSOD",
-        //         text: "Computer crashed, I need it for work ASAP. HELP",
-        //     };
-        //     this.choose(input2, function(err, result) {
-        //         if (err != null) {
-        //             console.error("Error during test.", err);
-        //             return;
-        //         }
-        //         console.log(input2, "leads to", result.managerID, result.score);
-        //     });
-        // },
     };
 }
