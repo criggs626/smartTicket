@@ -15,11 +15,11 @@ module.exports = function (mysqlConnection) {
             //     title: "title",
             //     text: "description"
             // }
-            // get text data
-            // title is twice as important as the text
+            // get text data and convert it to 'tokens' (list of words)
             var tokens = this.processTokens(data.title, data.text)
             // use dataCount to assess scores
             var dataCount = require(PATH_DATA_COUNT);
+            console.log(this.uniquePerManager(tokens, dataCount));
             var scores = this.calcScores(tokens, dataCount);
             // list manager ranking
             var sorted = Object.keys(scores).sort(function(a, b) {
@@ -43,6 +43,37 @@ module.exports = function (mysqlConnection) {
                 "managerID": managerID,
                 "score": scores[managerID],
             });
+        },
+        /*
+         * Given the ticket's tokens and the count data, find what words appear
+         * excusively in each manager's corpus
+         */
+        uniquePerManager: function(tokens, dataCount) {
+            var unique = {};
+            for (var tokenID in tokens) {
+                var managerForToken = -1;
+                var token = tokens[tokenID];
+                for (var managerID in dataCount) {
+                    var wordCounts = dataCount[managerID]["words"];
+                    if (wordCounts[token]) {
+                        if (managerForToken == -1) {
+                            managerForToken = managerID;
+                        } else {
+                            managerForToken = -1;
+                            break;
+                        }
+                    }
+                }
+                if (managerForToken != -1) { // only one manager has this word
+                    if (unique[managerForToken]) {
+                        unique[managerForToken].push(token);
+                    } else {
+                        unique[managerForToken] = [token];
+                    }
+                }
+            }
+            return unique;
+            // IDEA: try custom inverse document frequency instead
         },
         /*
          * Given the title and description of the ticket, return an array of
