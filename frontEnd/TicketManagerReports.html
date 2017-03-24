@@ -10,9 +10,9 @@
         <script src=js/materialize.min.js></script>
         <script src=js/settings.js></script>
 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-		
-				
-		
+
+
+
     </head>
     <body>
         <nav>
@@ -29,32 +29,32 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <img src="img/ic_group_black_48dp.png">
                                     <a href="/manager" target=_self>
-                                    Tickets
+                                        <img src="img/ic_group_black_48dp.png">
+                                        Tickets
                                     </a>
                                 </th>
                                 <th>
-                                    <img src="img/ic_work_black_48dp_2x.png" width="48px" height="48px">
                                     <a href="/managers" target=_self>
-                                    Ticket&nbsp;Managers
+                                        <img src="img/ic_work_black_48dp_2x.png" width="48px" height="48px">
+                                        Ticket&nbsp;Managers
                                     </a>
                                 </th>
                                 <th>
                                     <img src="img/ic_poll_black_48dp.png" width="48px" height="48px">
-                                    <a href="TicketManagerReports.html" target=_self>
                                     Reports
-                                    </a>
                                 </th>
                                 <th>
-                                    <img src="img/ic_pages_black_48dp.png" width="48px" height="48px">
                                     <a href="TicketManagerFAQ.html" target=_self>
-                                    FAQ
+                                        <img src="img/ic_pages_black_48dp.png" width="48px" height="48px">
+                                        FAQ
                                     </a>
                                 </th>
                                 <th>
-                                    <img src="img/ic_settings_black_48dp_2x.png" width="48px" height="48px">
-                                    Settings
+                                    <a href="/settings" target=_self>
+                                        <img src="img/ic_settings_black_48dp_2x.png" width="48px" height="48px">
+                                        Settings
+                                    </a>
                                 </th>
                             </tr>
                         </thead>
@@ -64,16 +64,16 @@
             <table id="settingsTable">
                 <img src="img/ic_poll_black_48dp.png" id="reportsIMG">
                 <h2>&nbsp;Reports</h2></br>
-				
-				
+
+
 				<div id="piechart"></div> </br>
 				  <div id="barchart"></div>
             </table>
-			
+
             </div>
         </main>
     </body>
-	
+
 	<script type="text/javascript">
 				  google.charts.load('current', {'packages':['corechart']});
 				  google.charts.setOnLoadCallback(drawChart);
@@ -97,10 +97,10 @@
 					var chart = new google.visualization.PieChart(document.getElementById('piechart'));
 
 					chart.draw(data, options);
-					
+
 				  }
 	</script>
-	
+
 	<script type="text/javascript">
 		google.charts.load('current', {packages: ['corechart', 'bar']});
 		google.charts.setOnLoadCallback(drawStacked);
