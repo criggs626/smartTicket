@@ -7,7 +7,7 @@ const SETTINGS = "TicketManagerSettings.html";
 const MANAGERVIEW = "managerView.html";
 const DEFAULT_SIZE = 50;
 const DEBUG = false;
-module.exports = function (app, passport, express, mysqlConnection,replace) {
+module.exports = function (app, passport, express, mysqlConnection,replace,mysqlDump) {
     var path = require('path');
     var chooseManager = require('../machinelearning/chooseTicketManager.js')(
             mysqlConnection);
@@ -528,6 +528,21 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
 
 
 		res.redirect(returnAddr)
+	});
+	
+	app.get("/backup",function(req,res){
+		mysqlDump({
+			host: 'localhost',
+			user: 'root',
+			password: '',
+			database: 'smartticket',
+			dest:'./data.sql' // destination file 
+		},function(err){
+			if(!err){
+				res.send(data.sql);
+			}
+			// create data.sql file; 
+		})
 	});
 
     // make sure that this one is last

@@ -90,9 +90,9 @@ function categoryDrop(dropDown, callback) {
 		$.get("/get_categories", function (categories) {
 			for (i = 0; i < categories.length; i++) {
 				if(i == 0)
-					dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '" selected>' + categories[i].NAME + '</option>';
+					dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '"'+($(".category").html()==categories[i].NAME ? "selected":"")+'>' + categories[i].NAME + '</option>';
 				else
-					dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '">' + categories[i].NAME + '</option>';
+					dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '"'+($(".category").html()==categories[i].NAME ? "selected":"")+'>' + categories[i].NAME + '</option>';
 			}
 			callback();
 		});
