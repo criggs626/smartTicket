@@ -9,7 +9,6 @@ var config = require('../config.json');
 var replace = require("replace");
 var mysqlDump = require("mysqldump");
 
-
 // initialize the MySQL database connection
 var mysqlConnection = mysql.createConnection({
 	host: 'localhost',
@@ -35,7 +34,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-require('./routes.js')(app, passport, express, mysqlConnection,replace,mysqlDump );
+require('./routes.js')(app, passport, express, mysqlConnection,replace,mysqlDump);
 
 var port = parseInt(config['port']) || 80;
 app.listen(port, function () {

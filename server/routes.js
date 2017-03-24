@@ -7,13 +7,8 @@ const SETTINGS = "TicketManagerSettings.html";
 const MANAGERVIEW = "managerView.html";
 const DEFAULT_SIZE = 50;
 const DEBUG = false;
-<<<<<<< HEAD
 module.exports = function (app, passport, express, mysqlConnection,replace,mysqlDump) {
-=======
 const DEFAULT_ASSIGNEE = "[0]";
-
-module.exports = function (app, passport, express, mysqlConnection, replace) {
->>>>>>> a4e263720ca5fddddcdf3ef74e32c13c8f1f8906
     var path = require('path');
     var chooseManager = require('../machinelearning/chooseTicketManager.js')(
         mysqlConnection);
@@ -588,16 +583,21 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
 		res.redirect(returnAddr)
 	});
 	
-	app.get("/backup",function(req,res){
+	app.get("/backup",isLoggedIn,function(req,res){
 		mysqlDump({
 			host: 'localhost',
 			user: 'root',
 			password: '',
 			database: 'smartticket',
-			dest:'./data.sql' // destination file 
+			dest:'./backup.sql' // destination file 
 		},function(err){
 			if(!err){
-				res.send(data.sql);
+				fs = require('fs')
+				res.sendFile(path.join(__dirname,"./backup.sql"),function(){fs.unlink(path.join(__dirname,"./backup.sql"))});
+				console.log("Database exported");
+			}
+			else{
+				console.log("Error exporting database");
 			}
 			// create data.sql file; 
 		})
