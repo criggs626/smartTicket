@@ -1,6 +1,7 @@
 const ROOT_DIR = "../frontEnd/";
 const HOME = "TicketManagerHome.html";
 const FAQ = "TicketManagerFAQ.html";
+const REPORTS = "TicketManagerReports.html";
 const LOGIN = "TicketManagerLogin.html";
 const MANAGERS = "TicketManagers.html";
 const INDEX = "SubmitTicket.html";
@@ -32,7 +33,11 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
 
     app.get('/faq', function(req, res) {
         send(res, FAQ);
-    })
+    });
+
+    app.get('/reports', function(req, res) {
+        send(res, REPORTS);
+    });
 
     app.get('/managers', isLoggedIn, function(req, res) {
         send(res, MANAGERS);
