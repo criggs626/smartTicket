@@ -84,8 +84,8 @@ window.onclick = function (event) {
 }
 
 function categoryDrop(dropDown, callback) {
-	if (pageName!="managerView"){
-		dropdown = document.getElementById(dropDown);
+	dropdown = document.getElementById(dropDown);
+    if (dropdown) {
 		dropdown.innerHTML = "";
 		$.get("/get_categories", function (categories) {
 			for (i = 0; i < categories.length; i++) {

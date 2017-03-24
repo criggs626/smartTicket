@@ -7,8 +7,9 @@ const SETTINGS = "TicketManagerSettings.html";
 const MANAGERVIEW = "managerView.html";
 const DEFAULT_SIZE = 50;
 const DEBUG = false;
-module.exports = function (app, passport, express, mysqlConnection,replace,mysqlDump) {
 const DEFAULT_ASSIGNEE = "[0]";
+
+module.exports = function (app, passport, express, mysqlConnection,replace,mysqlDump) {
     var path = require('path');
     var chooseManager = require('../machinelearning/chooseTicketManager.js')(
         mysqlConnection);
@@ -92,7 +93,7 @@ const DEFAULT_ASSIGNEE = "[0]";
                     if (assignee_id == -1) {
                         assignee_id = DEFAULT_ASSIGNEE;
                     }
-                    // console.log("ML chose ", assignee_id);
+                    console.log("ML chose ", assignee_id);
                     var query = "INSERT INTO tickets " +
                         "(client, title, description, category, " +
                         "assignee_id, open_status) VALUES (" +
@@ -582,7 +583,6 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
 
 		res.redirect(returnAddr)
 	});
-	
 	app.get("/backup",isLoggedIn,function(req,res){
 		mysqlDump({
 			host: 'localhost',
@@ -599,7 +599,7 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
 			else{
 				console.log("Error exporting database");
 			}
-			// create data.sql file; 
+			// create data.sql file;
 		})
 	});
 
