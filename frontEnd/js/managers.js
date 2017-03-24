@@ -14,7 +14,7 @@ function getManagers(id) {
     $.post("/get_depEmployee", {"ID": id}, function (data) {
         managerTable.innerHTML = "<tr><th>Ticket Managers</th><th data-depid='"+id+"'>Delete</th></tr>";
         for (i = 0; i < data.length; i++) {
-            managerTable.innerHTML += "<tr><td data-depID='" + data[i].USER_ID + "'>" + data[i].FNAME+" "+data[i].LNAME + "</td></tr>";
+            managerTable.innerHTML += "<tr><td data-depID='" + data[i].USER_ID + "'>" + data[i].FNAME+" "+data[i].LNAME + "</td><td><button class='btn' onclick='removeUser("+data[i].USER_ID+","+id+")'>X</button></td></tr>";
         }
         managerTable.innerHTML += "<tr><td data-add='"+id+"'><b>Add User</b></td></tr>";
     });
@@ -48,6 +48,11 @@ $("#managerTable").on("click", "th", function () {
     }
 });
 
+function removeUser(id,department){
+	$.post("/removeFromDepartment",{"id":id,"depID":department},function(){
+		location.reload();
+	});
+}
 //Modal Code
 
 $(".close, .cancel").click(function () {
