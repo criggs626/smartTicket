@@ -93,7 +93,7 @@ module.exports = function (app, passport, express, mysqlConnection, replace) {
                     if (assignee_id == -1) {
                         assignee_id = DEFAULT_ASSIGNEE;
                     }
-                    // console.log("ML chose ", assignee_id);
+                    console.log("ML chose ", assignee_id);
                     var query = "INSERT INTO tickets " +
                         "(client, title, description, category, " +
                         "assignee_id, open_status) VALUES (" +
