@@ -375,6 +375,26 @@ form[for=Login]
 
 }
 
+#reportsIMG{
+	margin-top: -20px;
+	margin-left: 10%;
+	float: left;
+	width: 100px;
+	height: 100px;
+}
+
+#piechart{
+	width: 60%;
+	height: 500px;
+	margin-left: 20%;
+}
+
+#barchart{
+	width: 60%;
+	height: 500px;
+	margin-left: 20%;
+}
+
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */

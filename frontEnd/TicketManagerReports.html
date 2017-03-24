@@ -90,7 +90,8 @@
 					]);
 
 					var options = {
-					  title: 'Assigned Tickets'
+					  title: 'Assigned Tickets',
+					  backgroundColor: '#3CB878' //This will need to be changed to --main-color but i couldnt get it to work
 					};
 
 					var chart = new google.visualization.PieChart(document.getElementById('piechart'));
@@ -118,6 +119,7 @@
 				title: 'Assigned Tickets',
 				chartArea: {width: '50%'},
 				isStacked: true,
+				backgroundColor: '#3CB878', //This will need to be changed to --main-color but i couldnt get it to work
 				hAxis: {
 				  title: 'Total Number of Assigned Tickets',
 				  minValue: 0,
