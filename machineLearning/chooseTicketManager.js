@@ -1,3 +1,6 @@
+var PATH_DATA_COUNT = "../machineLearning/dataCount.json";
+var stopWords = require("./stopWords.json");
+
 module.exports = function (mysqlConnection) {
     return {
         /*
@@ -15,7 +18,7 @@ module.exports = function (mysqlConnection) {
             // title is twice as important as the text
             var tokens = this.processTokens(data.title, data.text)
             // use dataCount to assess scores
-            var dataCount = require('./dataCount.json')
+            var dataCount = require(PATH_DATA_COUNT)
             var scores = this.calcScores(tokens, dataCount);
             // list manager ranking
             var sorted = Object.keys(scores).sort(function(a, b) {
@@ -51,7 +54,16 @@ module.exports = function (mysqlConnection) {
             text = text.replace(/[ ]{2,}/g, " ");    // minimize whitespace
             text = text.replace(/s\b/g, "");         // remove any trailing 's'
             text = text.toLowerCase();               // lowercase
-            return text.split(" ");                  // return as array of words
+            // remove stopwords
+            var tokens = text.split(" ")
+            for (var i = 0; i < tokens.length; i++) {
+                var token = tokens[i];
+                if (stopWords.indexOf(token) != -1) {
+                    tokens.splice(i, 1);
+                    i -= 1;
+                }
+            }
+            return tokens;                           // return as array of words
         },
         /*
          * Given data and dataCount, determine each manager's "score". Greater score means
@@ -76,12 +88,35 @@ module.exports = function (mysqlConnection) {
          * manually, adjust the data to represent this preference (legit~ish ML)
          */
         train: function(data, managerID, done) {
+            var fs = require("fs");
             console.log("Training classifier");
-            console.log(data, managerID);
-            done(null);
+            var dataCount = require(PATH_DATA_COUNT);
+            var words = this.processTokens(data.title, data.text);
+            var oldLength = dataCount[managerID]["count"];
+            var wordCounts = dataCount[managerID]["words"];
+            var newLength = oldLength + words.length;
+            var ratio = oldLength / newLength;
+            for (var wordID in wordCounts) {
+                wordCounts[wordID] *= ratio;
+            }
+            var add = 1 / newLength;
+            for (var wordID in words) {
+                var word = words[wordID];
+                if (!wordCounts[word]) wordCounts[word] = 0;
+                wordCounts[word] += add;
+            }
+            dataCount[managerID]["words"] = wordCounts;
+            fs.writeFile(PATH_DATA_COUNT, JSON.stringify(dataCount, null, 4), function(err) {
+                if (err) {
+                    return done(err);
+                }
+                console.log("Word count data adjusted.")
+                done(null);
+            });
         },
         /*
          * Given a manager's ID, determine whether he/she is working now
+         * (i.e. they are on schedule and they have not quit)
          */
          isManagerWorking(managerID) {
              // TODO
