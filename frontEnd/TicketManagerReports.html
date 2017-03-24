@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset=utf-8>
+        <title>SmartTicket - Reports</title>
+        <link rel=stylesheet href=css/materialize.min.css>
+		<link rel=stylesheet href=colors.css>
+        <link rel=stylesheet href=css/custom.css>
+        <script src=js/jquery.min.js></script>
+        <script src=js/materialize.min.js></script>
+        <script src=js/settings.js></script>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		
+				
+		
+    </head>
+    <body>
+        <nav>
+            <a href="/home"><img src="img/logo.png" height="35px"></a>
+	    <a class = "logout" href="/logout"><img src="img/ic_directions_run_white_48dp_2x.png" height="35px">Logout</a>
+        </nav>
+        <nav class="links">
+        </nav>
+        <main>
+            <div class="row">
+                <div class="col s10 offset-s1 main">
+                    <section id=ticketsTable>
+                        <table class="striped highlight">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <img src="img/ic_group_black_48dp.png">
+                                    <a href="/manager" target=_self>
+                                    Tickets
+                                    </a>
+                                </th>
+                                <th>
+                                    <img src="img/ic_work_black_48dp_2x.png" width="48px" height="48px">
+                                    <a href="/managers" target=_self>
+                                    Ticket&nbsp;Managers
+                                    </a>
+                                </th>
+                                <th>
+                                    <img src="img/ic_poll_black_48dp.png" width="48px" height="48px">
+                                    <a href="TicketManagerReports.html" target=_self>
+                                    Reports
+                                    </a>
+                                </th>
+                                <th>
+                                    <img src="img/ic_pages_black_48dp.png" width="48px" height="48px">
+                                    <a href="TicketManagerFAQ.html" target=_self>
+                                    FAQ
+                                    </a>
+                                </th>
+                                <th>
+                                    <img src="img/ic_settings_black_48dp_2x.png" width="48px" height="48px">
+                                    Settings
+                                </th>
+                            </tr>
+                        </thead>
+                    </section>
+                </div>
+            </div>
+            <table id="settingsTable">
+                <img src="img/ic_poll_black_48dp.png" id="reportsIMG">
+                <h2>&nbsp;Reports</h2></br>
+				
+				
+				<div id="piechart"></div> </br>
+				  <div id="barchart"></div>
+            </table>
+			
+            </div>
+        </main>
+    </body>
+	
+	<script type="text/javascript">
+				  google.charts.load('current', {'packages':['corechart']});
+				  google.charts.setOnLoadCallback(drawChart);
+
+				  function drawChart() {
+
+					var data = google.visualization.arrayToDataTable([
+					  ['Ticket Manager', 'Number of Assigned Tickets'],
+					  ['Caleb Riggs',     8],
+					  ['Gabriel Hutchinson',      4],
+					  ['Jared Davis',  5],
+					  ['Thomas Carter', 5],
+					  ['William Bell',    3]
+					]);
+
+					var options = {
+					  title: 'Assigned Tickets'
+					};
+
+					var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+					chart.draw(data, options);
+					
+				  }
+	</script>
+	
+	<script type="text/javascript">
+		google.charts.load('current', {packages: ['corechart', 'bar']});
+		google.charts.setOnLoadCallback(drawStacked);
+
+		function drawStacked() {
+			  var data = google.visualization.arrayToDataTable([
+				['Ticket Manager', 'Closed Tickets', 'Open Tickets'],
+				['Caleb Riggs', 20, 8],
+				['Gabriel Hutchinson', 17, 1],
+				['Jared Davis', 15, 5],
+				['Thomas Carter', 11, 10],
+				['William Bell', 12, 5]
+			  ]);
+
+			  var options = {
+				title: 'Assigned Tickets',
+				chartArea: {width: '50%'},
+				isStacked: true,
+				hAxis: {
+				  title: 'Total Number of Assigned Tickets',
+				  minValue: 0,
+				},
+				vAxis: {
+				  title: 'Ticket Manager'
+				}
+			  };
+			  var chart = new google.visualization.BarChart(document.getElementById('barchart'));
+			  chart.draw(data, options);
+    }
+	</script>
+</html>
