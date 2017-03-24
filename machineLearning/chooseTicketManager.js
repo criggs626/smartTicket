@@ -19,7 +19,7 @@ module.exports = function (mysqlConnection) {
             // title is twice as important as the text
             var tokens = this.processTokens(data.title, data.text)
             // use dataCount to assess scores
-            var dataCount = require(PATH_DATA_COUNT)
+            var dataCount = require(PATH_DATA_COUNT);
             var scores = this.calcScores(tokens, dataCount);
             // list manager ranking
             var sorted = Object.keys(scores).sort(function(a, b) {
@@ -105,7 +105,7 @@ module.exports = function (mysqlConnection) {
                 if (!wordCounts[word]) wordCounts[word] = 0;
                 wordCounts[word] += add;
             }
-            
+
             dataCount[managerID]["count"] = newLength;
             dataCount[managerID]["words"] = wordCounts;
             fs.writeFile(PATH_DATA_COUNT, JSON.stringify(dataCount, null, 4), function(err) {
