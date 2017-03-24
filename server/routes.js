@@ -1,5 +1,6 @@
 const ROOT_DIR = "../frontEnd/";
 const HOME = "TicketManagerHome.html";
+const FAQ = "TicketManagerFAQ.html";
 const LOGIN = "TicketManagerLogin.html";
 const MANAGERS = "TicketManagers.html";
 const INDEX = "SubmitTicket.html";
@@ -28,6 +29,10 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
     app.get('/login', function(req, res) {
         send(res, LOGIN);
     });
+
+    app.get('/faq', function(req, res) {
+        send(res, FAQ);
+    })
 
     app.get('/managers', isLoggedIn, function(req, res) {
         send(res, MANAGERS);
@@ -589,7 +594,7 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
 			user: 'root',
 			password: '',
 			database: 'smartticket',
-			dest:'./backup.sql' // destination file 
+			dest:'./backup.sql' // destination file
 		},function(err){
 			if(!err){
 				fs = require('fs')
