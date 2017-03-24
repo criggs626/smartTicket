@@ -84,7 +84,6 @@ module.exports = function (mysqlConnection) {
         //         }
         //     }
         //     return unique;
-        //     // IDEA: try custom inverse document frequency instead
         // },
         /*
          * Given the title and description of the ticket, return an array of
