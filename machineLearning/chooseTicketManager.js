@@ -19,12 +19,18 @@ module.exports = function (mysqlConnection) {
             var tokens = this.processTokens(data.title, data.text)
             // use dataCount to assess scores
             var dataCount = require(PATH_DATA_COUNT);
-            console.log(this.uniquePerManager(tokens, dataCount));
-            var scores = this.calcScores(tokens, dataCount);
-            // list manager ranking
+            // var scores = this.calcScores(tokens, dataCount);
+            // // list manager ranking
+            // var sorted = Object.keys(scores).sort(function(a, b) {
+            //     return scores[b] - scores[a];
+            // });
+            var scores = this.uniquePerManager(tokens, dataCount);
+            console.log(scores);
             var sorted = Object.keys(scores).sort(function(a, b) {
-                return scores[b] - scores[a];
+                return scores[b].length - scores[a].length;
             });
+            console.log(sorted);
+
             var bestManagerID = sorted[0];
             // loop through managers in order until currently on-duty manager
             // is found
@@ -66,7 +72,9 @@ module.exports = function (mysqlConnection) {
                 }
                 if (managerForToken != -1) { // only one manager has this word
                     if (unique[managerForToken]) {
-                        unique[managerForToken].push(token);
+                        if (unique[managerForToken].indexOf(token) == -1) {
+                            unique[managerForToken].push(token);
+                        }
                     } else {
                         unique[managerForToken] = [token];
                     }
