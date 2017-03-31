@@ -619,7 +619,7 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
 		})
 	});
 
-  app.get("/privelage",function(req,res){
+  app.get("/privilege",function(req,res){
     var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
     mysqlConnection.query(query, function (err, results, fields) {
         if (err) {
