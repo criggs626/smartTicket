@@ -3,7 +3,7 @@ var stopWords = require("./stopWords.json");
 var fs = require("fs");
 const IDF_WEIGHT = 4;
 
-module.exports = function (mysqlConnection) {
+module.exports = function () {
     return {
         /*
          * Given text data from the ticket, return the correct ticket manager
