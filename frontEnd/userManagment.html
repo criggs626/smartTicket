@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset=utf-8>
+        <title>SmartTicket - Home</title>
+
+        <link rel=stylesheet href=css/materialize.min.css>
+        <link rel=stylesheet href=colors.css>
+        <link rel=stylesheet href=css/custom.css>
+
+        <script src=js/jquery.min.js></script>
+        <script src=js/materialize.min.js></script>
+
+    </head>
+
+    <body>
+        <nav>
+           <img src="	img/logo.png" height="35px">
+	   <a class = "logout" href="/logout"><img src="img/ic_directions_run_white_48dp_2x.png" height="35px">Logout</a>
+        </nav>
+        <nav class="links">
+          <h5 id="current"></h5>
+        </nav>
+
+        <main>
+            <div class="row">
+                <div class="col s10 offset-s1 main">
+                    <section id=ticketsTable>
+                        <table class="striped highlight">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <a href= "/manager"
+                                           target=_self>
+                                           <img src="	img/ic_group_black_48dp.png">
+                                            Tickets
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href= "/managers"
+                                           target=_self>
+                                           <img src="	img/ic_work_black_48dp_2x.png" width= "48px" height= "48px">
+                                            Ticket&nbsp;Managers
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href= ""
+                                           target=_self>
+                                           <img src="	img/ic_poll_black_48dp.png" width= "48px" height= "48px">
+                                            Reports
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href= ""
+                                           target=_self>
+                                           <img src="	img/ic_pages_black_48dp.png" width= "48px" height= "48px">
+                                            FAQ
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href= "/settings"
+                                           target=_self>
+                                           <img src="	img/ic_settings_black_48dp_2x.png" width= "48px" height= "48px">
+                                            Settings
+                                        </a>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div id="content">
+                          <table id = "managerTable" style="display:none;">
+                              <tr>
+                                  <th>Ticket Managers</th><th>Edit</th>
+                              </tr>
+                          </table>
+                          <div id="individual" style="display:none;">
+                          <form>
+                            <input type="text" class="form-control" placeholder="First Name" id="Fname"></input>
+                            <input type="text" class="form-control" placeholder="Last Name" id="Lname"></input>
+                            <input type="text" class="form-control" placeholder="Work Email" id="Wemail"></input>
+                            <input type="text" class="form-control" placeholder="Personal Email" id="Pemail"></input>
+                            <input type="text" class="form-control" placeholder="Phone" id="Phone"></input>
+                            <input type="date" class="form-control" id="Bday"></input>
+                            <input type="submit" class="form-control btn" value="update"></input>
+                          </form>
+                        </div>
+                        </div>
+
+                    </section>
+
+                </div>
+            </div>
+        </main>
+    </body>
+    <script src="js/userManagment.js"></script>
+
+</html>

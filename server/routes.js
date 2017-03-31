@@ -7,6 +7,7 @@ const MANAGERS = "TicketManagers.html";
 const INDEX = "SubmitTicket.html";
 const SETTINGS = "TicketManagerSettings.html";
 const MANAGERVIEW = "managerView.html";
+const MANAGEUSERS = "userManagment.html"
 const DEFAULT_SIZE = 50;
 const DEBUG = false;
 const DEFAULT_ASSIGNEE = "[0]";
@@ -45,6 +46,11 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
     app.get('/settings', isLoggedIn, function(req, res) {
         send(res, SETTINGS);
     });
+
+    app.get('/manageuser', isLoggedIn, function(req, res) {
+        send(res, MANAGEUSERS);
+    });
+
 
     app.post('/login', passport.authenticate('local-login', {
         successRedirect: '/home', // redirect to the secure profile section
@@ -613,6 +619,56 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
 		})
 	});
 
+  app.get("/privelage",function(req,res){
+    var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
+    mysqlConnection.query(query, function (err, results, fields) {
+        if (err) {
+            console.error("Unknown MySQL error occured: " + err);
+            res.send(null);
+        } else {
+            var permissions = results[0].PERMISSION;
+            res.send({"permission":permissions,"fname":req.user.FNAME,"lname":req.user.LNAME,"wemail":req.user.WORK_EMAIL,"pemail":req.user.PERSONAL_EMAIL,"phone":req.user.PHONE,"bday":req.user.BIRTH_DAY});
+        }
+  });
+});
+
+app.get("/getUsers",function(req,res){
+  var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
+  mysqlConnection.query(query, function (err, results, fields) {
+      if (err) {
+          console.error("Unknown MySQL error occured: " + err);
+          res.send(null);
+      } else {
+          var permissions = results[0].PERMISSION;
+          if(permissions!=0){
+            res.send(null);
+          }
+          else{
+            var query = 'SELECT USER_ID,FNAME,LNAME FROM users;';
+            mysqlConnection.query(query, function (err, results, fields) {
+                if (err) {
+                    console.error("Unknown MySQL error occured: " + err);
+                    res.send(null);
+                } else {
+                  res.json(results);
+                }
+          });
+          }
+      }
+});
+});
+app.post("/getPersonalInfo",function(req,res){
+    var id = parseInt(req.body.id || req.body.assignee_id || req.body.assign) || -1;
+    var query = 'SELECT USER_ID,FNAME,LNAME,WORK_EMAIL,PERSONAL_EMAIL,PHONE,BIRTH_DAY FROM users WHERE USER_ID='+id+';';
+    mysqlConnection.query(query, function (err, results, fields) {
+        if (err) {
+            console.error("Unknown MySQL error occured: " + err);
+            res.send(null);
+        } else {
+          res.json(results);
+        }
+  });
+});
     // make sure that this one is last
     app.use('/', function(req, res) {
         send(res, INDEX);
