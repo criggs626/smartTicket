@@ -3,7 +3,7 @@ var stopWords = require("./stopWords.json");
 var fs = require("fs");
 const IDF_WEIGHT = 4;
 
-module.exports = function (mysqlConnection) {
+module.exports = function () {
     return {
         /*
          * Given text data from the ticket, return the correct ticket manager
@@ -38,7 +38,7 @@ module.exports = function (mysqlConnection) {
             // loop through managers in order until currently on-duty manager
             // is found
             var managerID = bestManagerID;
-            while (this.isManagerWorking(managerID) && sorted.length > 0) {
+            while (!this.isManagerWorking(managerID) && sorted.length > 0) {
                 sorted.pop();
                 managerID = sorted[0];
             }
@@ -179,7 +179,7 @@ module.exports = function (mysqlConnection) {
          */
          isManagerWorking(managerID) {
              // TODO
-             return false;
+             return true;
          },
     };
 }

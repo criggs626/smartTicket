@@ -153,3 +153,10 @@ INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,P
 INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(2,1,"What is the optimal way to program a for loop in Java?","Last time I tried it didn't for too loop..","[7]",TRUE,3);
 INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(2,1,"Can I get a whooop whoopppp? for Java","Java is a nice language. Not a real human language, a programming language..","[7]",TRUE,3);
 INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,PRIORITY) VALUES(2,1,"If python oh oh your a baby","Boy don't try to run I know just just what you are. You got me going your oh so charming but I can't do it.","[7]",TRUE,3);
+
+
+
+-- Sample FAQ entries
+INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("My internet is down and I can't get it working. I've tried connecting the school's wifi but it won't work. I can't get my computer to connect to the polysecure wifi. My wifi won't connect.", "Try connecting to PolySecure with your first name's first letter, last name, and the first four letters of your student ID.");
+INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("How do I install Microsoft Office with my student ID?", "Go to microsoft.com\nCry, because we've apparantly stopped giving students access to Office.\n:D");
+INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("My computer is frozen and I can't move my mouse.", "Hello, IT. Have you tried turning it off and on again?");
