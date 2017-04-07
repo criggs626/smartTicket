@@ -14,7 +14,7 @@ const DEFAULT_ASSIGNEE = "[0]";
 
 module.exports = function (app, passport, express, mysqlConnection,replace,mysqlDump) {
     var path = require('path');
-    var chooseManager = require('../machinelearning/chooseTicketManager.js');
+    var chooseManager = require('../machinelearning/chooseTicketManager.js')();
     var autoReply = require('../machinelearning/autoReply.js')(mysqlConnection);
     autoReply.test();
 
