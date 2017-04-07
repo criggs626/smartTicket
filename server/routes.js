@@ -738,6 +738,36 @@ app.post("/deleteUser",isLoggedIn,function(req,res){
   });
 });
 
+app.get("/getFAQ",function(req,res){
+  var id=parseInt(req.body.id);
+  var query="SELECT * FROM FAQ;";
+  mysqlConnection.query(query,function(err,results,fields){
+    if(err){
+      console.error("Unknown MySQL error occured: "+err);
+      res.send(null)
+    }
+    else{
+      res.json(results);
+    }
+  });
+});
+
+app.post("/addFAQ",isLoggedIn,function(req,res){
+  var question=req.body.question;
+  var answer=req.body.answer;
+  var query="INSERT INTO FAQ(QUESTION,ANSWER) VALUES('"+question+"','"+answer+"');";
+  mysqlConnection.query(query,function(err,results,fields){
+    if(err){
+      console.error("Unknown MySQL error occured: "+err);
+      res.send(null)
+    }
+    else{
+      console.log("Added FAQ");
+      res.redirect("/faq");
+    }
+  });
+});
+
     // make sure that this one is last
     app.use('/', function(req, res) {
         send(res, INDEX);
