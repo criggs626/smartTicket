@@ -121,35 +121,35 @@ module.exports = function (mysqlConnection) {
             }
             return true;
         },
-        test: function() {
-            // var _this = this;
-            // var tickets = this.loadFAQTickets(function(err, tickets) {
-            //     if (err) {
-            //         console.error("Yep, there was an error. :( -> ", err);
-            //         return;
-            //     }
-            //     // console.log("loadFAQTickets()", tickets);
-            //     var topicsA = _this.extractTopics(tickets[0].question);
-            //     //console.log("extractTopics()", topicsA);
-            //     var topicsB = _this.extractTopics(tickets[1].question);
-            //     console.log("similarEnough()", _this.similarEnough(topicsA, topicsB), "FALSA");
-            //     console.log("similarEnough()", _this.similarEnough(topicsA, topicsA), "TRUTH");
-            // });
-            // the moment of most relief
-            var ticketBody = "I'm having a wifi problem.";
-            this.getAutoReply(ticketBody, function(err, answer) {
-                if (err) {
-                    console.error("Nope. I couldn't get auto-reply due to technical errors :(");
-                    return;
-                }
-                if (answer == null) {
-                    console.log("None of the FAQs were all that similar to this one, really.");
-                    return;
-                }
-                // actually got an answer :)
-                console.log("Here's a suggestion, blah blah blah answer only if"
-                    + " they don't work:\n", answer);
-            });
-        },
+        // test: function() {
+        //     // var _this = this;
+        //     // var tickets = this.loadFAQTickets(function(err, tickets) {
+        //     //     if (err) {
+        //     //         console.error("Yep, there was an error. :( -> ", err);
+        //     //         return;
+        //     //     }
+        //     //     // console.log("loadFAQTickets()", tickets);
+        //     //     var topicsA = _this.extractTopics(tickets[0].question);
+        //     //     //console.log("extractTopics()", topicsA);
+        //     //     var topicsB = _this.extractTopics(tickets[1].question);
+        //     //     console.log("similarEnough()", _this.similarEnough(topicsA, topicsB), "FALSA");
+        //     //     console.log("similarEnough()", _this.similarEnough(topicsA, topicsA), "TRUTH");
+        //     // });
+        //     // the moment of most relief
+        //     var ticketBody = "I'm having a wifi problem.";
+        //     this.getAutoReply(ticketBody, function(err, answer) {
+        //         if (err) {
+        //             console.error("Nope. I couldn't get auto-reply due to technical errors :(");
+        //             return;
+        //         }
+        //         if (answer == null) {
+        //             console.log("None of the FAQs were all that similar to this one, really.");
+        //             return;
+        //         }
+        //         // actually got an answer :)
+        //         console.log("Here's a suggestion, blah blah blah answer only if"
+        //             + " they don't work:\n", answer);
+        //     });
+        // },
     };
 }

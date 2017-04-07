@@ -16,7 +16,6 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
     var path = require('path');
     var chooseManager = require('../machinelearning/chooseTicketManager.js')();
     var autoReply = require('../machinelearning/autoReply.js')(mysqlConnection);
-    autoReply.test();
 
     app.use(express.static(ROOT_DIR));
 
