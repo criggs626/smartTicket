@@ -1,4 +1,4 @@
-drop database smartticket;
+drop database smartTicket;
 CREATE DATABASE smartTicket;
 USE smartTicket;
 

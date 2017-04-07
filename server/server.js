@@ -5,7 +5,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var mysql = require('mysql');
-var config = require('../config.json');
+//var config = require('../config.json');
+var config = {};
 var replace = require("replace");
 var mysqlDump = require("mysqldump");
 
@@ -15,7 +16,7 @@ var mysqlConnection = mysql.createConnection({
 	user: config['mysql-username'] || 'root',
 	password: config['mysql-password'] || ''
 });
-mysqlConnection.query('USE smartticket;');
+mysqlConnection.query('USE smartTicket;');
 
 
 require('./config/passport')(mysqlConnection, passport);
