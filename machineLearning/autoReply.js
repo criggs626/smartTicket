@@ -62,7 +62,7 @@ module.exports = function (mysqlConnection) {
          * (Asynchronously) return all faq tickets from database
          */
         loadFAQTickets: function(done) {
-            var query = "SELECT FAQ_ID, QUESTION, ANSWER FROM faq;";
+            var query = "SELECT FAQ_ID, QUESTION, ANSWER FROM FAQ;";
             mysqlConnection.query(query, function(err, results, fields) {
                 if (err) {
                     console.error("Failed to load faq tickets.", err);

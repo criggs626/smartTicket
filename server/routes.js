@@ -14,8 +14,8 @@ const DEFAULT_ASSIGNEE = "[0]";
 
 module.exports = function (app, passport, express, mysqlConnection,replace,mysqlDump) {
     var path = require('path');
-    var chooseManager = require('../machinelearning/chooseTicketManager.js')();
-    var autoReply = require('../machinelearning/autoReply.js')(mysqlConnection);
+    var chooseManager = require('../machineLearning/chooseTicketManager.js')();
+    var autoReply = require('../machineLearning/autoReply.js')(mysqlConnection);
 
     app.use(express.static(ROOT_DIR));
 
@@ -90,14 +90,14 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
         }
         // add user to database if they don't exist
         clientEmail = mysqlConnection.escape(clientEmail);
-        var query = "INSERT IGNORE INTO clients (email) VALUES (" +
+        var query = "INSERT IGNORE INTO CLIENTS (email) VALUES (" +
             clientEmail + ");";
         mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
                 return;
             }
-            var query = "SELECT client_id FROM clients WHERE email=" +
+            var query = "SELECT client_id FROM CLIENTS WHERE email=" +
                 clientEmail + ";";
             mysqlConnection.query(query, function(err, results, fields) {
                 if (err) {
@@ -110,7 +110,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                         assignee_id = DEFAULT_ASSIGNEE;
                     }
                     console.log("ML chose ", assignee_id);
-                    var query = "INSERT INTO tickets " +
+                    var query = "INSERT INTO TICKETS " +
                         "(client, title, description, category, " +
                         "assignee_id, open_status) VALUES (" +
                         clientID + ", " +
@@ -134,7 +134,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                     var ticketData = title + " " + title + " " + description;
                     autoReply.getAutoReply(ticketData, function(err, data) {
                         if (err) {
-                            console.err("Failed to auto-reply:", err);
+                            console.error("Failed to auto-reply:", err);
                             return;
                         }
                         if (data != null) {
@@ -203,7 +203,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             return;
         }
         // add message to ticket
-        var query = "INSERT INTO messages " +
+        var query = "INSERT INTO MESSAGES " +
             "(ticket, message_content, user, sender, time_sent) VALUES (" +
             ticket_id + ", " +
             mysqlConnection.escape(message) + ", " +
@@ -245,7 +245,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             // accepted the ticket. Set it to the currently signed-in ID.
             assignee_id = req.user.USER_ID;
         }
-        var query = "UPDATE tickets SET assignee_id=" + assignee_id +
+        var query = "UPDATE TICKETS SET assignee_id=" + assignee_id +
             " WHERE ticket_id=" + ticket_id + ";";
         mysqlConnection.query(query, function(err, results, fields) {
             // return to webpage
@@ -259,8 +259,8 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             }
         });
         // train the classifier on the ticket data
-        query = "SELECT clients.email as email, title, description FROM tickets"
-            + " LEFT JOIN clients ON tickets.client=clients.client_id"
+        query = "SELECT CLIENTS.email as email, title, description FROM TICKETS"
+            + " LEFT JOIN CLIENTS ON TICKETS.client=CLIENTS.client_id"
             + " WHERE ticket_id=" + ticket_id + ";";
         mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
@@ -294,7 +294,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             console.error("Invalid ticket id: '%d'", req.body.ticket_id);
             return;
         }
-        var query = "UPDATE tickets SET open_status=0 WHERE ticket_id=" +
+        var query = "UPDATE TICKETS SET open_status=0 WHERE ticket_id=" +
             ticket_id + " LIMIT 1;";
         mysqlConnection.query(query, function(err, results, fields) {
             // return to webpage
@@ -317,10 +317,10 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             console.error("Invalid ticket id.");
             return;
         }
-        var query = "SELECT *, clients.email as CLIENT_EMAIL, \n"
-                + "users.work_email AS USER_EMAIL FROM messages \n"
-                + "LEFT JOIN users ON messages.user=users.user_id \n"
-                + "LEFT JOIN clients ON messages.client=clients.client_id\n"
+        var query = "SELECT *, CLIENTS.email as CLIENT_EMAIL, \n"
+                + "USERS.work_email AS USER_EMAIL FROM MESSAGES \n"
+                + "LEFT JOIN USERS ON MESSAGES.user=USERS.user_id \n"
+                + "LEFT JOIN CLIENTS ON MESSAGES.client=CLIENTS.client_id\n"
 				+ "WHERE TICKET="+ticket_id+";";
         mysqlConnection.query(query, function (err, results, fields) {
             if (err) {
@@ -336,12 +336,12 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
         var start = parseInt(req.query.start) || 0;
         var size = parseInt(req.query.length) || DEFAULT_SIZE;
         var query = 'SELECT ticket_id as id, title, description, open_status, \n'
-                + 'priority, tickets.department as department, \n'
-                + 'clients.email as client_email, categories.name as category, \n'
+                + 'priority, TICKETS.department as department, \n'
+                + 'CLIENTS.email as client_email, CATEGORIES.name as category, \n'
                 + 'category as category_id, assignee_id as assignee_ids \n'
-                + 'FROM tickets \n'
-                + 'LEFT JOIN clients ON clients.client_id=tickets.client \n'
-                + 'LEFT JOIN categories ON categories.category_id=tickets.category \n'
+                + 'FROM CATEGORIES \n'
+                + 'LEFT JOIN CLIENTS ON CLIENTS.client_id=TICKETS.client \n'
+                + 'LEFT JOIN CATEGORIES ON CATEGORIES.category_id=TICKETS.category \n'
                 + 'WHERE 1=1 ' + ((onlyOpen) ? 'AND open_status=1 \n' : 'AND open_status=0 \n')
                 + ((onlyPersonal) ? 'AND assignee_id LIKE "%'+req.user.USER_ID+'%"\n' : ' AND assignee_id LIKE "%0%" \n')
                 + 'LIMIT ' + start + ', ' + size + ';\n'
@@ -355,7 +355,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
     });
 
     app.get('/get_categories', function(req, res) {
-        var query = 'SELECT CATEGORY_ID, NAME FROM categories;'
+        var query = 'SELECT CATEGORY_ID, NAME FROM CATEGORIES;'
         mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
@@ -365,7 +365,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
     });
 
     app.get('/get_assignee', isLoggedIn, function(req, res) {
-        var query = 'SELECT USER_ID, FNAME,LNAME FROM users ORDER BY FNAME;'
+        var query = 'SELECT USER_ID, FNAME,LNAME FROM USERS ORDER BY FNAME;'
         mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
@@ -375,7 +375,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
     });
 
     app.get('/get_departments', isLoggedIn, function(req, res) {
-        var query = 'SELECT * FROM departments ORDER BY NAME;'
+        var query = 'SELECT * FROM DEPARTMENTS ORDER BY NAME;'
         mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
@@ -386,7 +386,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
 
     app.post('/get_depEmployee', isLoggedIn, function(req, res) {
         var depID = req.body.ID;
-        var query = 'SELECT USER_ID, FNAME,LNAME FROM users WHERE DEPARTMENT LIKE "%' + depID + '%" ORDER BY FNAME;'
+        var query = 'SELECT USER_ID, FNAME,LNAME FROM USERS WHERE DEPARTMENT LIKE "%' + depID + '%" ORDER BY FNAME;'
         mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
@@ -397,7 +397,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
 
     app.post('/new_department', isLoggedIn, function(req, res) {
         var returnAddr = "/managers";
-        var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
+        var query = 'SELECT PERMISSION FROM USERS WHERE USER_ID="' + req.user.USER_ID + '";';
         mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
@@ -433,14 +433,14 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             console.error("Invalid ticket id: '%d'", req.body.depID);
             return;
         }
-        var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
+        var query = 'SELECT PERMISSION FROM USERS WHERE USER_ID="' + req.user.USER_ID + '";';
         mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
             } else {
                 var permissions = results[0].PERMISSION;
                 if (permissions == 0) {
-                    var query = "delete from departments WHERE DEPARTMENT_ID=" +
+                    var query = "delete from DEPARTMENTS WHERE DEPARTMENT_ID=" +
                         dep_id + ";";
                     mysqlConnection.query(query, function(err, results, fields) {
                         // return to webpage
@@ -471,14 +471,14 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             console.error("Invalid department id: '%d'", req.body.depID);
             return;
         }
-        var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
+        var query = 'SELECT PERMISSION FROM USERS WHERE USER_ID="' + req.user.USER_ID + '";';
         mysqlConnection.query(query, function(err, results, fields) {
             if (err) {
                 console.error("Unknown MySQL error occured: " + err);
             } else {
                 var permissions = results[0].PERMISSION;
                 if (permissions == 0) {
-                    var query = 'SELECT DEPARTMENT FROM users WHERE USER_ID="' + assignee_id + '";';
+                    var query = 'SELECT DEPARTMENT FROM USERS WHERE USER_ID="' + assignee_id + '";';
                     mysqlConnection.query(query, function(err, results, fields) {
                         // return to webpage
                         if (!err) {
@@ -522,14 +522,14 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
         console.error("Invalid department id: '%d'", req.body.depID);
         return;
     }
-    var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
+    var query = 'SELECT PERMISSION FROM USERS WHERE USER_ID="' + req.user.USER_ID + '";';
     mysqlConnection.query(query, function (err, results, fields) {
         if (err) {
             console.error("Unknown MySQL error occured: " + err);
         } else {
             var permissions = results[0].PERMISSION;
             if (permissions == 0) {
-                var query = 'SELECT DEPARTMENT FROM users WHERE USER_ID="' + assignee_id + '";';
+                var query = 'SELECT DEPARTMENT FROM USERS WHERE USER_ID="' + assignee_id + '";';
                 mysqlConnection.query(query, function (err, results, fields) {
                     // return to webpage
                     if (!err) {
@@ -616,7 +616,7 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
 			host: 'localhost',
 			user: 'root',
 			password: '',
-			database: 'smartticket',
+			database: 'smartTicket',
 			dest:'./backup.sql' // destination file
 		},function(err){
 			if(!err){
@@ -631,8 +631,8 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
 		})
 	});
 
-  app.get("/privilege",isLoggedIn,function(req,res){
-    var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
+  app.get("/privilege",function(req,res){
+    var query = 'SELECT PERMISSION FROM USERS WHERE USER_ID="' + req.user.USER_ID + '";';
     mysqlConnection.query(query, function (err, results, fields) {
         if (err) {
             console.error("Unknown MySQL error occured: " + err);
@@ -644,9 +644,9 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
   });
 });
 
-app.get("/getUsers",isLoggedIn,function(req,res){
-  var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
-  mysqlConnection.query(query, function (err, results, fields) {
+app.get("/getUsers",function(req,res){
+  var query = 'SELECT PERMISSION FROM USERS WHERE USER_ID="' + req.user.USER_ID + '";';
+ mysqlConnection.query(query, function (err, results, fields) {
       if (err) {
           console.error("Unknown MySQL error occured: " + err);
           res.send(null);
@@ -656,7 +656,7 @@ app.get("/getUsers",isLoggedIn,function(req,res){
             res.send(null);
           }
           else{
-            var query = 'SELECT USER_ID,FNAME,LNAME FROM users;';
+            var query = 'SELECT USER_ID,FNAME,LNAME FROM USERS;';
             mysqlConnection.query(query, function (err, results, fields) {
                 if (err) {
                     console.error("Unknown MySQL error occured: " + err);
@@ -671,7 +671,7 @@ app.get("/getUsers",isLoggedIn,function(req,res){
 });
 app.post("/getPersonalInfo",isLoggedIn,function(req,res){
     var id = parseInt(req.body.id || req.body.assignee_id || req.body.assign) || -1;
-    var query = 'SELECT USER_ID,FNAME,LNAME,WORK_EMAIL,PERSONAL_EMAIL,PHONE,BIRTH_DAY FROM users WHERE USER_ID='+id+';';
+    var query = 'SELECT USER_ID,FNAME,LNAME,WORK_EMAIL,PERSONAL_EMAIL,PHONE,BIRTH_DAY FROM USERS WHERE USER_ID='+id+';';
     mysqlConnection.query(query, function (err, results, fields) {
         if (err) {
             console.error("Unknown MySQL error occured: " + err);

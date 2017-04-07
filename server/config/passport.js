@@ -21,7 +21,7 @@ module.exports = function(mysqlConnection, passport) {
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
-        mysqlConnection.query("SELECT * FROM users WHERE USER_ID = ? ",[id], function(err, rows){
+        mysqlConnection.query("SELECT * FROM USERS WHERE USER_ID = ? ",[id], function(err, rows){
             done(err, rows[0]);
         });
     });
@@ -41,7 +41,7 @@ module.exports = function(mysqlConnection, passport) {
     },
     function(req, email, password, done) { // callback with email and password from our form
 
-         mysqlConnection.query("SELECT * FROM `users` WHERE `WORK_EMAIL` = '" + email + "'", function(err,rows) {
+         mysqlConnection.query("SELECT * FROM USERS WHERE WORK_EMAIL = '" + email + "'", function(err,rows) {
 			if (err)
                 return done(err);
 			 if (!rows.length) {
