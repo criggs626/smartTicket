@@ -27,7 +27,7 @@ function personalManage(){
   $("#Lname").val(user.lname);
 }
 
-$.get("/privelage",function(data){
+$.get("/privilege",function(data){
   $("#current").html(data.fname+" "+data.lname);
   user=data;
   permission=data.permission;
