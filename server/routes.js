@@ -32,7 +32,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
         send(res, LOGIN);
     });
 
-    app.get('/faq', function(req, res) {
+    app.get('/faq',isLoggedIn, function(req, res) {
         send(res, FAQ);
     });
 
@@ -738,7 +738,7 @@ app.post("/deleteUser",isLoggedIn,function(req,res){
   });
 });
 
-app.get("/getFAQ",function(req,res){
+app.get("/getFAQ",isLoggedIn,function(req,res){
   var id=parseInt(req.body.id);
   var query="SELECT * FROM FAQ;";
   mysqlConnection.query(query,function(err,results,fields){
