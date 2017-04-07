@@ -339,7 +339,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                 + 'priority, TICKETS.department as department, \n'
                 + 'CLIENTS.email as client_email, CATEGORIES.name as category, \n'
                 + 'category as category_id, assignee_id as assignee_ids \n'
-                + 'FROM CATEGORIES \n'
+                + 'FROM TICKETS \n'
                 + 'LEFT JOIN CLIENTS ON CLIENTS.client_id=TICKETS.client \n'
                 + 'LEFT JOIN CATEGORIES ON CATEGORIES.category_id=TICKETS.category \n'
                 + 'WHERE 1=1 ' + ((onlyOpen) ? 'AND open_status=1 \n' : 'AND open_status=0 \n')
