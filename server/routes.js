@@ -14,8 +14,8 @@ const DEFAULT_ASSIGNEE = "[0]";
 
 module.exports = function (app, passport, express, mysqlConnection,replace,mysqlDump) {
     var path = require('path');
-    var chooseManager = require('../machinelearning/chooseTicketManager.js')(
-        mysqlConnection);
+    var chooseManager = require('../machinelearning/chooseTicketManager.js')();
+    var autoReply = require('../machinelearning/autoReply.js')(mysqlConnection);
 
     app.use(express.static(ROOT_DIR));
 
@@ -104,7 +104,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                     console.error("Unknown MySQL error occured: " + err);
                     return;
                 }
-                // function to add ticket to database
+                // function to handle ticket after assignment
                 var afterGetAssignee = function() {
                     if (assignee_id == -1) {
                         assignee_id = DEFAULT_ASSIGNEE;
@@ -128,6 +128,18 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                         } else {
                             // TODO: notify user of failure
                             console.error("Failed to add ticket to database.");
+                        }
+                    });
+                    // attempt to auto-reply
+                    var ticketData = title + " " + title + " " + description;
+                    autoReply.getAutoReply(ticketData, function(err, data) {
+                        if (err) {
+                            console.err("Failed to auto-reply:", err);
+                            return;
+                        }
+                        if (data != null) {
+                            console.log("TODO auto-reply with mail.");
+                            console.log(data);
                         }
                     });
                 };
