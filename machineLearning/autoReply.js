@@ -6,8 +6,8 @@ const RAND_SEED = 42;
 module.exports = function (mysqlConnection) {
     return {
         /*
-         * Given a ticket, compare to all FAQs and return a string answer if one
-         * is "similar enough"
+         * Given a ticket body string, compare to all FAQs and return a string
+         * answer if one is "similar enough"
          */
         getAutoReply: function(ticketData, done) {
             // get lda for ticket data
@@ -23,6 +23,7 @@ module.exports = function (mysqlConnection) {
                     if (_this.similarEnough(ticketTopics, faqTopics)) {
                         // return the answer so it can be emailed
                         done(null, ticket.answer);
+                        break;
                     }
                 }
             });
@@ -86,18 +87,27 @@ module.exports = function (mysqlConnection) {
             // TODO improve. For now, it just naively chooses top word in each
             // topic and makes sure that they each show up in the other topic
             // with only one exception
+            if (topicsA.length == 0 || topicsB.length == 0) {
+                return false;
+            }
             var exceptions = 1;
             var topWordsA = [];
             for (var topicInd in topicsA) {
                 var topic = topicsA[topicInd];
                 // first value will always be top word
-                topWordsA.push(Object.keys(topic)[0]);
+                var keys = Object.keys(topic);
+                var word1 = keys[0], word2 = keys[1];
+                if (topWordsA.indexOf(word1) == -1) topWordsA.push(word1);
+                if (topWordsA.indexOf(word2) == -1) topWordsA.push(word2);
             }
             var topWordsB = [];
             for (var topicInd in topicsB) {
                 var topic = topicsB[topicInd];
                 // first value will always be top word
-                topWordsB.push(Object.keys(topic)[0]);
+                var keys = Object.keys(topic);
+                var word1 = keys[0], word2 = keys[1];
+                if (topWordsB.indexOf(word1) == -1) topWordsB.push(word1);
+                if (topWordsB.indexOf(word2) == -1) topWordsB.push(word2);
             }
             console.log("Comparing:", topWordsA, "to", topWordsB);
             // all A words are in B
