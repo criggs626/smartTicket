@@ -8,7 +8,6 @@
         <link rel=stylesheet href=css/custom.css>
         <script src=js/jquery.min.js></script>
         <script src=js/materialize.min.js></script>
-        <script src=js/settings.js></script>
     </head>
     <body>
         <nav>
@@ -31,15 +30,17 @@
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="/managers" target=_self>
-                                        <img src="img/ic_work_black_48dp_2x.png" width="48px" height="48px">
-                                        Ticket&nbsp;Managers
+                                    <a href= "/managers"
+                                       target=_self>
+                                       <img src="	img/ic_work_black_48dp_2x.png" width= "48px" height= "48px">
+                                        Departments
                                     </a>
                                 </th>
                                 <th>
-                                    <a href="/reports" target=_self>
-                                        <img src="img/ic_poll_black_48dp.png" width="48px" height="48px">
-                                        Reports
+                                    <a href= "/manageuser"
+                                       target=_self>
+                                       <img src="	img/ic_work_black_48dp_2x.png" width= "48px" height= "48px">
+                                        Manage&nbsp;Users
                                     </a>
                                 </th>
                                 <th>
@@ -57,167 +58,39 @@
                     </section>
                 </div>
             </div>
-            <table id="settingsTable">
+            <table>
                 <img src="img/ic_pages_black_48dp.png" id="settingsIMG">
                 <h2>&nbsp;Frequently Asked Questions</h2>
                 <tr>
-                    <th colspan=2>Categories</th>
+                    <th>Question</th><th>Answer</th>
                 </tr>
-                <tr>
-                    <td>Printers</td>
-                    <td>Wireless</td>
-                </tr>
-                <tr>
-                    <td>Servers</td>
-                    <td>Network</td>
-                </tr>
-                <tr>
-                    <td>End User Support</td>
-                    <td>Software</td>
-                </tr>
-                <tr>
-                    <td>Website</td>
-                    <td>Email</td>
-                </tr>
+                <tbody id="content">
+
+                </tbody>
             </table>
             </div>
+
+            <div id="newModal" class="modal">
+
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="close">X</span>
+                        </br>
+                        <h5>Please complete the form.</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="TicketForm">
+                          <form action="addFAQ" method="post" accept-charset="utf-8">
+                            <input type="text" class="form-control" placeholder="Question" name="question"></input>
+                            <input type="text" class="form-control" placeholder="Answer" name="answer"></input>
+                            <input type="submit" class="form-control btn" value="update"></input>
+                          </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
-
-        <!-- Modals -->
-        <!-- The Printers Modal -->
-        <div id="printersModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    </br>
-                    <h5>Printers</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="TicketForm">
-                        <br>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- The Servers Modal -->
-        <div id="serversModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    </br>
-                    <h5>Servers</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="TicketForm">
-                        <br>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- The End User Support Modal -->
-        <div id="endusersupportModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    </br>
-                    <h5>End User Support</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="TicketForm">
-                        <br>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- The Website Modal -->
-        <div id="websiteModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    </br>
-                    <h5>Website</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="TicketForm">
-                        <br>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- The Wireless Modal -->
-        <div id="wirelessModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    </br>
-                    <h5>Wireless</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="TicketForm">
-                        <br>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- The Network Modal -->
-        <div id="networkModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    </br>
-                    <h5>Network</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="TicketForm">
-                        <br>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- The Software Modal -->
-        <div id="softwareModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    </br>
-                    <h5>Software</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="TicketForm">
-                        <br>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- The Email Modal -->
-        <div id="emailModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close">X</span>
-                    </br>
-                    <h5>Email</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="TicketForm">
-                        <br>
-
-                    </div>
-                </div>
-            </div>
-        </div>
+        <script src="js/faq.js"></script>
     </body>
 </html>

@@ -15,9 +15,8 @@ function getManagers(id) {
         managerTable.innerHTML = "<tr><th>Ticket Managers</th><th data-depid='"+id+"'>Delete</th></tr>";
         for (i = 0; i < data.length; i++) {
             managerTable.innerHTML += "<tr><td data-depID='"
-                + data[i].USER_ID + "'><a href=\"/manageuser?id="
-                + data[i].USER_ID + "\">" + data[i].FNAME + " " + data[i].LNAME
-                + "</a></td><td><button class='btn' onclick='removeUser("
+                + data[i].USER_ID + "'>"+ data[i].FNAME + " " + data[i].LNAME
+                + "</td><td><button class='btn' onclick='removeUser("
                 + data[i].USER_ID + "," + id + ")'>X</button></td></tr>";
         }
         managerTable.innerHTML += "<tr><td data-add='"+id+"'><b>Add User</b></td></tr>";
