@@ -619,7 +619,7 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
 		})
 	});
 
-  app.get("/privilege",function(req,res){
+  app.get("/privilege",isLoggedIn,function(req,res){
     var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
     mysqlConnection.query(query, function (err, results, fields) {
         if (err) {
@@ -627,12 +627,12 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
             res.send(null);
         } else {
             var permissions = results[0].PERMISSION;
-            res.send({"permission":permissions,"fname":req.user.FNAME,"lname":req.user.LNAME,"wemail":req.user.WORK_EMAIL,"pemail":req.user.PERSONAL_EMAIL,"phone":req.user.PHONE,"bday":req.user.BIRTH_DAY});
+            res.send({"permission":permissions,"fname":req.user.FNAME,"lname":req.user.LNAME,"wemail":req.user.WORK_EMAIL,"pemail":req.user.PERSONAL_EMAIL,"phone":req.user.PHONE,"bday":req.user.BIRTH_DAY,"id":req.user.USER_ID});
         }
   });
 });
 
-app.get("/getUsers",function(req,res){
+app.get("/getUsers",isLoggedIn,function(req,res){
   var query = 'SELECT PERMISSION FROM users WHERE USER_ID="' + req.user.USER_ID + '";';
   mysqlConnection.query(query, function (err, results, fields) {
       if (err) {
@@ -657,7 +657,7 @@ app.get("/getUsers",function(req,res){
       }
 });
 });
-app.post("/getPersonalInfo",function(req,res){
+app.post("/getPersonalInfo",isLoggedIn,function(req,res){
     var id = parseInt(req.body.id || req.body.assignee_id || req.body.assign) || -1;
     var query = 'SELECT USER_ID,FNAME,LNAME,WORK_EMAIL,PERSONAL_EMAIL,PHONE,BIRTH_DAY FROM users WHERE USER_ID='+id+';';
     mysqlConnection.query(query, function (err, results, fields) {
@@ -669,6 +669,63 @@ app.post("/getPersonalInfo",function(req,res){
         }
   });
 });
+
+app.post("/updateUserInfo",isLoggedIn,function(req,res){
+  var id=parseInt(req.body.id);
+  var fname=req.body.fname;
+  var lname=req.body.lname;
+  var wemail=req.body.wemail;
+  var pemail=req.body.pemail;
+  var phone=req.body.phone;
+  var query="UPDATE USERS SET FNAME='"+fname+"', LNAME='"+lname+"', WORK_EMAIL='"+wemail+"', PERSONAL_EMAIL='"+pemail+"', PHONE='"+phone+"'  WHERE USER_ID="+id+";";
+  mysqlConnection.query(query,function(err,results,fields){
+    if(err){
+      console.error("Unknown MySQL error occured: "+err);
+      res.send(null)
+    }
+    else{
+      console.log("Updated User info");
+      res.redirect("/manageuser");
+    }
+  });
+});
+
+app.post("/createNewUser",isLoggedIn,function(req,res){
+  var fname=req.body.fname;
+  var lname=req.body.lname;
+  var wemail=req.body.wemail;
+  var pemail=req.body.pemail;
+  var phone=req.body.phone;
+  var permission=req.body.permission;
+  var password=req.body.password;
+  var query="INSERT INTO USERS(PERMISSION,FNAME,LNAME,WORK_EMAIL,PERSONAL_EMAIL,PHONE,PASSWORD) VALUES(1,'"+fname+"','"+lname+"','"+wemail+"','"+pemail+"','"+phone+"',MD5("+password+"));";
+  mysqlConnection.query(query,function(err,results,fields){
+    if(err){
+      console.error("Unknown MySQL error occured: "+err);
+      res.send(null)
+    }
+    else{
+      console.log("Created new user");
+      res.redirect("/manageuser");
+    }
+  });
+});
+
+app.post("/deleteUser",isLoggedIn,function(req,res){
+  var id=parseInt(req.body.id);
+  var query="DELETE FROM USERS WHERE USER_ID="+id+";";
+  mysqlConnection.query(query,function(err,results,fields){
+    if(err){
+      console.error("Unknown MySQL error occured: "+err);
+      res.send(null)
+    }
+    else{
+      console.log("Deleted user");
+      res.redirect("/manageuser");
+    }
+  });
+});
+
     // make sure that this one is last
     app.use('/', function(req, res) {
         send(res, INDEX);
