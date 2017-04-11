@@ -160,3 +160,12 @@ INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,P
 INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("My internet is down and I can't get it working. I've tried connecting the school's wifi but it won't work. I can't get my computer to connect to the polysecure wifi. My wifi won't connect.", "Try connecting to PolySecure with your first name's first letter, last name, and the first four letters of your student ID.");
 INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("How do I install Microsoft Office with my student ID?", "Go to microsoft.com\nCry, because we've apparantly stopped giving students access to Office.\n:D");
 INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("My computer is frozen and I can't move my mouse.", "Hello, IT. Have you tried turning it off and on again?");
+
+
+-- Add a way to keep track of when exactly the last time emails were loaded
+CREATE TABLE EMAIL_STATISTICS(
+LAST_LOADED_EMAIL bigint NOT NULL, -- Last time emails were loaded
+PRIMARY KEY(LAST_LOADED_EMAIL)
+);
+
+INSERT INTO EMAIL_STATISTICS (LAST_LOADED_EMAIL) VALUES (0);

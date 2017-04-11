@@ -10,14 +10,79 @@ module.exports = function (mysqlConnection) {
          */
         handleUpdates: function(done) {
             // get last load time from database
-            // getUpdates()
-                // if successful, set last load time in database
-                // for each new thread, submit a ticket
-                // for each new message in a thread, add message to ticket
-                //     and email managers about new message
-                // TODO decide what else should be done for various kinds of
-                //     new messages
-            console.log('TODO handleUpdates');
+            var _this = this;
+            var QUERY = 'SELECT LAST_LOADED_EMAIL as lastLoad'
+                + ' FROM EMAIL_STATISTICS LIMIT 1;';
+            mysqlConnection.query(QUERY, function(err, result, fields) {
+                var since = 0;
+                if (err) {
+                    console.error('Failed to load email data from database;'
+                        + ' defaulting to 0.');
+                } else {
+                    since = result[0].lastLoad;
+                }
+                // DEBUG MODE ONLY!!! REMOVE WHEN ACTUALLY DEPLOYED!!!
+                since = 0;
+                // UGH THIS WOULD BE SO BAD TO KEEP LYING AROUND!!!
+                _this.getUpdates(since, function(err, emails) {
+                    if (err) {
+                        console.error('Error downloaded email data:', err);
+                    }
+                    // if successful, set last load time in database
+                    mysqlConnection.query(
+                        'UPDATE EMAIL_STATISTICS SET LAST_LOADED_EMAIL=NOW();',
+                        function(err) {
+                            if (err) console.error(
+                                'Failed to update latest load time:', err);
+                        });
+                    for (var i = 0; i < emails.length; i++) {
+                        var email = emails[i];
+                        var id = _this.getTicketID(email);
+                        if (id !== -1) {
+                            _this.addMessageToTicket(email, id, function(err) {
+                                if (err) {
+                                    console.error('Message failed to be added'
+                                        + 'to ticket: ' + id + ':', err);
+                                }
+                            })
+                        } else {
+                            _this.submitTicket(email, function(err) {
+                                if (err) {
+                                    console.error('Ticket failed to submit:',
+                                        err);
+                                }
+                            });
+                        }
+                    }
+                    done(null);
+                });
+            });
+        },
+        /*
+         * Given an email, determine return it's corresponding ticketID (if
+         * it's a message) or -1 (if it's a new ticket).
+         * Return the error.
+         */
+        getTicketID: function(email, done) {
+            console.log('TODO getTicketID');
+            return -1;
+        },
+        /*
+         * Given an email, submit a new ticket with the email's data.
+         * Return the error.
+         */
+        submitTicket: function(email, done) {
+            console.log('TODO submitTicket');
+            done(null);
+        },
+        /*
+         * Given an email and ticketID, add to ticket as a new message with the
+         * email's data.
+         * Return the error.
+         */
+        addMessageToTicket: function(email, ticketID, done) {
+            console.log('TODO submitTicket');
+            done(null);
         },
         /*
          * Given a unix timestamp (UTC?) return all emails recieved since that
@@ -116,7 +181,6 @@ module.exports = function (mysqlConnection) {
                     }
                 });
             });
-            console.log('TODO getUpdates');
         },
         /*
          * Given a recipient, title, and full html body, send the messages
@@ -154,15 +218,20 @@ module.exports = function (mysqlConnection) {
         },
         // TODO remove
         test: function() {
-            this.getUpdates(1490385831001, function(err, messages) {
+            // this.getUpdates(1490385831001, function(err, messages) {
+            //     if (err) {
+            //         console.log("Totally recieved an error, bro:", err);
+            //         return;
+            //     }
+            //     console.log("Messages:\n", messages[0]);
+            // });
+            this.handleUpdates(function(err) {
                 if (err) {
-                    console.log("Totally recieved an error, bro:", err);
+                    console.log('Failed to load mail:', err);
                     return;
                 }
-                console.log("Messages:\n", messages[0]);
+                console.log('Refreshed email.');
             });
         },
     };
 }
-
-module.exports(null).test();

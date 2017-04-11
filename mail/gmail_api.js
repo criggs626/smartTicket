@@ -1,7 +1,7 @@
 // For the most part stolen from
 // https://developers.google.com/gmail/api/quickstart/nodejs
 
-const SECRET_FILE = './client_secret.json';
+const SECRET_FILE = '../mail/client_secret.json';
 
 var fs = require('fs');
 var readline = require('readline');

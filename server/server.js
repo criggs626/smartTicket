@@ -17,6 +17,9 @@ var mysqlConnection = mysql.createConnection({
 });
 mysqlConnection.query('USE smartticket;');
 
+// for testing; remove before commit
+require('../mail/mail.js')(mysqlConnection).test();
+
 
 require('./config/passport')(mysqlConnection, passport);
 
