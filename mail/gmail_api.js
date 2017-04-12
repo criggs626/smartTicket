@@ -45,9 +45,10 @@ module.exports = {
         var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
         // Check if we have previously stored a token.
+        var _this = this;
         fs.readFile(TOKEN_PATH, function(err, token) {
             if (err) {
-                getNewToken(oauth2Client, callback);
+                _this.getNewToken(oauth2Client, callback);
             } else {
                 oauth2Client.credentials = JSON.parse(token);
                 callback(oauth2Client, google);
@@ -79,6 +80,7 @@ module.exports = {
             oauth2Client.getToken(code, function(err, token) {
                 if (err) {
                     console.log('Error while trying to retrieve access token', err);
+                    exit();
                     return;
                 }
                 oauth2Client.credentials = token;
