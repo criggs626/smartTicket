@@ -10,9 +10,11 @@ Configure certain details of the server by adding ```config.json``` to the root 
 ### Example config.json
 ```js
 {
-    "mysql-username": "root",     // mysql user
-    "mysql-password": "password", // mysql password
-    "port": "80"                  // port to run server on
+    "mysql-username": "root",              // mysql user
+    "mysql-password": "password",          // mysql password
+    "port": "80",                          // port to run server on
+    "gmail_username": "example@gmail.com", // gmail account
+    "gmail_password": "SecurePa$$word",    // gmail password
 }
 ```
 
