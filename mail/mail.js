@@ -1,8 +1,19 @@
 var gmail_api = require('./gmail_api.js');
 var base64url = require('base64url');
 var request = require('request');
+var nodemailer = require('nodemailer');
 
-module.exports = function (mysqlConnection, port) {
+module.exports = function (mysqlConnection, config, port) {
+
+    var smtpTransport = nodemailer.createTransport({
+        server: 'gmail',
+        host: 'smtp.gmail.com',
+        auth: {
+            user: config.gmail_username,
+            pass: config.gmail_password,
+        }
+    });
+
     return {
         /*
          * Automatically load all changes and handle new messages or adding
@@ -309,7 +320,12 @@ module.exports = function (mysqlConnection, port) {
          * using the Gmail API. Return the error.
          */
         sendMessage: function(to, title, body, done) {
-            console.log('TODO sendMessage');
+            var mailOptions = {
+                to: to,
+                subject: title,
+                text: body,
+            };
+            smtpTransport.sendMail(mailOptions, done);
         },
         /*
          * Use this when sending certain kinds of messages, which would only

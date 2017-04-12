@@ -21,7 +21,7 @@ var mysqlConnection = mysql.createConnection({
 mysqlConnection.query('USE smartticket;');
 
 // check for new emails ever 30 seconds
-var mail = require('../mail/mail.js')(mysqlConnection, port);
+var mail = require('../mail/mail.js')(mysqlConnection, config, port);
 var refreshMail = function() {
 	mail.handleUpdates(function(err, newCount) {
 		if (err) {
