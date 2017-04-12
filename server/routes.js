@@ -738,7 +738,7 @@ app.post("/deleteUser",isLoggedIn,function(req,res){
   });
 });
 
-app.get("/getFAQ",isLoggedIn,function(req,res){
+app.get("/getFAQ", function(req,res){
   var id=parseInt(req.body.id);
   var query="SELECT * FROM FAQ;";
   mysqlConnection.query(query,function(err,results,fields){

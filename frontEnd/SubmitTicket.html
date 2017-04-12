@@ -1,85 +1,97 @@
 <!DOCTYPE html>
 <html lang=en>
-        <head>
-        <meta charset=utf-8>
-        <title>SmartTicket - Submit A Ticket</title>
 
-        <link rel=stylesheet href=	css/materialize.min.css>
-		<link rel=stylesheet href=colors.css>
-        <link rel=stylesheet href=	css/custom.css>
+<head>
+    <meta charset=utf-8>
+    <title>SmartTicket - Submit A Ticket</title>
 
-        <script src=	js/jquery.min.js></script>
-        <script src=	js/materialize.min.js></script>
+    <link rel=stylesheet href=css/materialize.min.css>
+    <link rel=stylesheet href=colors.css>
+    <link rel=stylesheet href=css/custom.css>
 
-    </head>
-    <body><nav>
-            <img src="	img/logo.png" height="35px">
+    <script src=js/jquery.min.js></script>
+    <script src=js/materialize.min.js></script>
+    <script src=js/index.js></script>
+</head>
 
-        </nav>
-        <nav class="links">
-
-        </nav>
-
-        <main>
-            <div class="row">
-                <div class="col s10 offset-s1 main">
-                    <section id=ticketsTable>
-
-					   <table>
-
-                                    <th>
-										For help with an IT issue you are experiencing, email: tickets@flpoly.org or complete the form below.
-									<div class="TicketForm">
-
-			<form name="Ticket" action="submit_ticket" method="post" accept-charset="utf-8">
-				<ul>
-					<li><label for="contact">Contact:</label>
-					<input type="text" name="contact" placeholder="" required></li>
-
-					<li><label for="summary">Summary:</label>
-					<input type="text" name="summary" placeholder="" required></li>
-
-					<li><label for="description">Description:</label>
-					<!--<input type="text" name="description" placeholder="" required></li>-->
-					<textarea name="description" rows="5" cols=100%></textarea>
-
-					<li><label for="ticket type">Ticket Type:</label>
-
-					<select name="ticket type" class="browser-default" id="categories">
-
-					</select> </li>
-
-
-					</br>
-					<input type="submit" value="Submit Ticket" id="submit" class="btn"></li>
-				</ul>
-			</form>
-			</div>
-
-									</th>
-
-
-
-                </div>
+<body>
+    <nav>
+        <img src="img/logo.png" height="35px">
+    </nav>
+    <nav class="links">
+    </nav>
+    <main>
+        <div class="row">
+            <div class="col s10 offset-s1 main">
+                <section id=ticketsTable>
+                    <table>
+                        <tr>
+                            <th>
+                                For help with an IT issue you are experiencing, email: tickets@flpoly.org or complete the form below.
+                                <div class="TicketForm">
+                                    <form name="Ticket" action="submit_ticket" method="post" accept-charset="utf-8">
+                                        <ul>
+                                            <li>
+                                                <label for="contact">Contact:</label>
+                                                <input type="text" name="contact" placeholder="" required>
+                                            </li>
+                                            <li>
+                                                <label for="summary">Summary:</label>
+                                                <input type="text" name="summary" placeholder="" required>
+                                            </li>
+                                            <li>
+                                                <label for="description">Description:</label>
+                                                <textarea name="description" rows="5" cols=100%></textarea>
+                                            </li>
+                                            <li>
+                                                <label for="ticket type">Ticket Type:</label>
+                                                <select name="ticket type" class="browser-default" id="categories"></select>
+                                            </li>
+                                            <li>
+                                                </br>
+                                                <input type="submit" value="Submit Ticket" id="submit" class="btn">
+                                            </li>
+                                        </ul>
+                                    </form>
+                                </div>
+                            </th>
+                        </tr>
+                    </table>
+                </section>
+                <section id=faqTable>
+                    <table>
+                        <tr>
+                            <th class=faq_title>
+                                FAQ
+                            </th>
+                        </tr>
+                        <tr id=faq_template class=faq>
+                            <td>
+                                <span class=faq_q>QUEST???</span>
+                                <br>
+                                <span class=faq_a>ANSWER</span>
+                            </td>
+                        </tr>
+                    </table>
+                </section>
             </div>
-
-
-
-        </main>
-		<script>
-		function categoryDrop(dropDown) {
-    dropdown = document.getElementById(dropDown);
-    $.get("/get_categories", function (categories) {
-        for (i = 0; i < categories.length; i++) {
-            dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '">' + categories[i].NAME + '</option>';
+        </div>
+    </main>
+    <script>
+        function categoryDrop(dropDown) {
+            dropdown = document.getElementById(dropDown);
+            $.get("/get_categories", function(categories) {
+                for (i = 0; i < categories.length; i++) {
+                    dropdown.innerHTML += '<option value="' + categories[i].CATEGORY_ID + '">' + categories[i].NAME + '</option>';
+                }
+            });
         }
-    });
-}
-categoryDrop("categories")
-$("#submit").click(function(){
-	alert("Ticket Created");
-});
-</script>
+        categoryDrop("categories")
+        $("#submit").click(function() {
+            alert("Ticket Created");
+        });
+    </script>
 
-    </body>
+</body>
+
 </html>

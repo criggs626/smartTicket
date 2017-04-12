@@ -64,6 +64,20 @@ main > div.row {
     font-size: 110%;
 }
 
+#faqTable {
+    font-family: Ubuntu;
+    font-size: 110%;
+}
+#faq_template {
+    display: none;
+}
+.faq_title {
+    font-size: 130%;
+}
+.faq_q {
+    font-weight: bold;
+}
+
 div.viewHead{
     background-color: #dbdbdb;
     height:50px;
@@ -501,7 +515,7 @@ div.message_container{
 	height:50vh;
 	background-color:var(--third-color);
 	margin-top:20px;
-	
+
 }
 #messages{
 }
