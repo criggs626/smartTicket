@@ -10,6 +10,7 @@ var replace = require("replace");
 var mysqlDump = require("mysqldump");
 
 var port = parseInt(config['port']) || 80;
+const REFRESH_FREQUENCY = .5; // in minutes
 
 // initialize the MySQL database connection
 var mysqlConnection = mysql.createConnection({
@@ -19,8 +20,19 @@ var mysqlConnection = mysql.createConnection({
 });
 mysqlConnection.query('USE smartticket;');
 
-// for testing; remove before commit
-require('../mail/mail.js')(mysqlConnection, port).test();
+// check for new emails ever 30 seconds
+var mail = require('../mail/mail.js')(mysqlConnection, port);
+var refreshMail = function() {
+	mail.handleUpdates(function(err, newCount) {
+		if (err) {
+			console.error('Error refreshing email:', err);
+		} else {
+			console.log('Refreshed email data (' + newCount + ' new).');
+		}
+	});
+}
+refreshMail();
+setInterval(refreshMail, 1000 * 60 * REFRESH_FREQUENCY);
 
 
 require('./config/passport')(mysqlConnection, passport);

@@ -22,16 +22,15 @@ module.exports = function (mysqlConnection, port) {
                 } else {
                     since = result[0].lastLoad;
                 }
-                // DEBUG MODE ONLY!!! REMOVE WHEN ACTUALLY DEPLOYED!!!
-                since = 0;
-                // UGH THIS WOULD BE SO BAD TO KEEP LYING AROUND!!!
                 _this.getUpdates(since, function(err, emails) {
                     if (err) {
                         console.error('Error downloaded email data:', err);
                     }
                     // if successful, set last load time in database
+                    var now = Date.now();
                     mysqlConnection.query(
-                        'UPDATE EMAIL_STATISTICS SET LAST_LOADED_EMAIL=NOW();',
+                        'UPDATE EMAIL_STATISTICS SET LAST_LOADED_EMAIL='
+                        + now + ';',
                         function(err) {
                             if (err) console.error(
                                 'Failed to update latest load time:', err);
@@ -47,7 +46,6 @@ module.exports = function (mysqlConnection, port) {
                                 }
                             })
                         } else {
-                            continue;
                             _this.submitTicket(email, function(err) {
                                 if (err) {
                                     console.error('Ticket failed to submit:',
@@ -56,7 +54,7 @@ module.exports = function (mysqlConnection, port) {
                             });
                         }
                     }
-                    done(null);
+                    done(null, emails.length);
                 });
             });
         },
@@ -207,43 +205,71 @@ module.exports = function (mysqlConnection, port) {
                 // Email will be the raw json data.
                 // Convert it to a more useable format and return it to done
                 var emailData = {
-                    "from": "",
-                    "to": "",
-                    "title": "",
-                    "body": "",
-                    "time": 0, // unix timestamp
+                    'from': '',
+                    'to': '',
+                    'title': '',
+                    'body': '',
+                    'time': 0, // unix timestamp
                 };
-                var bodyRaw = email.payload.body.data;
-                if (bodyRaw === undefined || bodyRaw === "") {
+
+                // get body
+                emailData.body = getBody(email.payload);
+                if (emailData.body === undefined || emailData.body === '') {
                     addOneLoaded();
                     return;
                 }
-                emailData.body = base64url.decode(bodyRaw);
 
+                // get headers
+                var latestTime = 0;
                 for (var i = 0; i < email.payload.headers.length; i++) {
                     var header = email.payload.headers[i];
-                    if (header.name == 'To') { // 'To'
+                    if (header.name == 'To') {
                         var v = header.value;
-                        v = v.split('<')[1];
-                        v = v.substring(0, v.length - 1);
+                        if (v.indexOf('<') > -1) { // 'Name <email@email.com>'
+                            v = v.split('<')[1];
+                            v = v.substring(0, v.length - 1);
+                        }
                         emailData.to = v;
-                    } else if (header.name == 'Subject') { // 'Thread-Topic'
+                    } else if (header.name == 'Subject') {
                         emailData.title = header.value;
                     } else if (header.name == 'Date') {
                         emailData.time = new Date(header.value).getTime();
+                        // var s = new Date(header.value).toString();
+                        // if (s.indexOf('Apr') > -1) console.log(s);
                         // It's too old! Yes, too old to begin the training.
                         if (emailData.time < since) {
                             addOneLoaded();
                             return;
                         }
-                    } else if (header.name == 'Return-Path') { // 'From'
-                        emailData.from = header.value.substring(1,
-                            header.value.length - 1);
+                    } else if (header.name == 'From') {
+                        var v = header.value;
+                        if (v.indexOf('<') > -1) { // 'Name <email@email.com>'
+                            v = v.split('<')[1];
+                            v = v.substring(0, v.length - 1);
+                        }
+                        emailData.from = v;
                     }
                 }
                 emails.push(emailData);
 
                 addOneLoaded();
+            }
+            function getBody(emailPayload) {
+                if (emailPayload.body.size > 0) {
+                    return base64url.decode(emailPayload.body.data);
+                } else {
+                    var str = "";
+                    for (var i = 0; i < emailPayload.parts.length; i++) {
+                        var part = emailPayload.parts[i];
+                        // TODO don't just ignore attachements
+                        // (part.body.attachementID != undefined)
+                        if (part.body.data && part.mimeType == 'text/plain') {
+                            var bodyPart = base64url.decode(part.body.data);
+                            str += bodyPart;
+                        }
+                    }
+                    return str;
+                }
             }
             // get authentication rights to use API
             gmail_api.obtainAuth(function(auth, google) {
@@ -293,45 +319,6 @@ module.exports = function (mysqlConnection, port) {
          */
         sendMessageOfType: function(type, to, title /* ??? */, body, done) {
             console.log('TODO sendMessageOfType');
-        },
-        // /*
-        //  * Given data about a ticket, add it to the database and notify the
-        //  * manager that a ticket has been recieved.
-        //  * Returns the error.
-        //  * Note: 'to' may be null, meaning no manager is assigned yet.
-        //  */
-        // recievedNewTicket: function(title, body, from, to, done) {
-        //     console.log('TODO recievedNewTicket');
-        // },
-        // /*
-        //  * Given data about a message, add it to the database, associate it with
-        //  * a ticket, and notify (email) the manager that a reply has been made
-        //  * (if the sender was not the manager).
-        //  * Return the error.
-        //  */
-        // recievedNewMessage: function(ticketID, title, body, from, done) {
-        //     console.log('TODO recievedNewMessage');
-        // },
-        // TODO remove
-        test: function() {
-            // this.getUpdates(1490385831001, function(err, messages) {
-            //     if (err) {
-            //         console.log("Totally recieved an error, bro:", err);
-            //         return;
-            //     }
-            //     console.log("Messages:\n", messages[0]);
-            // });
-            // var email = 'GabeHWebsites6@gmail.com';
-            // this.getUserIdForEmail(email, function(err, id) {
-            //     console.log('I DONE DOWNLOADED ID:', id, 'for', email);
-            // });
-            this.handleUpdates(function(err) {
-                if (err) {
-                    console.log('Failed to load mail:', err);
-                    return;
-                }
-                console.log('Refreshed email.');
-            });
         },
     };
 }

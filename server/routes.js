@@ -212,7 +212,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             // ticket sender
             + ((client_id == -1) ? "NULL" : client_id) + ", "
             // current user in passport session
-            + ((client_id == -1) ? managerID : "NULL") + ", "
+            + ((client_id == -1) ? manager_id : "NULL") + ", "
             // 0 for currently signed-in manager, 1 for client
             + ((client_id == -1) ? 0 : 1) + ", "
             + "NOW());";
