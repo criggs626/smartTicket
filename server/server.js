@@ -9,6 +9,8 @@ var config = require('../config.json');
 var replace = require("replace");
 var mysqlDump = require("mysqldump");
 
+var port = parseInt(config['port']) || 80;
+
 // initialize the MySQL database connection
 var mysqlConnection = mysql.createConnection({
 	host: 'localhost',
@@ -18,7 +20,7 @@ var mysqlConnection = mysql.createConnection({
 mysqlConnection.query('USE smartticket;');
 
 // for testing; remove before commit
-require('../mail/mail.js')(mysqlConnection).test();
+require('../mail/mail.js')(mysqlConnection, port).test();
 
 
 require('./config/passport')(mysqlConnection, passport);
@@ -39,7 +41,6 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 require('./routes.js')(app, passport, express, mysqlConnection,replace,mysqlDump);
 
-var port = parseInt(config['port']) || 80;
 app.listen(port, function () {
     console.log('Example app listening on port %d!', port);
 });

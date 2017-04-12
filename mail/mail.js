@@ -1,7 +1,8 @@
 var gmail_api = require('./gmail_api.js');
 var base64url = require('base64url');
+var request = require('request');
 
-module.exports = function (mysqlConnection) {
+module.exports = function (mysqlConnection, port) {
     return {
         /*
          * Automatically load all changes and handle new messages or adding
@@ -42,10 +43,11 @@ module.exports = function (mysqlConnection) {
                             _this.addMessageToTicket(email, id, function(err) {
                                 if (err) {
                                     console.error('Message failed to be added'
-                                        + 'to ticket: ' + id + ':', err);
+                                        + 'to ticket ' + id + ':', err);
                                 }
                             })
                         } else {
+                            continue;
                             _this.submitTicket(email, function(err) {
                                 if (err) {
                                     console.error('Ticket failed to submit:',
@@ -67,7 +69,7 @@ module.exports = function (mysqlConnection) {
             var regexp = /<span\ id=ticketID>(\d+)<\/span>/;
             var regexMatch = email.body.match(regexp);
             if (!regexMatch) return -1;
-            var intID = parseInt(regexMatch);
+            var intID = parseInt(regexMatch[1]);
             if (isNaN(intID)) return -1;
             return intID;
         },
@@ -76,8 +78,33 @@ module.exports = function (mysqlConnection) {
          * Return the error.
          */
         submitTicket: function(email, done) {
-            console.log('TODO submitTicket');
-            done(null);
+            // just send a post request since we already wrote the code
+            const uri = 'http://127.0.0.1:' + port + '/submit_ticket';
+            request.post(
+                uri,
+                {
+                    json: {
+                        'contact': email.from,
+                        'summary': email.title,
+                        'description': email.body,
+                    }
+                },
+                function (err, response, body) {
+                    if (err) {
+                        console.error(
+                            'Couldn\'t submit ticket with POST:',
+                            err);
+                        return;
+                    }
+                    if (response.statusCode === 200
+                        || response.statusCode === 302) {
+                        done(null);
+                    } else {
+                        console.error('Unexpected response:',
+                            response.statusCode);
+                    }
+                }
+            );
         },
         /*
          * Given an email and ticketID, add to ticket as a new message with the
@@ -85,8 +112,73 @@ module.exports = function (mysqlConnection) {
          * Return the error.
          */
         addMessageToTicket: function(email, ticketID, done) {
-            console.log('TODO submitTicket');
-            done(null);
+            // like above, send a request to have routes.js do the hard work
+            this.getUserIdForEmail(email.from, function(err, userID) {
+                if (err) {
+                    console.error('Failed to add message from email:', err);
+                    return;
+                }
+                const uri = 'http://127.0.0.1:' + port + '/reply_to_ticket';
+                request.post(
+                    uri,
+                    {
+                        json: {
+                            'ticket_id': ticketID,
+                            'description': email.body,
+                            'client_id': userID,
+                        }
+                    },
+                    function (err, response, body) {
+                        if (err) {
+                            console.error(
+                                'Couldn\'t reply to ticket with POST:',
+                                err);
+                            return;
+                        }
+                        if (response.statusCode === 200
+                            || response.statusCode === 302) {
+                            done(null);
+                        } else {
+                            console.error('Unexpected response:',
+                            response.statusCode);
+                        }
+                    }
+                );
+            });
+        },
+        /*
+         * Get id of user given their email.
+         */
+        getUserIdForEmail: function(email, done) {
+            const QUERY = 'SELECT CLIENT_ID FROM CLIENTS WHERE EMAIL=\''
+                + email + '\' LIMIT 1;';
+            mysqlConnection.query(QUERY, function(err, result) {
+                if (err) {
+                    console.error('Failed to get client emails:', err);
+                    done(err);
+                    return;
+                }
+                if (result.length > 0) {
+                    done(null, result[0].CLIENT_ID);
+                } else {
+                    mysqlConnection.query('INSERT INTO CLIENTS (EMAIL)'
+                        + ' VALUES (\'' + email + '\')',
+                        function(err, result) {
+                            if (err) {
+                                console.error('Failed to add client to '
+                                    + 'database:', err);
+                                done(err);
+                                return;
+                            }
+                            done(null, result.insertId);
+                        }
+                    );
+                }
+            });
+            // if it exists,
+            // return it,
+            // else make a new one,
+            // and return that one.
         },
         /*
          * Given a unix timestamp (UTC?) return all emails recieved since that
@@ -202,24 +294,24 @@ module.exports = function (mysqlConnection) {
         sendMessageOfType: function(type, to, title /* ??? */, body, done) {
             console.log('TODO sendMessageOfType');
         },
-        /*
-         * Given data about a ticket, add it to the database and notify the
-         * manager that a ticket has been recieved.
-         * Returns the error.
-         * Note: 'to' may be null, meaning no manager is assigned yet.
-         */
-        recievedNewTicket: function(title, body, from, to, done) {
-            console.log('TODO recievedNewTicket');
-        },
-        /*
-         * Given data about a message, add it to the database, associate it with
-         * a ticket, and notify (email) the manager that a reply has been made
-         * (if the sender was not the manager).
-         * Return the error.
-         */
-        recievedNewMessage: function(ticketID, title, body, from, done) {
-            console.log('TODO recievedNewMessage');
-        },
+        // /*
+        //  * Given data about a ticket, add it to the database and notify the
+        //  * manager that a ticket has been recieved.
+        //  * Returns the error.
+        //  * Note: 'to' may be null, meaning no manager is assigned yet.
+        //  */
+        // recievedNewTicket: function(title, body, from, to, done) {
+        //     console.log('TODO recievedNewTicket');
+        // },
+        // /*
+        //  * Given data about a message, add it to the database, associate it with
+        //  * a ticket, and notify (email) the manager that a reply has been made
+        //  * (if the sender was not the manager).
+        //  * Return the error.
+        //  */
+        // recievedNewMessage: function(ticketID, title, body, from, done) {
+        //     console.log('TODO recievedNewMessage');
+        // },
         // TODO remove
         test: function() {
             // this.getUpdates(1490385831001, function(err, messages) {
@@ -228,6 +320,10 @@ module.exports = function (mysqlConnection) {
             //         return;
             //     }
             //     console.log("Messages:\n", messages[0]);
+            // });
+            // var email = 'GabeHWebsites6@gmail.com';
+            // this.getUserIdForEmail(email, function(err, id) {
+            //     console.log('I DONE DOWNLOADED ID:', id, 'for', email);
             // });
             this.handleUpdates(function(err) {
                 if (err) {
