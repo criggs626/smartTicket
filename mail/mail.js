@@ -61,11 +61,15 @@ module.exports = function (mysqlConnection) {
         /*
          * Given an email, determine return it's corresponding ticketID (if
          * it's a message) or -1 (if it's a new ticket).
-         * Return the error.
+         * Return the id.
          */
-        getTicketID: function(email, done) {
-            console.log('TODO getTicketID');
-            return -1;
+        getTicketID: function(email) {
+            var regexp = /<span\ id=ticketID>(\d+)<\/span>/;
+            var regexMatch = email.body.match(regexp);
+            if (!regexMatch) return -1;
+            var intID = parseInt(regexMatch);
+            if (isNaN(intID)) return -1;
+            return intID;
         },
         /*
          * Given an email, submit a new ticket with the email's data.
