@@ -5,10 +5,23 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var mysql = require('mysql');
-//var config = require('../config.json');
-var config = {};
+var fs = require('fs');
 var replace = require("replace");
 var mysqlDump = require("mysqldump");
+
+// load config file
+var config = {
+	"mysql-username": "root",
+	"mysql-password": "",
+	"port": 80,
+	"gmail_username": "smartticket0@gmail.com",
+	"gmail_password": "password",
+};
+try {
+	config = JSON.parse(fs.readFileSync('../config.json', 'utf8'));
+} catch (e) {
+	console.log('No config file found. Using defaults.');
+}
 
 // initialize the MySQL database connection
 var mysqlConnection = mysql.createConnection({
