@@ -12,6 +12,7 @@ module.exports = function (mysqlConnection) {
          */
         getAutoReply: function(ticketData, done) {
             // get lda for ticket data
+            // TODO save lda for the FAQs because this is repetitive
             var ticketTopics = this.extractTopics(ticketData);
             // for each ticket, get lda
             var _this = this;
@@ -27,7 +28,6 @@ module.exports = function (mysqlConnection) {
                 }
                 // find faq with max similarity. Return the answer.
                 var maxID = -1;
-                console.log("SIM SIM:", similarities);
                 for (var ticketID in similarities) {
                     if (maxID == -1) {
                         maxID = ticketID;
@@ -39,13 +39,11 @@ module.exports = function (mysqlConnection) {
                 }
                 if (maxID != -1 && similarities[maxID] > SIMILARITY_THRESHOLD) {
                     done(null, tickets[maxID].answer);
+                } else {
+                    done(null, null);
+                    console.log('No topics were deemed similar enough. No auto-reply.');
                 }
             });
-            // else return null
-            done(null, null);
-            console.log('No topics were deemed similar enough. No auto-reply.');
-
-            // TODO save lda because this is repetitive
         },
         /*
          * Given a ticket message string, return the LDA topics
