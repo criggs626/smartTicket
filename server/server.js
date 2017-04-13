@@ -23,6 +23,9 @@ try {
 	console.log('No config file found. Using defaults.');
 }
 
+var port = parseInt(config['port']) || 80;
+const REFRESH_FREQUENCY = .5; // in minutes
+
 // initialize the MySQL database connection
 var mysqlConnection = mysql.createConnection({
 	host: 'localhost',
@@ -30,6 +33,20 @@ var mysqlConnection = mysql.createConnection({
 	password: config['mysql-password'] || ''
 });
 mysqlConnection.query('USE smartTicket;');
+
+// check for new emails ever 30 seconds
+var mail = require('../mail/mail.js')(mysqlConnection, config, port);
+var refreshMail = function() {
+	mail.handleUpdates(function(err, newCount) {
+		if (err) {
+			console.error('Error refreshing email:', err);
+		} else {
+			console.log('Refreshed email data (' + newCount + ' new).');
+		}
+	});
+}
+refreshMail();
+setInterval(refreshMail, 1000 * 60 * REFRESH_FREQUENCY);
 
 
 require('./config/passport')(mysqlConnection, passport);
@@ -50,7 +67,6 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 require('./routes.js')(app, passport, express, mysqlConnection,replace,mysqlDump);
 
-var port = parseInt(config['port']) || 80;
 app.listen(port, function () {
     console.log('Example app listening on port %d!', port);
 });

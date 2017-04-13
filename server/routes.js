@@ -23,11 +23,6 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
         send(res, HOME);
     });
 
-    // app.get('/', function (req, res) {
-    //     // test stuff for ML
-    //     chooseManager.conductTest();
-    // });
-
     app.get('/login', function(req, res) {
         send(res, LOGIN);
     });
@@ -182,13 +177,15 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             });
         });
     });
-    app.post('/reply_to_ticket', isLoggedIn, function(req, res) {
+    // app.post('/reply_to_ticket', isLoggedIn, replyToTicket);
+    app.post('/reply_to_ticket', function(req, res) {
         var returnAddr = req.body.returnAddr || "/";
         returnAddr = returnAddr.trim();
         var ticket_id = parseInt(req.body.ticket_id) || -1;
         var assignee_id = parseInt(req.body.assignee) || -1;
         var message = req.body.description.trim();
-        var ticketType = parseInt(req.body['ticket type']) || 1;
+        var client_id = parseInt(req.body.client_id) || -1;
+        var manager_id = (req.user) ? req.user.USER_ID : -1;
 
         if (ticket_id == -1) {
             res.redirect(returnAddr);
@@ -202,14 +199,23 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             console.error("No message provided.");
             return;
         }
+        if (manager_id === null && client_id === null) {
+            console.error('Cannot identify message sender.');
+            return;
+        }
         // add message to ticket
-        var query = "INSERT INTO MESSAGES " +
-            "(ticket, message_content, user, sender, time_sent) VALUES (" +
+        var query = "INSERT INTO MESSAGES "
+            + "(ticket, message_content, client, user, sender, time_sent)"
+            + " VALUES (" +
             ticket_id + ", " +
-            mysqlConnection.escape(message) + ", " +
-            req.user.USER_ID + ", " // current user in passport session
-            +
-            "0, NOW());";
+            mysqlConnection.escape(message) + ", "
+            // ticket sender
+            + ((client_id == -1) ? "NULL" : client_id) + ", "
+            // current user in passport session
+            + ((client_id == -1) ? manager_id : "NULL") + ", "
+            // 0 for currently signed-in manager, 1 for client
+            + ((client_id == -1) ? 0 : 1) + ", "
+            + "NOW());";
         mysqlConnection.query(query, function(err, results, fields) {
             // return to webpage
             if (!err) {
@@ -227,6 +233,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             }
         });
     });
+
     app.post('/assign_ticket', isLoggedIn, assignTicket);
 
     function assignTicket(req, res) {
@@ -418,7 +425,6 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                 } else {
                     console.error("Inadiquate permissions");
                 }
-
             }
         });
     });
@@ -780,7 +786,8 @@ app.post("/addFAQ",isLoggedIn,function(req,res){
             return next();
 
         // if they aren't redirect them to the home page
-        res.redirect("/login");
+        res.redirect('/login');
+        console.log('Not logged in; redirecting...');
     }
 
     function send(request, file) {
