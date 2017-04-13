@@ -29,8 +29,9 @@ function personalManage(){
 }
 
 function deleteUser(id){
-  $.post("/deleteUser",{"id":id},function(data){
-    console.log("Succesfull");
+  $.post("/deleteUser",{"id":id},function(data, textStatus){
+    console.log("Successfully deleted user.");
+    location.reload();
   });
 }
 
