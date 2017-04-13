@@ -190,7 +190,11 @@ function loadMessages(ticket_id) {
 }
 function addMessage(message) {
     var content = message.MESSAGE_CONTENT;
-    content = content.split('\n').join('<br>');
+    // remove history data
+    content = content.split('> On ')[0]; // gmail history
+    content = content.split('________________________________')[0]; // outlook history
+    console.log(content);
+    content = content.trim().split('\n').join('<br>');
 	if (message.SENDER==0){
 		$("#messages").append("<div class='sent'>"+message.USER_EMAIL+":<br>"+content+"</div>");
 	}
