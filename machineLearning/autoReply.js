@@ -2,6 +2,7 @@ var lda = require("lda");
 const TOPICS_PER_TICKET = 2;
 const TERMS_PER_TOPIC = 3;
 const RAND_SEED = 42;
+const SIMILARITY_THRESHOLD = 0.7;
 
 module.exports = function (mysqlConnection) {
     return {
@@ -16,19 +17,33 @@ module.exports = function (mysqlConnection) {
             var _this = this;
             this.loadFAQTickets(function(err, tickets) {
                 if (err) done(err);
+                var similarities = {};
                 for (var ticketID in tickets) {
                     var ticket = tickets[ticketID];
                     var faqTopics = _this.extractTopics(ticket.question);
                     // compare ldas. if they are similar enough,
-                    if (_this.similarEnough(ticketTopics, faqTopics)) {
-                        // return the answer so it can be emailed
-                        done(null, ticket.answer);
-                        break;
+                    var similarity = _this.similarity(ticketTopics, faqTopics);
+                    similarities[ticketID] = similarity;
+                }
+                // find faq with max similarity. Return the answer.
+                var maxID = -1;
+                console.log("SIM SIM:", similarities);
+                for (var ticketID in similarities) {
+                    if (maxID == -1) {
+                        maxID = ticketID;
+                        continue;
                     }
+                    if (similarities[ticketID] > similarities[maxID]) {
+                        maxID = ticketID;
+                    }
+                }
+                if (maxID != -1 && similarities[maxID] > SIMILARITY_THRESHOLD) {
+                    done(null, tickets[maxID].answer);
                 }
             });
             // else return null
             done(null, null);
+            console.log('No topics were deemed similar enough. No auto-reply.');
 
             // TODO save lda because this is repetitive
         },
@@ -80,10 +95,10 @@ module.exports = function (mysqlConnection) {
             });
         },
         /*
-         * Given the topic analysis for two tickets, return whether they or not
-         * are "similar enough".
+         * Given the topic analysis for two tickets, return topic similarity
+         * (number of topics in common / number of topics).
          */
-        similarEnough(topicsA, topicsB) {
+        similarity(topicsA, topicsB) {
             // TODO improve. For now, it just naively chooses top word in each
             // topic and makes sure that they each show up in the other topic
             // with only one exception
@@ -110,46 +125,15 @@ module.exports = function (mysqlConnection) {
                 if (topWordsB.indexOf(word2) == -1) topWordsB.push(word2);
             }
             console.log("Comparing:", topWordsA, "to", topWordsB);
-            // all A words are in B
+            var commonCount = 0;
             for (var wordInd in topWordsA) {
                 var word = topWordsA[wordInd];
-                if (topWordsB.indexOf(word) == -1) {
-                    if (--exceptions < 0) {
-                        return false;
-                    }
+                if (topWordsB.indexOf(word) > -1) {
+                    commonCount++;
                 }
             }
-            return true;
+            // percentage of how many topics are similar
+            return commonCount / Math.min(topWordsA.length, topWordsB.length);
         },
-        // test: function() {
-        //     // var _this = this;
-        //     // var tickets = this.loadFAQTickets(function(err, tickets) {
-        //     //     if (err) {
-        //     //         console.error("Yep, there was an error. :( -> ", err);
-        //     //         return;
-        //     //     }
-        //     //     // console.log("loadFAQTickets()", tickets);
-        //     //     var topicsA = _this.extractTopics(tickets[0].question);
-        //     //     //console.log("extractTopics()", topicsA);
-        //     //     var topicsB = _this.extractTopics(tickets[1].question);
-        //     //     console.log("similarEnough()", _this.similarEnough(topicsA, topicsB), "FALSA");
-        //     //     console.log("similarEnough()", _this.similarEnough(topicsA, topicsA), "TRUTH");
-        //     // });
-        //     // the moment of most relief
-        //     var ticketBody = "I'm having a wifi problem.";
-        //     this.getAutoReply(ticketBody, function(err, answer) {
-        //         if (err) {
-        //             console.error("Nope. I couldn't get auto-reply due to technical errors :(");
-        //             return;
-        //         }
-        //         if (answer == null) {
-        //             console.log("None of the FAQs were all that similar to this one, really.");
-        //             return;
-        //         }
-        //         // actually got an answer :)
-        //         console.log("Here's a suggestion, blah blah blah answer only if"
-        //             + " they don't work:\n", answer);
-        //     });
-        // },
     };
 }
