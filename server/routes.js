@@ -26,9 +26,9 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             next();
     });
 
-    app.use('/home', isLoggedIn, function(req, res) {
-        send(res, HOME);
-    });
+    // app.use('/home', isLoggedIn, function(req, res) {
+    //     send(res, HOME);
+    // });
 
     app.get('/login', function(req, res) {
         send(res, LOGIN);
@@ -55,7 +55,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
 
 
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect: '/home', // redirect to the secure profile section
+        successRedirect: '/manager', // redirect to the secure profile section
         failureRedirect: '/' // redirect back to the signup page if there is an error
     }));
 
