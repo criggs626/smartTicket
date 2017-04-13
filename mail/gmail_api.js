@@ -80,7 +80,7 @@ module.exports = {
             oauth2Client.getToken(code, function(err, token) {
                 if (err) {
                     console.log('Error while trying to retrieve access token', err);
-                    exit();
+                    process.exit(1);
                     return;
                 }
                 oauth2Client.credentials = token;
