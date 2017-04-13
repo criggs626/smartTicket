@@ -498,10 +498,10 @@ form[for=Login]
 
 /* Messages */
 div.message_container{
-	height:50vh;
+	min-height:50vh;
 	background-color:var(--third-color);
 	margin-top:20px;
-	
+
 }
 #messages{
 }
