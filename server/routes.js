@@ -19,6 +19,13 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
 
     app.use(express.static(ROOT_DIR));
 
+    app.use(function(req, res, next) {
+        if(req.url.substr(-1) == '/' && req.url.length > 1)
+            res.redirect(301, req.url.slice(0, -1));
+        else
+            next();
+    });
+
     app.use('/home', isLoggedIn, function(req, res) {
         send(res, HOME);
     });
