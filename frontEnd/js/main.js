@@ -189,10 +189,12 @@ function loadMessages(ticket_id) {
     });
 }
 function addMessage(message) {
+    var content = message.MESSAGE_CONTENT;
+    content = content.split('\n').join('<br>');
 	if (message.SENDER==0){
-		$("#messages").append("<div class='sent'>"+message.USER_EMAIL+": "+message.MESSAGE_CONTENT+"</div>");
+		$("#messages").append("<div class='sent'>"+message.USER_EMAIL+":<br>"+content+"</div>");
 	}
 	else{
-		$("#messages").append("<div class='received'>"+message.CLIENT_EMAIL+": "+message.MESSAGE_CONTENT+"</div>");
+		$("#messages").append("<div class='received'>"+message.CLIENT_EMAIL+":<br>"+content+"</div>");
 	}
 }
