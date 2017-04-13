@@ -157,9 +157,9 @@ INSERT INTO TICKETS (CATEGORY,CLIENT,TITLE,DESCRIPTION,ASSIGNEE_ID,OPEN_STATUS,P
 
 
 -- Sample FAQ entries
---INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("My internet is down and I can't get it working. I've tried connecting the school's wifi but it won't work. I can't get my computer to connect to the polysecure wifi. My wifi won't connect.", "Try connecting to PolySecure with your first name's first letter, last name, and the first four letters of your student ID.");
---INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("How do I install Microsoft Office with my student ID?", "Go to microsoft.com\nCry, because we've apparantly stopped giving students access to Office.\n:D");
---INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("My computer is frozen and I can't move my mouse.", "Hello, IT. Have you tried turning it off and on again?");
+-- INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("My internet is down and I can't get it working. I've tried connecting the school's wifi but it won't work. I can't get my computer to connect to the polysecure wifi. My wifi won't connect.", "Try connecting to PolySecure with your first name's first letter, last name, and the first four letters of your student ID.");
+-- INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("How do I install Microsoft Office with my student ID?", "Go to microsoft.com\nCry, because we've apparantly stopped giving students access to Office.\n:D");
+-- INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("My computer is frozen and I can't move my mouse.", "Hello, IT. Have you tried turning it off and on again?");
 INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("How do I install Microsoft Office with my student ID?", "Go to Pulse.floridapoly.org and scroll to the bottom. Click on 'Office Download' and follow the on-screen instrcutions.");
 INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("My internet is down and I can't get it working.", "Try turning your wifi off and back on again and see if that fixes the problem.");
 INSERT INTO FAQ (QUESTION, ANSWER) VALUES ("My computer is frozen. How do I fix it?", "Have you tried turning it off and on again?");
