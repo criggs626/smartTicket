@@ -49,6 +49,7 @@ module.exports = function (mysqlConnection, config, port) {
                     for (var i = 0; i < emails.length; i++) {
                         var email = emails[i];
                         var id = _this.getTicketID(email);
+                        console.log('This should have an ticketID: ', email, id);
                         if (id !== -1) {
                             _this.addMessageToTicket(email, id, function(err) {
                                 if (err) {
@@ -323,7 +324,7 @@ module.exports = function (mysqlConnection, config, port) {
             var mailOptions = {
                 to: to,
                 subject: title,
-                text: body,
+                html: body,
             };
             smtpTransport.sendMail(mailOptions, done);
         },

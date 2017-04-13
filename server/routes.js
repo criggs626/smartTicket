@@ -12,7 +12,7 @@ const DEFAULT_SIZE = 50;
 const DEBUG = false;
 const DEFAULT_ASSIGNEE = "[0]";
 
-module.exports = function (app, passport, express, mysqlConnection,replace,mysqlDump) {
+module.exports = function (app, passport, express, mysqlConnection,replace,mysqlDump,mail) {
     var path = require('path');
     var chooseManager = require('../machinelearning/chooseTicketManager.js')();
     var autoReply = require('../machinelearning/autoReply.js')(mysqlConnection);
@@ -133,7 +133,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                             return;
                         }
                         if (data != null) {
-                            console.log("TODO auto-reply with mail.");
+                          mail.send(clientEmail,title,data,function(err){if(err){console.log(err);}});
                             console.log(data);
                         }
                     });
@@ -223,6 +223,19 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
 				if (assignee_id!=-1){
 					assignTicket(req, res);
 				}
+        var query = "SELECT EMAIL,TITLE FROM CLIENTS,TICKETS WHERE TICKETS.CLIENT=CLIENTS.CLIENT_ID AND TICKET_ID="+ticket_id+";";
+        mysqlConnection.query(query, function(err,results,fields){
+          if(err){
+            console.log(err);
+          }
+          else{
+            var email=results[0].EMAIL;
+            var title=results[0].TITLE;
+            message += "<span id=ticketID>"+ticket_id+"<span> ";
+            console.log("Message To:"+email+" About:"+title);
+            mail.sendMessage(email,title,message,function(err){if(err){console.log(err);}});
+          }
+        });
 				res.redirect(returnAddr);
 				return;
             } else {
