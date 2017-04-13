@@ -65,7 +65,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-require('./routes.js')(app, passport, express, mysqlConnection,replace,mysqlDump);
+require('./routes.js')(app, passport, express, mysqlConnection,replace,mysqlDump,mail);
 
 app.listen(port, function () {
     console.log('Example app listening on port %d!', port);

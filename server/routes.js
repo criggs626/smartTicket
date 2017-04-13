@@ -12,7 +12,7 @@ const DEFAULT_SIZE = 50;
 const DEBUG = false;
 const DEFAULT_ASSIGNEE = "[0]";
 
-module.exports = function (app, passport, express, mysqlConnection,replace,mysqlDump) {
+module.exports = function (app, passport, express, mysqlConnection,replace,mysqlDump,mail) {
     var path = require('path');
     var chooseManager = require('../machineLearning/chooseTicketManager.js')();
     var autoReply = require('../machineLearning/autoReply.js')(mysqlConnection);
@@ -77,6 +77,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
         var description = req.body.description.trim();
         var assignee_id = parseInt(req.body.assignee) || -1;
         var ticketType = parseInt(req.body['ticket type']) || 1;
+        var suppressEmail = !!req.body.suppressEmail;
 
         if (!VALID_EMAIL.test(clientEmail)) {
             res.redirect(returnAddr);
@@ -139,8 +140,14 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                             console.error("Failed to auto-reply:", err);
                             return;
                         }
-                        if (data != null) {
-                            console.log("TODO auto-reply with mail.");
+                        if (data != null && !suppressEmail) {
+                            mail.sendMessage(clientEmail, title, data,
+                                function(err){
+                                    if (err) {
+                                        console.log(err);
+                                    }
+                                }
+                            );
                             console.log(data);
                         }
                     });
@@ -193,6 +200,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
         var message = req.body.description.trim();
         var client_id = parseInt(req.body.client_id) || -1;
         var manager_id = (req.user) ? req.user.USER_ID : -1;
+        var suppressEmail = !!req.body.suppressEmail;
 
         if (ticket_id == -1) {
             res.redirect(returnAddr);
@@ -230,6 +238,23 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
 				if (assignee_id!=-1){
 					assignTicket(req, res);
 				}
+                var query = "SELECT EMAIL,TITLE FROM CLIENTS,TICKETS WHERE TICKETS.CLIENT=CLIENTS.CLIENT_ID AND TICKET_ID="+ticket_id+";";
+                mysqlConnection.query(query, function(err, results, fields) {
+                    if (err) {
+                        console.log(err);
+                    } else if (!suppressEmail) {
+                        var email = results[0].EMAIL;
+                        var title = results[0].TITLE;
+                        message += "<br><br><br>Ticket <" + ticket_id
+                            + "><br>(Please leave this ID intact).<br>";
+                        console.log("Message To:" + email + " About:" + title);
+                        mail.sendMessage(email, title, message, function(err) {
+                            if (err) {
+                                console.log(err);
+                            }
+                        });
+                    }
+                });
 				res.redirect(returnAddr);
 				return;
             } else {

@@ -37,15 +37,23 @@ module.exports = function (mysqlConnection, config, port) {
                     if (err) {
                         console.error('Error downloaded email data:', err);
                     }
-                    // if successful, set last load time in database
-                    var now = Date.now();
+                    // If successful, set last load time in database,
+                    // which is sourced from latest email to avoid errors.
+                    var now = since;
+                    for (var i = 0; i < emails.length; i++) {
+                        if (emails[i].time > now) {
+                            now = emails[i].time;
+                        }
+                    }
+                    now += 1;
                     mysqlConnection.query(
                         'UPDATE EMAIL_STATISTICS SET LAST_LOADED_EMAIL='
                         + now + ';',
                         function(err) {
                             if (err) console.error(
                                 'Failed to update latest load time:', err);
-                        });
+                        }
+                    );
                     for (var i = 0; i < emails.length; i++) {
                         var email = emails[i];
                         var id = _this.getTicketID(email);
@@ -55,7 +63,7 @@ module.exports = function (mysqlConnection, config, port) {
                                     console.error('Message failed to be added'
                                         + 'to ticket ' + id + ':', err);
                                 }
-                            })
+                            });
                         } else {
                             _this.submitTicket(email, function(err) {
                                 if (err) {
@@ -75,7 +83,7 @@ module.exports = function (mysqlConnection, config, port) {
          * Return the id.
          */
         getTicketID: function(email) {
-            var regexp = /<span\ id=ticketID>(\d+)<\/span>/;
+            var regexp = /Ticket\ <(\d+)>/;
             var regexMatch = email.body.match(regexp);
             if (!regexMatch) return -1;
             var intID = parseInt(regexMatch[1]);
@@ -96,6 +104,7 @@ module.exports = function (mysqlConnection, config, port) {
                         'contact': email.from,
                         'summary': email.title,
                         'description': email.body,
+                        'suppressEmail': true,
                     }
                 },
                 function (err, response, body) {
@@ -135,6 +144,7 @@ module.exports = function (mysqlConnection, config, port) {
                             'ticket_id': ticketID,
                             'description': email.body,
                             'client_id': userID,
+                            'suppressEmail': true,
                         }
                     },
                     function (err, response, body) {
@@ -261,8 +271,10 @@ module.exports = function (mysqlConnection, config, port) {
                         emailData.from = v;
                     }
                 }
-                emails.push(emailData);
-
+                // ignore emails that are sent by the smartTicket system
+                if (emailData.from != config.gmail_username) {
+                    emails.push(emailData);
+                }
                 addOneLoaded();
             }
             function getBody(emailPayload) {
@@ -298,6 +310,10 @@ module.exports = function (mysqlConnection, config, port) {
                     }
                     total = response.resultSizeEstimate;
                     var id;
+                    if (!response.messages) {
+                        console.log('No emails found online');
+                        return;
+                    }
                     for (var i = 0; i < response.messages.length; i++) {
                         id = response.messages[i].id;
                         gmail.users.messages.get({
@@ -323,7 +339,7 @@ module.exports = function (mysqlConnection, config, port) {
             var mailOptions = {
                 to: to,
                 subject: title,
-                text: body,
+                html: body,
             };
             smtpTransport.sendMail(mailOptions, done);
         },
