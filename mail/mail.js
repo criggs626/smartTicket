@@ -336,6 +336,10 @@ module.exports = function (mysqlConnection, config, port) {
          * using the Gmail API. Return the error.
          */
         sendMessage: function(to, title, body, done) {
+            // remove '' from around to if they exist
+            if (to[0] == '\'') to = to.substring(1);
+            if (to[to.length - 1] == '\'') to = to.substring(0, to.length - 1);
+            //console.log('sendMessage', to, title, body);
             var mailOptions = {
                 to: to,
                 subject: title,

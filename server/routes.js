@@ -135,20 +135,22 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                     });
                     // attempt to auto-reply
                     var ticketData = title + " " + title + " " + description;
-                    autoReply.getAutoReply(ticketData, function(err, data) {
+                    autoReply.getAutoReply(ticketData, function(err, answer) {
                         if (err) {
                             console.error("Failed to auto-reply:", err);
                             return;
                         }
-                        if (data != null && !suppressEmail) {
-                            mail.sendMessage(clientEmail, title, data,
+                        if (answer != null && !suppressEmail) {
+                            answer += '<br><br>(This is an automated reply. If this does not solve your problem, just reply to this email again).';
+                            mail.sendMessage(clientEmail, title, answer,
                                 function(err){
                                     if (err) {
-                                        console.log(err);
+                                        console.error('Failed to send email as auto-reply:', err); 
+                                        return;
                                     }
+                                    console.log('Auto-reply:', answer);
                                 }
                             );
-                            console.log(data);
                         }
                     });
                 };
