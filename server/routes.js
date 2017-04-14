@@ -147,7 +147,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                             mail.sendMessage(clientEmail, title, answer,
                                 function(err){
                                     if (err) {
-                                        console.error('Failed to send email as auto-reply:', err); 
+                                        console.error('Failed to send email as auto-reply:', err);
                                         return;
                                     }
                                     console.log('Auto-reply:', answer);
@@ -206,6 +206,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
         var client_id = parseInt(req.body.client_id) || -1;
         var manager_id = (req.user) ? req.user.USER_ID : -1;
         var suppressEmail = !!req.body.suppressEmail;
+        // console.log('reply_to_ticket', returnAddr, ticket_id, assignee_id, message, client_id, manager_id, suppressEmail);
 
         if (ticket_id == -1) {
             res.redirect(returnAddr);
@@ -255,13 +256,11 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                         console.log("Message To:" + email + " About:" + title);
                         mail.sendMessage(email, title, message, function(err) {
                             if (err) {
-                                console.log(err);
+                                console.log('Failed to send email:', err);
                             }
                         });
                     }
                 });
-		console.log(returnAddr);		
-		res.redirect(returnAddr);
 				return;
             } else {
                 // TODO: notify user of failure
