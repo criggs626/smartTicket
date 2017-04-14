@@ -10,7 +10,7 @@ const MANAGERVIEW = "managerView.html";
 const MANAGEUSERS = "userManagment.html"
 const DEFAULT_SIZE = 50;
 const DEBUG = false;
-const DEFAULT_ASSIGNEE = "[0]";
+const DEFAULT_ASSIGNEE = "0";
 
 module.exports = function (app, passport, express, mysqlConnection,replace,mysqlDump,mail) {
     var path = require('path');
@@ -26,9 +26,9 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
             next();
     });
 
-    // app.use('/home', isLoggedIn, function(req, res) {
-    //     send(res, HOME);
-    // });
+    app.use('/home', isLoggedIn, function(req, res) {
+        send(res, HOME);
+    });
 
     app.get('/login', function(req, res) {
         send(res, LOGIN);
@@ -55,11 +55,11 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
 
 
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect: '/manager', // redirect to the secure profile section
+        successRedirect: '/home', // redirect to the secure profile section
         failureRedirect: '/' // redirect back to the signup page if there is an error
     }));
 
-	app.use('/manager', isLoggedIn, function (req, res) {
+    app.use('/manager', isLoggedIn, function (req, res) {
         send(res, MANAGERVIEW);
     });
 
@@ -111,8 +111,10 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                 var afterGetAssignee = function() {
                     if (assignee_id == -1) {
                         assignee_id = DEFAULT_ASSIGNEE;
+                        console.log("ML chose nobody");
+                    } else {
+                        console.log("ML chose ", assignee_id);
                     }
-                    console.log("ML chose ", assignee_id);
                     var query = "INSERT INTO TICKETS " +
                         "(client, title, description, category, " +
                         "assignee_id, open_status) VALUES (" +
@@ -168,7 +170,8 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                             return;
                         }
                         // determine whether the managerID is worthy
-                        if (shouldAutoAssignManager(result.managerID)) {
+                        // console.log(result);
+                        if (shouldAutoAssignManager(result.score)) {
                             assignee_id = result.managerID;
                         } else {
                             assignee_id = -1;
@@ -257,7 +260,8 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
                         });
                     }
                 });
-				res.redirect(returnAddr);
+		console.log(returnAddr);		
+		res.redirect(returnAddr);
 				return;
             } else {
                 // TODO: notify user of failure
@@ -829,7 +833,7 @@ app.post("/addFAQ",isLoggedIn,function(req,res){
     }
 
     function shouldAutoAssignManager(score) {
-        const THRESHOLD = 0.001;
+        const THRESHOLD = 0.0033;
         return score > THRESHOLD;
     }
 }
