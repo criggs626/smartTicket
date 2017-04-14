@@ -191,9 +191,24 @@ function loadMessages(ticket_id) {
 function addMessage(message) {
     var content = message.MESSAGE_CONTENT;
     // remove history data
-    content = content.split('> On ')[0]; // gmail history
-    content = content.split('________________________________')[0]; // outlook history
-    console.log(content);
+    // gmail history
+    try {
+        content = content.split('> On ')[0];
+    } catch (e) {
+        // not a gmail
+    }
+    try {
+    	content = content.substring(0, content.match(/[\r?\n?](> )?On .+wrote:[\r?\n?]/).index);
+    } catch (e) {
+	// not a gmail
+    }
+    // outlook history
+    try {
+        content = content.split('________________________________')[0];
+    } catch (e) {
+        // not an outlook email
+    }
+    //console.log(content);
     content = content.trim().split('\n').join('<br>');
 	if (message.SENDER==0){
 		$("#messages").append("<div class='sent'>"+message.USER_EMAIL+":<br>"+content+"</div>");
