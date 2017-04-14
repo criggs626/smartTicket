@@ -612,7 +612,7 @@ module.exports = function (app, passport, express, mysqlConnection,replace,mysql
 		var secondReplacment=req.body.second;
 		var thirdReplacement=req.body.third;
 		fs = require('fs')
-fs.readFile('../frontend/colors', 'utf8', function (err,data) {
+fs.readFile('../frontEnd/colors', 'utf8', function (err,data) {
   if (err) {
     return console.log(err);
   }
@@ -620,7 +620,7 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
   replace({
 		regex: colors.first,
 		replacement: firstReplacement,
-		paths: ['../frontend/colors.css'],
+		paths: ['../frontEnd/colors.css'],
 		recursive: true,
 		silent: true,
 	});
@@ -628,7 +628,7 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
 	replace({
 		regex: colors.second,
 		replacement: secondReplacment,
-		paths: ['../frontend/colors.css'],
+		paths: ['../frontEnd/colors.css'],
 		recursive: true,
 		silent: true,
 	});
@@ -636,12 +636,12 @@ fs.readFile('../frontend/colors', 'utf8', function (err,data) {
 	replace({
 		regex: colors.third,
 		replacement: thirdReplacement,
-		paths: ['../frontend/colors.css'],
+		paths: ['../frontEnd/colors.css'],
 		recursive: true,
 		silent: true,
 	});
 	colors.third=thirdReplacement;
-	fs.writeFile("../frontend/colors", JSON.stringify(colors), 'utf8', function (err) {
+	fs.writeFile("../frontEnd/colors", JSON.stringify(colors), 'utf8', function (err) {
      if (err) return console.log("Why!!!!"+err);
   });
 });
