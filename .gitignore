@@ -2,3 +2,5 @@ config.json
 frontEnd/colors.css
 frontEnd/colors
 machineLearning/dataCount.json
+npm-debug.log
+server/npm-debug.log

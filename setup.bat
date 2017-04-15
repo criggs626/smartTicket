@@ -1,1 +1,0 @@
-server/setup/setup.bat
