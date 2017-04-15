@@ -9,7 +9,7 @@ using machine learning concepts.
 
 ## Setup
 #### Windows
-Run setup.bat (Windows) to configure the server.
+Run setup/setup.bat (Windows) to configure the server.
 #### Linux
 (Coming soon)
 
