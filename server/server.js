@@ -33,7 +33,7 @@ var mysqlConnection = mysql.createConnection({
 	user: config['mysql_username'] || 'root',
 	password: config['mysql_password'] || '',
     port: parseInt(config['mysql_port']) || 3306,
-    database: 'smartticket',
+    database: 'smartTicket',
 });
 
 // check for new emails ever 30 seconds
