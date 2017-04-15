@@ -149,6 +149,12 @@ module.exports = function () {
             console.log("Training classifier");
             var dataCount = require(PATH_DATA_COUNT);
             var words = this.processTokens(data.title, data.text);
+            if (!dataCount[managerID]) {
+                dataCount[managerID] = {
+                    "count": 0,
+                    "words": {},
+                };
+            }
             var oldLength = dataCount[managerID]["count"];
             var wordCounts = dataCount[managerID]["words"];
             var newLength = oldLength + words.length;
@@ -177,7 +183,7 @@ module.exports = function () {
          * Given a manager's ID, determine whether he/she is working now
          * (i.e. they are on schedule and they have not quit)
          */
-         isManagerWorking(managerID) {
+         isManagerWorking: function(managerID) {
              // TODO
              return true;
          },

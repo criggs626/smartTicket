@@ -11,8 +11,9 @@ var mysqlDump = require("mysqldump");
 
 // load config file
 var config = {
-	"mysql-username": "root",
-	"mysql-password": "",
+	"mysql_username": "root",
+	"mysql_password": "",
+    "mysql_port": 3306,
 	"port": 80,
 	"gmail_username": "smartticket0@gmail.com",
 	"gmail_password": "password",
@@ -29,10 +30,11 @@ const REFRESH_FREQUENCY = .5; // in minutes
 // initialize the MySQL database connection
 var mysqlConnection = mysql.createConnection({
 	host: 'localhost',
-	user: config['mysql-username'] || 'root',
-	password: config['mysql-password'] || ''
+	user: config['mysql_username'] || 'root',
+	password: config['mysql_password'] || '',
+    port: parseInt(config['mysql_port']) || 3306,
+    database: 'smartticket',
 });
-mysqlConnection.query('USE smartTicket;');
 
 // check for new emails ever 30 seconds
 var mail = require('../mail/mail.js')(mysqlConnection, config, port);

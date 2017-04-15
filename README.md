@@ -1,25 +1,20 @@
 # SmartTicketingSystem
-A smart ticketing system for organizations to track issues using machine learning concepts.
+A smart ticketing system for organizations to track issues
+using machine learning concepts.
+
+## Requirements
+- Node.js & npm installed on the computer.
+- A Gmail account with
+[Google API](https://developers.google.com/gmail/api/) enabled.
 
 ## Setup
-Run setup.bat (Windows) in the root directory of the repository to build the MySQL tables.
-
-## Configuration
-Configure certain details of the server by adding ```config.json``` to the root directory.
-
-### Example config.json
-```js
-{
-    "mysql-username": "root",              // mysql user
-    "mysql-password": "password",          // mysql password
-    "port": "80",                          // port to run server on
-    "gmail_username": "example@gmail.com", // gmail account
-    "gmail_password": "SecurePa$$word",    // gmail password
-}
-```
+#### Windows
+Run setup.bat (Windows) to configure the server.
+#### Linux
+(Coming soon)
 
 ## Run
-To start the server, open the command line and run
+After setting up, start the server by opening the command line and run
 ```shell
 cd server
 node server.js
@@ -29,3 +24,6 @@ If that doesn't work, try
 cd server
 nodejs server.js
 ```
+Then, open localhost:&lt;port&gt; in your web browser,
+where &lt;port&gt; is the port you chose when setting up
+(Example: localhost:80).
